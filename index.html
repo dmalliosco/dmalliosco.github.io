@@ -1,599 +1,475 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hans">
 <head>
-  <meta charset="utf-8">
-  
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <script>if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode)) window.location.href="https://support.dmeng.net/upgrade-your-browser.html?referrer="+encodeURIComponent(window.location.href); </script>
+    
+    
+        <link rel="preload" crossorigin="crossorigin" href="/fonts/roboto/Roboto-Regular.woff2" as="font">
+        <link rel="preload" crossorigin="crossorigin" href="/fonts/roboto/Roboto-Bold.woff2" as="font">
+    
+    
+    
+        <link rel="shortcut icon" href="/icons/favicon.ico">
+    
 
-  
-  <title>dmalliosco</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="dmalldev">
-<meta property="og:type" content="website">
-<meta property="og:title" content="dmalliosco">
-<meta property="og:url" content="http://example.com/index.html">
-<meta property="og:site_name" content="dmalliosco">
-<meta property="og:description" content="dmalldev">
-<meta property="og:locale">
-<meta property="article:author" content="dmalliosco">
-<meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="dmalliosco" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  
-<link rel="stylesheet" href="/css/style.css">
+    
+    
+        
+<link rel="stylesheet" href="/css/mdui.min.v1.0.0.css">
 
+    
+    
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+    
+    
+
+    
+        <script data-ad-client="ca-" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        
+            load: ['[tex]/mhchem'],
+        
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        
+            packages: {'[+]': ['mhchem']},
+        
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+          
+
+
+    
+    
+    <title>
+          
+            dmalliosco
+        
+    </title>
+    
+    
 <meta name="generator" content="Hexo 5.1.1"></head>
-
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">dmalliosco</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
-      </div>
-    </div>
+<body class="mdui-drawer-body-left mdui-appbar-with-toolbar mdui-theme-primary-teal mdui-theme-accent-blue">
+  
+  <header class="mdui-appbar mdui-appbar-fixed">
+  <div id="toolbar" class="mdui-toolbar mdui-color-theme">
+    <button class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="iconfont icon-menu"></i></button>
+    <a href="/" class="mdui-typo-headline">dmalliosco</a>
+    <a href="/" class="header-subtitle mdui-typo-headline">dmalldev</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <button class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: 'search'}"><i class="iconfont icon-search"></i></button>
   </div>
 </header>
-      <div class="outer">
-        <section id="main">
+
+<div class="mdui-dialog" id="search">
   
-    <article id="post-KVC实现原理分析" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/09/03/KVC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/" class="article-date">
-  <time datetime="2020-09-03T02:43:06.035Z" itemprop="datePublished">2020-09-03</time>
-</a>
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字" onfocus="listenSearchFunc()">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer">
+    <div class="mdui-tab" mdui-tab>
+        <a href="#sidebar-tab1" id="sidebartab" class="mdui-ripple mdui-tab-active">Overview</a>
+        <a href="#sidebar-tab2" id="sidebartab" class="mdui-ripple">About</a>
+    </div>
+
+    
+    <div id="sidebar-tab1" class="mdui-p-a-2">
+        <div class="mdui-list">
+            
+                
+                <a href="/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-home"></i>
+                    </div>
+                    <div class="mdui-list-item-content">Home</div>
+                </a>
+            
+                
+                <a href="/tags/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-bookmark"></i>
+                    </div>
+                    <div class="mdui-list-item-content">Tags</div>
+                </a>
+            
+                
+                <a href="/categories/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-folder"></i>
+                    </div>
+                    <div class="mdui-list-item-content">Categories</div>
+                </a>
+            
+                
+                <a href="/archives/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-archive"></i>
+                    </div>
+                    <div class="mdui-list-item-content">Archives</div>
+                </a>
+            
+                
+                <a href="/tools/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-tools"></i>
+                    </div>
+                    <div class="mdui-list-item-content">工具箱</div>
+                </a>
+            
+                
+                <a href="/about/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-user"></i>
+                    </div>
+                    <div class="mdui-list-item-content">About</div>
+                </a>
+            
+            <div class="mdui-list-item mdui-ripple">
+                <div class="mdui-list-item-icon">
+                    <i class="iconfont icon-moon"></i>
+                </div>
+                <div class="mdui-list-item-content">Night Mode</div>
+                <label class="mdui-switch" id="darkmode">
+                  <input type="checkbox" id="nightmode_switch"/>
+                  <i class="mdui-switch-icon"></i>
+                </label>
+            </div>           
+        </div>
+    </div>
+
+    
+    <div id="sidebar-tab2" class="mdui-p-a-2">
+        <div class="sidebar-overview">
+            <div class="sidebar-avatar">
+                
+                    <img src="/icons/avatar.gif"/>
+                
+            </div>
+            <div class="sidebar-author-name">dmalliosco</div>
+            <div class="sidebar-description">dmalldev</div>
+        </div>
+        <div class="sidebar-links">
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-mail"></i></span>
+                    <a href="mailto:xxx@xxx.com" class="mdui-chip-title">E-Mail</a>
+                </div>
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-github"></i></span>
+                    <a target="_blank" rel="noopener" href="https://your.url" class="mdui-chip-title">GitHub</a>
+                </div>
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-steam"></i></span>
+                    <a target="_blank" rel="noopener" href="https://your.url" class="mdui-chip-title">Steam</a>
+                </div>
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-weibo"></i></span>
+                    <a target="_blank" rel="noopener" href="https://your.url" class="mdui-chip-title">Weibo</a>
+                </div>
+            
+        </div>
+        <ul class="mdui-list" mdui-collapse="{accordion: true}">
+            <li class="mdui-collapse-item">
+                <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-link"></i>
+                    </div>
+                    <div class="mdui-list-item-content">Links</div>
+                    <div class="mdui-collapse-item-arrow">
+                        <i class="mdui-list-item-icon iconfont icon-angle-down"></i>
+                    </div>
+                </div>
+                <ul id="linksList" class="mdui-collapse-item-body mdui-list mdui-list-dense">
+                    
+                        <a target="_blank" rel="noopener" href="https://garybear.cn/hexo-theme-meadow/" class="mdui-list-item mdui-ripple">
+                            Meadow说明文档
+                        </a>
+                    
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="mdui-divider"></div>
+    
+    
+</aside>
+  
+  <main id="main-contain" class="mdui-container mdui-m-t-5">
+    
+    <article class="mdui-card mdui-m-b-5 mdui-hoverable">    
+      
+      
+        <div class="post-header"> 
+  <a class="post-header-title" href="/2020/09/03/KVC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">KVC实现原理分析</a>
+  <div class="post-header-meta">
+    <span>
+      <span class="iconfont icon-calendar"></span>
+      Posted on:&nbsp;2020-09-03
+    </span>
+    <span>
+      <span class="iconfont icon-calendar-check"></span>
+      Edited on:&nbsp;2020-09-03
+    </span>
+    <span>
+      <span class="iconfont icon-folder"></span>
+      In:&nbsp;
+    </span>
     
   </div>
-  <div class="article-inner">
+</div>   
     
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/09/03/KVC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">KVC实现原理分析</a>
-    </h1>
-  
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
+
+
       
-        <h2 id="KVC实现原理分析"><a href="#KVC实现原理分析" class="headerlink" title="KVC实现原理分析"></a>KVC实现原理分析</h2><h3 id="问题？"><a href="#问题？" class="headerlink" title="问题？"></a>问题？</h3><ol>
+      
+  <div class="tag-line-space"></div>
+
+      
+      <div id="achieve-abstract" class="mdui-card-content mdui-p-x-4">
+        <div class="post-abstract mdui-typo ">
+          
+            <h2 id="KVC实现原理分析"><a href="#KVC实现原理分析" class="headerlink" title="KVC实现原理分析"></a>KVC实现原理分析</h2><h3 id="问题？"><a href="#问题？" class="headerlink" title="问题？"></a>问题？</h3><ol>
 <li>KVC在进行存取的时候，是怎么进行查找赋值的？</li>
 <li>KVC的keypath中集合运算符是如何使用的？</li>
 <li>使用KVC的时候如果setvalue的属性没有实现会怎样？</li>
 </ol>
-<h3 id="KVC是什么？"><a href="#KVC是什么？" class="headerlink" title="KVC是什么？"></a>KVC是什么？</h3><ul>
-<li>KVC全称是Key value coding，定义在NSKeyValueCoding.h文件中，是一个非正式协议。</li>
-<li>KVC提供了一种间接访问属性方法/成员变量的机制。我们可以通过字符串来访问对应的属性方法或者成员变量。</li>
-<li>KVC的实现依赖其搜索规则。</li>
-</ul>
-<h3 id="KVC的访问方法"><a href="#KVC的访问方法" class="headerlink" title="KVC的访问方法"></a>KVC的访问方法</h3><ul>
-<li>在NSKeyValueCoding中我们可以看到提供了KVC的通用访问方法，getter方法：valueForKey:以及setter方法：setValue:forKey，以及其衍生出来的keyPath方法。</li>
-<li>这两个方法由KVC提供了默认的实现。也可以重写对应的方法来更改实现。</li>
-</ul>
-<h3 id="操作对象"><a href="#操作对象" class="headerlink" title="操作对象"></a>操作对象</h3><p>KVC主要针对三种类型进行操作，基础数据类型，对象和集合类型。</p>
-<h3 id="KVC的集合操作符运算"><a href="#KVC的集合操作符运算" class="headerlink" title="KVC的集合操作符运算"></a>KVC的集合操作符运算</h3><ul>
-<li>@sum 求和运算 比如@sum.classNumber</li>
-<li>@avg 求平均值运算 比如@avg.classNumber</li>
-<li>@count 求集合中元素的个数 比如@count</li>
-</ul>
-<h3 id="搜索规则"><a href="#搜索规则" class="headerlink" title="搜索规则"></a>搜索规则</h3><ul>
-<li>KVC在通过key和keypath进行操作的时候，可以查找属性方法，成员变量。查找的时候可以兼容多种命名，查找的规则官方文档有介绍。</li>
-<li>在KVC的实现中，依赖了<code>setter</code>和<code>getter</code>方法的实现。方法的命名要符合apple的规范。</li>
-</ul>
-<h4 id="关键属性accessInstanceVariablesDirectly"><a href="#关键属性accessInstanceVariablesDirectly" class="headerlink" title="关键属性accessInstanceVariablesDirectly"></a>关键属性accessInstanceVariablesDirectly</h4><p>这个属性表示是否允许读取实例变量的值，如果设置为YES,表明在KVC的查找中，从内存中读取实例变量的值。（在没有找到存取器的时候才会调用该方法）。</p>
-<h3 id="基础getter搜索模式"><a href="#基础getter搜索模式" class="headerlink" title="基础getter搜索模式"></a>基础getter搜索模式</h3><ol>
-<li>这种搜索模式是valueForKey:的默认实现，给定一个key作为参数</li>
-<li>通过<code>getter</code>方法搜索实例，依次匹配  <code>get&lt;key&gt;</code>  <code>&lt;key&gt; </code> <code>is&lt;key&gt;</code> <code> _&lt;key&gt;</code> 如果找到，直接返回。需要注意的是：如果返回的是对象指针类型，直接返回结果，如果返回的是NSNumber转化所支持的变量之一，返回一个NSNumber否则返回的是NSValue。</li>
-<li>当没有找到getter方法的时候，调用<code>accessInstanceVariablesDirectly</code>询问，如果返回<code>yes</code>，从<code>_&lt;key&gt;`` _is&lt;key&gt;</code> <code>&lt;key&gt;</code> <code>is&lt;key&gt;</code>中查找对应的值。如果返回NO结束查找，并调用<code>valueForUndefindedKey</code>异常。</li>
-</ol>
-<h3 id="基础setter搜索模式"><a href="#基础setter搜索模式" class="headerlink" title="基础setter搜索模式"></a>基础setter搜索模式</h3><ol>
-<li>这种搜索模式是<code>setValue:forKey</code>的默认实现，给定输入的value和key。在调用对象的内部，设置属性名为key的<code>value</code>。</li>
-<li>查找<code>set&lt;key&gt;:</code>或者<code>_set&lt;key&gt;</code>命名的setter。按照这个顺序，如果找到的话，调用这个方法执行。</li>
-<li>如果设置的<code>setter</code>但是<code>accessInstanceVariablesDirectly</code>返回YES,那么查找的命名规则为<code>_&lt;key&gt; _is&lt;key&gt; &lt;key&gt; is&lt;key&gt;</code>的实例变量。根据这个顺序将value赋值给实例变量。</li>
-<li>如果没有发现setter或实例变量。调用<code>setValueForUndefinedKey</code>并抛出异常。</li>
-</ol>
-<h3 id="KVC的性能"><a href="#KVC的性能" class="headerlink" title="KVC的性能"></a>KVC的性能</h3><p>从上面的描述中可以看出：KVC的性能访问属性并没有直接访问快，因为他是按照搜索规则进行搜索。所以我们在使用的时候，最好不 要手动设置<code>setter``和getter</code> 方法这样会导致搜索的步骤变长。本质上是操作方法列表以及在内存中去查找实例变量。这个操作对readonly和protected的成员变量，都可以正常访问。如果不想在外界访问的话，可以将<code>accessInstanceVariableDirectly</code>设置为NO。</p>
-<h3 id="KVC缺点"><a href="#KVC缺点" class="headerlink" title="KVC缺点"></a>KVC缺点</h3><ul>
-<li>因为我们在操作的时候传入<code>setvalueForKey</code>以及<code>setvalueForKeyPath valueForKey</code>以及<code>keyPath</code>是一个字符串。编译器在编译的时候不会报错，但是在运行的时候，如果设置或者获取的属性不存在就会报undefinedKey异常。</li>
-<li>例如：在 iOS13之前我们可以通过改变私有变量的属性来更改一些设置。比如更改textField的颜色属性。iOS13之后更改的时候debug模式下会crash。</li>
-</ul>
-<h3 id="JsonModel中的使用"><a href="#JsonModel中的使用" class="headerlink" title="JsonModel中的使用"></a>JsonModel中的使用</h3><p>主要是通过KVC进行赋值，例如在赋值的时候，循环遍历model中每一个解析出来的property结构，从dic中拿出对应的value，进行一系列的判断。如果value可用，就进行赋值。如果对应的property是一个jsonmodel的时候，就递归先将子model进行整理解析。如果包含protocol字段，表明是一个array或者dictionary。然后将这个protocol字段的对象解析。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/09/03/KVC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/" data-id="ckem8kyp60001nn8obc8j26t9" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hexo使用说明" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/09/02/hexo%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/" class="article-date">
-  <time datetime="2020-09-02T12:15:32.792Z" itemprop="datePublished">2020-09-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
+<h3 id="KVC是什么...
+          
+        </div>
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/09/02/hexo%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/">hexo使用说明</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/09/02/hexo%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/" data-id="ckem8kyp70002nn8o6uia6ni4" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-CodeSnippets使用说明" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/06/04/CodeSnippets%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/" class="article-date">
-  <time datetime="2020-06-04T05:48:59.617Z" itemprop="datePublished">2020-06-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/04/CodeSnippets%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/">CodeSnippets使用说明</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="CodeSnippets"><a href="#CodeSnippets" class="headerlink" title="CodeSnippets"></a>CodeSnippets</h3><h3 id="使用方式："><a href="#使用方式：" class="headerlink" title="使用方式："></a>使用方式：</h3><ul>
-<li>第一种 前往文件夹：<br>前往文件夹：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~&#x2F;Library&#x2F;Developer&#x2F;Xcode&#x2F;UserData&#x2F;CodeSnippets</span><br></pre></td></tr></table></figure>
-然后复制粘贴即可</li>
-<li>第二种 执行脚本即可<br>进入到当前文件根目录。然后执行脚本即可。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh DMCodeSnippets.sh</span><br></pre></td></tr></table></figure>
-如果没有权限,在终端添加<code>sudo</code>,输入电脑密码，执行脚本即可。<br><code>sudo sh  DMCodeSnippets.sh</code></li>
-</ul>
-<h4 id="说明："><a href="#说明：" class="headerlink" title="说明："></a>说明：</h4><table>
-<thead>
-<tr>
-<th>快捷方式</th>
-<th>功能</th>
-<th>实现</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>DMArray</td>
-<td>不可变数组的声明</td>
-<td>@property (nonatomic, copy) NSArray *&lt;#array#&gt;;</td>
-</tr>
-<tr>
-<td>DMBOOL</td>
-<td>基本数据类型BOOL</td>
-<td>@property (nonatomic, assign) BOOL  &lt;#bool#&gt;;</td>
-</tr>
-<tr>
-<td>DMDictionary</td>
-<td>不可变字典属性声明</td>
-<td>@property (nonatomic, copy) NSDictionary *&lt;#dictionary#&gt;;</td>
-</tr>
-<tr>
-<td>DMMutableDictInterface</td>
-<td>可变字典属性声明</td>
-<td>@property (nonatomic, strong) NSMutableDictionary *&lt;#mutableDictionary#&gt;;</td>
-</tr>
-<tr>
-<td>DMMutableDictLazyLoading</td>
-<td>可变字典懒加载</td>
-<td>实现见下面</td>
-</tr>
-<tr>
-<td>DMInteger</td>
-<td>NSInteger基本数据类型</td>
-<td>@property (nonatomic, assign) NSInteger  &lt;#integer#&gt;;</td>
-</tr>
-<tr>
-<td>DMString</td>
-<td>字符串声明</td>
-<td>@property (nonatomic, copy) NSString *&lt;#string#&gt;;</td>
-</tr>
-<tr>
-<td>DMMutableArrayInterface</td>
-<td>可变数组声明</td>
-<td>@property (nonatomic, strong) NSMutableArray *&lt;#mutableArray#&gt;;</td>
-</tr>
-<tr>
-<td>DMMutableArrayLazyLoading</td>
-<td>可变数组懒加载</td>
-<td>实现见下面</td>
-</tr>
-<tr>
-<td>DMLabelInterface</td>
-<td>UILabel声明</td>
-<td>@property (nonatomic, strong) UILabel *&lt;#contentLabel#&gt;;</td>
-</tr>
-<tr>
-<td>DMLabelLazyLoading</td>
-<td>UILabel懒加载</td>
-<td>实现见下面</td>
-</tr>
-<tr>
-<td>DMButtonInterface</td>
-<td>UIButton声明</td>
-<td>@property (nonatomic, strong) UIButton *&lt;#customBtn#&gt;;</td>
-</tr>
-<tr>
-<td>DMButtonLazyLoading</td>
-<td>UIButton懒加载</td>
-<td>实现见下面</td>
-</tr>
-<tr>
-<td>DMImageViewInterface</td>
-<td>UIImageView声明</td>
-<td>@property (nonatomic, strong) UIImageView *&lt;#iconImageView#&gt;;</td>
-</tr>
-<tr>
-<td>DMImageViewLazyLoading</td>
-<td>UIImageView懒加载</td>
-<td>实现见下面</td>
-</tr>
-<tr>
-<td>DMViewInterface</td>
-<td>UIView声明</td>
-<td>@property (nonatomic, strong) UIView *&lt;#contentView#&gt;;</td>
-</tr>
-<tr>
-<td>DMViewLazyLoading</td>
-<td>UIView懒加载</td>
-<td>实现见下面</td>
-</tr>
-<tr>
-<td>DMPragmaMark</td>
-<td>pragmaMark</td>
-<td>#pragma mark   - &lt;#infoMessage#&gt; -</td>
-</tr>
-<tr>
-<td>DMWarning</td>
-<td>warning，包括作者，以及warning描述</td>
-<td>#warning   &lt;#author#&gt;   &lt;#messageDesc#&gt;</td>
-</tr>
-<tr>
-<td>DMDispatchOnce</td>
-<td>单例中dispatch_once写法</td>
-<td>实现见下面</td>
-</tr>
-<tr>
-<td>DMGCDAsyMain</td>
-<td>异步回到主线程</td>
-<td>实现见下面</td>
-</tr>
-<tr>
-<td>DMWeakSelf</td>
-<td>weak修饰写法</td>
-<td>__weak typeof(self)weakSelf = self;</td>
-</tr>
-<tr>
-<td>DMStrongSelf</td>
-<td>strong修饰写法</td>
-<td>__strong typeof(weakSelf)strongSelf = weakSelf;</td>
-</tr>
-<tr>
-<td>DMLocalBlock</td>
-<td>localBlock</td>
-<td>实现见下面</td>
-</tr>
-<tr>
-<td>DMInitMethod</td>
-<td>初始化方法</td>
-<td>实现见下面</td>
-</tr>
-<tr>
-<td>DMLifecycle</td>
-<td>vc生命周期</td>
-<td>实现见下面</td>
-</tr>
-<tr>
-<td>DMTableViewInterface</td>
-<td>UITabeleView声明</td>
-<td>@property (nonatomic, strong) UITableView *&lt;#tableView#&gt;;</td>
-</tr>
-<tr>
-<td>DMTableViewLazyLoading</td>
-<td>UITableView懒加载</td>
-<td>实现见下面</td>
-</tr>
-<tr>
-<td>DMCollectionViewInterface</td>
-<td>UICollectionView声明</td>
-<td>@property (nonatomic, strong) UICollectionView *&lt;#collectionView#&gt;;</td>
-</tr>
-<tr>
-<td>DMCollectionViewLazyLoading</td>
-<td>UICollectionView懒加载</td>
-<td>实现见下面</td>
-</tr>
-</tbody></table>
-<h4 id="DMButtonLazyLoading"><a href="#DMButtonLazyLoading" class="headerlink" title="DMButtonLazyLoading"></a>DMButtonLazyLoading</h4><p>实现：UIButton实现</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- (UIButton *)&lt;#customBtn#&gt; &#123;</span><br><span class="line">    if (!&lt;#_customBtn#&gt;) &#123;</span><br><span class="line">        &lt;#_customBtn#&gt; &#x3D; [UIButton buttonWithType:UIButtonTypeCustom];</span><br><span class="line">        [&lt;#_customBtn#&gt; setTitle:&lt;#(nullable NSString *)#&gt; forState:UIControlStateNormal];</span><br><span class="line">        [&lt;#_customBtn#&gt; setTitleColor:&lt;#(nullable UIColor *)#&gt; forState:UIControlStateNormal];</span><br><span class="line">        [&lt;#_customBtn#&gt; setBackgroundColor:&lt;#(UI_APPEARANCE_SELECTOR UIColor *)#&gt;];</span><br><span class="line">        [&lt;#_customBtn#&gt; addTarget:&lt;#(nullable id)#&gt; action:&lt;#(nonnull SEL)#&gt; forControlEvents:UIControlEventTouchUpInside];</span><br><span class="line">    &#125;</span><br><span class="line">    return &lt;#_customBtn#&gt;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="DMDispatchOnce"><a href="#DMDispatchOnce" class="headerlink" title="DMDispatchOnce"></a>DMDispatchOnce</h4><p>实现：单例中dispatch_once写法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">  + (instancetype)sharedInstance &#123;</span><br><span class="line">      static dispatch_once_t onceToken;</span><br><span class="line">      dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">          &lt;#code#&gt;</span><br><span class="line">      &#125;);</span><br><span class="line">      return &lt;#expression#&gt;;</span><br><span class="line">  &#125;</span><br><span class="line">&#96;&#96;&#96; </span><br><span class="line">#### DMGCDAsyMain</span><br><span class="line">实现：异步回到主线程</span><br></pre></td></tr></table></figure>
-<p>dispatch_async(dispatch_get_main_queue(), ^{<br>       &lt;#code#&gt;<br>   });</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### DMImageViewLazyLoading</span><br><span class="line">实现：UIImageView懒加载</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>(UIImageView *)&lt;#iconImageView#&gt; {<br>  if (!&lt;#_iconImageView#&gt;) {</p>
-<pre><code>  &lt;#_iconImageView#&gt; =[[UIImageView alloc]init];</code></pre>
-<p>  }<br>  return &lt;#_iconImageView#&gt;;<br>}</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### DMInitMethod</span><br><span class="line">实现：初始化方法</span><br></pre></td></tr></table></figure></li>
-<li><p>(instancetype)init {</p>
-<p>  if (self = [super init]) {</p>
-<p>  }<br>  return self;<br>}</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### DMLabelLazyLoading</span><br><span class="line">实现：UILabel懒加载</span><br></pre></td></tr></table></figure></li>
-<li><p>(UILabel *)&lt;#contentLabel#&gt; {<br>  if (!&lt;#_contentLabel#&gt;) {</p>
-<pre><code>  &lt;#_contentLabel#&gt; = [[UILabel alloc]initWithFrame:CGRectMake(&lt;#CGFloat x#&gt;, &lt;#CGFloat y#&gt;, &lt;#CGFloat width#&gt;, &lt;#CGFloat height#&gt;)];
-  &lt;#_contentLabel#&gt;.backgroundColor = [UIColor clearColor];</code></pre>
-<p>  }<br>  return &lt;#_contentLabel#&gt;;<br>}</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### DMLifecycle</span><br><span class="line">实现：vc生命周期</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>(void)pageInit {<br>  [super pageInit];</p>
-</li>
-</ul>
-<p>}</p>
-<ul>
-<li>(void)pageWillForwardToMe {<br>  [super pageWillForwardToMe];</li>
-</ul>
-<p>}</p>
-<ul>
-<li>(void)pageDidForwardToMe {<br>  [super pageDidForwardToMe];</li>
-</ul>
-<p>}</p>
-<ul>
-<li>(void)viewDidLoad {<br>  [super viewDidLoad];</li>
-</ul>
-<p>}</p>
-<ul>
-<li>(void)pageWillBeShown {<br>  [super pageWillBeShown];</li>
-</ul>
-<p>}</p>
-<ul>
-<li>(void)pageDidShown {<br>  [super pageDidShown];</li>
-</ul>
-<p>}</p>
-<ul>
-<li>(void)pageWillForwardFromMe {<br>  [super pageWillForwardFromMe];</li>
-</ul>
-<p>}</p>
-<ul>
-<li>(void)pageDidForwardFromMe {<br>  [super pageDidForwardFromMe];</li>
-</ul>
-<p>}</p>
-<ul>
-<li>(void)pageWillBackwardFromMe {<br>  [super pageWillBackwardFromMe];</li>
-</ul>
-<p>}</p>
-<ul>
-<li>(void)pageDidBackwardFromMe {<br>  [super pageDidBackwardFromMe];</li>
-</ul>
-<p>}</p>
-<ul>
-<li>(void)pageWillBackwardToMe {<br>  [super pageWillBackwardToMe];</li>
-</ul>
-<p>}</p>
-<ul>
-<li>(void)pageDidBackwardToMe {<br>  [super pageDidBackwardToMe];</li>
-</ul>
-<p>}</p>
-<ul>
-<li>(void)pageWillBeHidden {<br>  [super pageWillBeHidden];</li>
-</ul>
-<p>}</p>
-<ul>
-<li>(void)pageDidHidden {<br>  [super pageDidHidden];</li>
-</ul>
-<p>}</p>
-<ul>
-<li>(void)pageDestroy {<br>  [super pageDestroy];</li>
-</ul>
-<p>}</p>
-<ul>
-<li>(void)pageReload {<br>  [super pageReload];</li>
-</ul>
-<p>}</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### DMLocalBlock</span><br><span class="line">实现：localBlock</span><br></pre></td></tr></table></figure>
-<p>&lt;#returnType#&gt;(^&lt;#blocKname#&gt;)(&lt;#parameterTypes#&gt;) = ^&lt;#returnType#&gt; (&lt;#parameters#&gt;) {<br>    &lt;#statements#&gt;<br>    };</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### DMMutableArrayLazyLoading</span><br><span class="line">实现：可变数组懒加载</span><br></pre></td></tr></table></figure>
-<ul>
-<li>(NSMutableArray *)&lt;#mutableArray#&gt; {<br>  if (!&lt;#_mutableArray#&gt;) {<pre><code>  &lt;#_mutableArray#&gt; = [NSMutableArray array];</code></pre>
-  }<br>  return &lt;#_mutableArray#&gt;;<br>}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### DMMutableDictLazyLoading</span><br><span class="line">实现：可变字典懒加载</span><br></pre></td></tr></table></figure></li>
-<li>(NSMutableDictionary *)&lt;#mutableDictionary#&gt; {<br>  if (!&lt;#_mutableDictionary#&gt;) {<pre><code>  &lt;#_mutableDictionary#&gt; = [NSMutableDictionary dictionary];</code></pre>
-  }<br>  return &lt;#_mutableDictionary#&gt;;<br>}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### DMViewLazyLoading</span><br><span class="line">实现：UIView懒加载</span><br></pre></td></tr></table></figure></li>
-<li>(UIView *)&lt;#contentView#&gt; {<br>  if (!&lt;#_contentView#&gt;) {<pre><code>  &lt;#_contentView#&gt; = [[UIView alloc]initWithFrame:CGRectMake(&lt;#CGFloat x#&gt;, &lt;#CGFloat y#&gt;, &lt;#CGFloat width#&gt;, &lt;#CGFloat height#&gt;)];
-  &lt;#_contentView#&gt;.backgroundColor = [UIColor clearColor];</code></pre>
-  }<br>  return &lt;#_contentView#&gt;;<br>}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># DMTableViewLazyLoading</span><br><span class="line">实现：UITableView懒加载</span><br></pre></td></tr></table></figure></li>
-<li>(UITableView *)&lt;#tableView#&gt; {<br>  if (!&lt;#_tableView#&gt;) {<pre><code>  &lt;#_tableView#&gt; = [[UITableView alloc]initWithFrame:&lt;#(CGRect)#&gt; style:UITableViewStylePlain];
-  &lt;#_tableView#&gt;.delegate = self;
-  &lt;#_tableView#&gt;.dataSource = self;
-  [self.view addSubview:&lt;#_tableView#&gt;];
-  [&lt;#_tableView#&gt; mas_makeConstraints:^(MASConstraintMaker *make) &#123;
-      make.edges.insets(UIEdgeInsetsMake(&lt;#CGFloat top#&gt;, &lt;#CGFloat left#&gt;, &lt;#CGFloat bottom#&gt;, &lt;#CGFloat right#&gt;));
-  &#125;];</code></pre>
-  }<br>  return &lt;#_tableView#&gt;;<br>}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># DMCollectionViewLazyLoading</span><br><span class="line">实现：UICollectionView懒加载</span><br></pre></td></tr></table></figure></li>
-<li>(UICollectionView *)&lt;#collectionView#&gt; {<br>  if (!&lt;#_collectionView#&gt;) {<pre><code>  &lt;#_collectionView#&gt; = [[UICollectionView alloc]initWithFrame:&lt;#(CGRect)#&gt; collectionViewLayout:&lt;#(nonnull UICollectionViewLayout *)#&gt;];
-  &lt;#_collectionView#&gt;.delegate = self;
-  &lt;#_collectionView#&gt;.dataSource = self;
-  [self.view addSubview:&lt;#_collectionView#&gt;];
-  [&lt;#_collectionView#&gt; mas_makeConstraints:^(MASConstraintMaker *make) &#123;
-      make.edges.insets(UIEdgeInsetsMake(&lt;#CGFloat top#&gt;, &lt;#CGFloat left#&gt;, &lt;#CGFloat bottom#&gt;, &lt;#CGFloat right#&gt;));
-  &#125;];</code></pre>
-  }<br>  return &lt;#_collectionView#&gt;;<br>}<pre><code></code></pre>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/06/04/CodeSnippets%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/" data-id="ckem8kyp00000nn8ohemc522d" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2020/09/03/KVC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">KVC实现原理分析</a>
-          </li>
-        
-          <li>
-            <a href="/2020/09/02/hexo%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/">hexo使用说明</a>
-          </li>
-        
-          <li>
-            <a href="/2020/06/04/CodeSnippets%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/">CodeSnippets使用说明</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
+        <div style="text-align:center;">
+          <a class="post-readmore mdui-btn mdui-ripple mdui-btn-raised" href="/2020/09/03/KVC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">Read More</a>
+        </div>
       </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2020 dmalliosco<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
+    </article>
+
+    <article class="mdui-card mdui-m-b-5 mdui-hoverable">    
+      
+      
+        <div class="post-header"> 
+  <a class="post-header-title" href="/2020/09/02/hexo%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/">hexo使用说明</a>
+  <div class="post-header-meta">
+    <span>
+      <span class="iconfont icon-calendar"></span>
+      Posted on:&nbsp;2020-09-02
+    </span>
+    <span>
+      <span class="iconfont icon-calendar-check"></span>
+      Edited on:&nbsp;2020-09-03
+    </span>
+    <span>
+      <span class="iconfont icon-folder"></span>
+      In:&nbsp;
+    </span>
+    
   </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
+</div>   
     
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+      
+      
+  <div class="tag-line-space"></div>
 
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
+      
+      <div id="achieve-abstract" class="mdui-card-content mdui-p-x-4">
+        <div class="post-abstract mdui-typo ">
+          
+            <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or yo...
+          
+        </div>
+        
+        <div style="text-align:center;">
+          <a class="post-readmore mdui-btn mdui-ripple mdui-btn-raised" href="/2020/09/02/hexo%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/">Read More</a>
+        </div>
+      </div>
+    </article>
 
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
+    <article class="mdui-card mdui-m-b-5 mdui-hoverable">    
+      
+      
+        <div class="post-header"> 
+  <a class="post-header-title" href="/2020/06/04/CodeSnippets%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/">CodeSnippets使用说明</a>
+  <div class="post-header-meta">
+    <span>
+      <span class="iconfont icon-calendar"></span>
+      Posted on:&nbsp;2020-06-04
+    </span>
+    <span>
+      <span class="iconfont icon-calendar-check"></span>
+      Edited on:&nbsp;2020-09-03
+    </span>
+    <span>
+      <span class="iconfont icon-folder"></span>
+      In:&nbsp;
+    </span>
+    
   </div>
+</div>   
+    
+
+
+
+      
+      
+  <div class="tag-line-space"></div>
+
+      
+      <div id="achieve-abstract" class="mdui-card-content mdui-p-x-4">
+        <div class="post-abstract mdui-typo ">
+          
+            <h3 id="CodeSnippets"><a href="#CodeSnippets" class="headerlink" title="CodeSnippets"></a>CodeSnippets</h3><h3 id="使用方式："><a href="#使用方式：" class="headerlink" title="使用方式："></a>使用方式：</h3><ul>
+<li>第一种 前往文件夹：<br>前往文件夹：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~&#x2F;Library&#x2F;Developer&#x2F;Xcode&#x2F;UserData&#x2F;CodeSnippets</span><br></pre></td></tr></table></figure>
+          
+        </div>
+        
+        <div style="text-align:center;">
+          <a class="post-readmore mdui-btn mdui-ripple mdui-btn-raised" href="/2020/06/04/CodeSnippets%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/">Read More</a>
+        </div>
+      </div>
+    </article>
+
+
+
+  </main>
+  <footer id="footer" class="mdui-text-center mdui-m-t-5 mdui-p-b-2 mdui-p-t-4 mdui-color-theme">
+  <div class="mdui-container">
+    <div class="mdui-row">
+      
+        <a href="https://beian.miit.gov.cn" rel="noopener" target="_blank"></a>
+      
+      <span>
+        &copy; 2015 - 2020 
+        
+          <span style="color:#d9333f" class="iconfont icon-heart"></span>
+        
+        dmalliosco
+      </span>
+    </div>
+    <div class="mdui-row">
+      
+        <div class="mdui-col-xs-6 mdui-text-right">
+          <span>Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a></span>
+        </div>
+        <div class="mdui-col-xs-6 mdui-text-left">
+          <span>Theme: <a href="https://github.com/kb1000fx/Meadow" rel="noopener" target="_blank">Meadow</a></span>
+        </div>
+      
+    </div>
+    <div class="mdui-row">
+      
+        <div class="mdui-col-xs-6 mdui-text-right">
+          <span id="busuanzi_container_site_uv" style="display: none;"> <span class="iconfont icon-user"></span>Total Visitors <span id="busuanzi_value_site_uv"></span></span>
+        </div>
+        <div class="mdui-col-xs-6 mdui-text-left">
+          <span id="busuanzi_container_site_pv" style="display: none;"> <span class="iconfont icon-eye"></span>Total Views <span id="busuanzi_value_site_pv"></span></span>
+        </div>
+      
+    </div>
+ </div>
+</footer>
+  
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-teal" style="z-index:100;"><i class="iconfont icon-arrowup"></i></button>
+  
+  
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+    
+<script src="/js/mdui.min.v1.0.0.js"></script>
+
+
+
+
+<script src="/js/meadow.js"></script>
+
 </body>
-</html>
+</html >
