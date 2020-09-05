@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <script>if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode)) window.location.href="https://support.dmeng.net/upgrade-your-browser.html?referrer="+encodeURIComponent(window.location.href); </script>
+    
+    
+        <link rel="preload" crossorigin="crossorigin" href="/fonts/roboto/Roboto-Regular.woff2" as="font">
+        <link rel="preload" crossorigin="crossorigin" href="/fonts/roboto/Roboto-Bold.woff2" as="font">
+    
+    
+    
+        <link rel="shortcut icon" href="/icons/favicon.ico">
+    
+
+    
+    
+        
+<link rel="stylesheet" href="/css/mdui.min.v1.0.0.css">
+
+    
+    
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+    
+    
+
+    
+        <script data-ad-client="ca-" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+          
+
+
+    
+    
+    <title>
+        
+            RunLoop实现原理分析 | dmalliosco
+        
+    </title>
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body class="mdui-drawer-body-left mdui-appbar-with-toolbar mdui-theme-primary-teal mdui-theme-accent-blue">
+  
+  <header class="mdui-appbar mdui-appbar-fixed">
+  <div id="toolbar" class="mdui-toolbar mdui-color-theme">
+    <button class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="iconfont icon-menu"></i></button>
+    <a href="/" class="mdui-typo-headline">dmalliosco</a>
+    <a href="/" class="header-subtitle mdui-typo-headline">dmalldev</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <button class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: 'search'}"><i class="iconfont icon-search"></i></button>
+  </div>
+</header>
+
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字" onfocus="listenSearchFunc()">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer">
+    <div class="mdui-tab" mdui-tab>
+        <a href="#sidebar-tab1" id="sidebartab" class="mdui-ripple mdui-tab-active">站点概览</a>
+        <a href="#sidebar-tab2" id="sidebartab" class="mdui-ripple">关于</a>
+    </div>
+
+    
+    <div id="sidebar-tab1" class="mdui-p-a-2">
+        <div class="mdui-list">
+            
+                
+                <a href="/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-home"></i>
+                    </div>
+                    <div class="mdui-list-item-content">主页</div>
+                </a>
+            
+                
+                <a href="/tags/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-bookmark"></i>
+                    </div>
+                    <div class="mdui-list-item-content">标签</div>
+                </a>
+            
+                
+                <a href="/categories/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-folder"></i>
+                    </div>
+                    <div class="mdui-list-item-content">分类</div>
+                </a>
+            
+                
+                <a href="/archives/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-archive"></i>
+                    </div>
+                    <div class="mdui-list-item-content">归档</div>
+                </a>
+            
+                
+                <a href="/tools/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-tools"></i>
+                    </div>
+                    <div class="mdui-list-item-content">工具箱</div>
+                </a>
+            
+                
+                <a href="/about/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-user"></i>
+                    </div>
+                    <div class="mdui-list-item-content">关于</div>
+                </a>
+            
+            <div class="mdui-list-item mdui-ripple">
+                <div class="mdui-list-item-icon">
+                    <i class="iconfont icon-moon"></i>
+                </div>
+                <div class="mdui-list-item-content">夜间模式</div>
+                <label class="mdui-switch" id="darkmode">
+                  <input type="checkbox" id="nightmode_switch"/>
+                  <i class="mdui-switch-icon"></i>
+                </label>
+            </div>           
+        </div>
+    </div>
+
+    
+    <div id="sidebar-tab2" class="mdui-p-a-2">
+        <div class="sidebar-overview">
+            <div class="sidebar-avatar">
+                
+                    <img src="/icons/avatar.gif"/>
+                
+            </div>
+            <div class="sidebar-author-name">dmalliosco</div>
+            <div class="sidebar-description">dmalldev</div>
+        </div>
+        <div class="sidebar-links">
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-mail"></i></span>
+                    <a href="mailto:xxx@xxx.com" class="mdui-chip-title">E-Mail</a>
+                </div>
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-github"></i></span>
+                    <a target="_blank" rel="noopener" href="https://your.url" class="mdui-chip-title">GitHub</a>
+                </div>
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-steam"></i></span>
+                    <a target="_blank" rel="noopener" href="https://your.url" class="mdui-chip-title">Steam</a>
+                </div>
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-weibo"></i></span>
+                    <a target="_blank" rel="noopener" href="https://your.url" class="mdui-chip-title">Weibo</a>
+                </div>
+            
+        </div>
+        <ul class="mdui-list" mdui-collapse="{accordion: true}">
+            <li class="mdui-collapse-item">
+                <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-link"></i>
+                    </div>
+                    <div class="mdui-list-item-content">友情链接</div>
+                    <div class="mdui-collapse-item-arrow">
+                        <i class="mdui-list-item-icon iconfont icon-angle-down"></i>
+                    </div>
+                </div>
+                <ul id="linksList" class="mdui-collapse-item-body mdui-list mdui-list-dense">
+                    
+                        <a target="_blank" rel="noopener" href="https://garybear.cn/hexo-theme-meadow/" class="mdui-list-item mdui-ripple">
+                            Meadow说明文档
+                        </a>
+                    
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="mdui-divider"></div>
+    
+    
+</aside>
+  
+  <main id="main-contain" class="mdui-container mdui-m-t-5">
+    <article id="article" class="mdui-card mdui-p-b-2 mdui-m-b-5">
+  <header class="mdui-card-media">
+    
+    
+      <div class="post-header"> 
+  <a class="post-header-title" href="/2020/09/05/Runloop%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">RunLoop实现原理分析</a>
+  <div class="post-header-meta">
+    <span>
+      <span class="iconfont icon-calendar"></span>
+      发布于:&nbsp;2020-09-05
+    </span>
+    <span>
+      <span class="iconfont icon-calendar-check"></span>
+      更新于:&nbsp;2020-09-05
+    </span>
+    <span>
+      <span class="iconfont icon-folder"></span>
+      分类于:&nbsp;
+    </span>
+    
+      <span>
+        <span class="iconfont icon-eye"></span>
+        阅读次数:&nbsp;
+        <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+      </span>
+    
+  </div>
+</div>   
+    
+
+
+
+    
+    
+    <div class="mdui-card-menu">
+    
+      <button class="mdui-btn mdui-btn-icon mdui-text-color-teal" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="iconfont icon-share"></i></button>
+      <ul class="mdui-menu" id="share_menu">
+        <li class="mdui-menu-item">
+          <a href="http://service.weibo.com/share/share.php?appkey=&title=RunLoop实现原理分析&url=http://example.com/2020/09/05/Runloop%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/&pic=http://example.com/null&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://twitter.com/intent/tweet?text=RunLoop实现原理分析&url=http://example.com/2020/09/05/Runloop%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/&via=dmalliosco" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=http://example.com/2020/09/05/Runloop%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://plus.google.com/share?url=http://example.com/2020/09/05/Runloop%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://example.com/2020/09/05/Runloop%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/&title=RunLoop实现原理分析" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="http://connect.qq.com/widget/shareqq/index.html?site=dmalliosco&title=RunLoop实现原理分析&summary=dmalldev&pics=http://example.com/null&url=http://example.com/2020/09/05/Runloop%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://telegram.me/share/url?url=http://example.com/2020/09/05/Runloop%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/&text=RunLoop实现原理分析" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+        </li>
+      </ul>
+    
+  </div>
+  </header>
+  
+  
+  
+  
+  
+  <div class="mdui-card-content mdui-typo mdui-p-x-4">
+    <h1 id="Runloop"><a href="#Runloop" class="headerlink" title="Runloop"></a>Runloop</h1><h2 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h2><p>RunLoop是通过内部维护的事件循环(Event Loop)来对事件/消息进行管理的一个对象。App主线程不退出就是用到了Event Loop。</p>
+<ul>
+<li>保持程序持续运行</li>
+<li>监听输入源，进行调度处理app各种事件（touch/timer/performSelector/异步回调）</li>
+<li>节省cpu资源</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gietsitlo3j31l60t41kx.jpg" alt="截屏2020-09-03 上午9.15.01"></p>
+<p>RunLoop 会接收两种类型的输入源：一种是来自另一个线程或者来自不同应用的异步消息；另一种是来自预订时间或者重复间隔的同步事件。</p>
+<blockquote>
+<p>macOS/iOS系统中提供了两个对象：<strong>NSRunLoop</strong>和<strong>CFRunLoopRef</strong>。</p>
+<ul>
+<li><strong>CFRunLoopRef</strong>在<strong>CoreFoundation</strong>框架中，提供了纯C函数的API，并且所有API都是<strong>线程安全</strong>的。</li>
+<li><strong>NSRunLoop</strong>则是基于<strong>CFRunLoopRef</strong>的封装，提供面向对象的API，但是这些API是<strong>非线程安全</strong>的。</li>
+</ul>
+</blockquote>
+<h4 id="和线程关系"><a href="#和线程关系" class="headerlink" title="和线程关系"></a>和线程关系</h4><ul>
+<li><p>线程和RunLoop是一一对应的,其映射关系是保存在一个全局的 Dictionary 里</p>
+</li>
+<li><p>自己创建的线程默认是没有开启RunLoop的</p>
+</li>
+<li><p>UIApplicationMain内部默认开启了主线程的RunLoop，不断地接收处理消息以及等待休眠，所以运行程序之后会保持持续运行状态。</p>
+<p>线程和runloop映射关系关键代码如下（<a target="_blank" rel="noopener" href="https://opensource.apple.com/tarballs/CF/">Runloop源码</a>）</p>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CFMutableDictionaryRef dict = CFDictionaryCreateMutable(kCFAllocatorSystemDefault, <span class="number">0</span>, <span class="literal">NULL</span>, &amp;kCFTypeDictionaryValueCallBacks);</span><br><span class="line">    CFRunLoopRef mainLoop = __CFRunLoopCreate(pthread_main_thread_np());</span><br><span class="line">    <span class="comment">// 绑定</span></span><br><span class="line">    CFDictionarySetValue(dict, pthreadPointer(pthread_main_thread_np()), mainLoop);</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="二、数据结构"><a href="#二、数据结构" class="headerlink" title="二、数据结构"></a>二、数据结构</h2><p>内部结构如下： </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">CFRunLoop</span> &#123;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">pthread_t</span> _pthread;                  <span class="comment">//持有的线程对象             </span></span><br><span class="line">    CFMutableSetRef  _commonModes;       <span class="comment">//模式名称字符串集合</span></span><br><span class="line">    CFMutableSetRef  _commonModeItems;   <span class="comment">//由Observer,Timer,Source集合构成</span></span><br><span class="line">    CFRunLoopModeRef _currentMode;</span><br><span class="line">    CFMutableSetRef  _modes;             <span class="comment">//多个运行模式集合</span></span><br><span class="line">		...</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">CFRunLoopMode</span> &#123;</span></span><br><span class="line">    ...</span><br><span class="line">    CFStringRef _name;                   <span class="comment">//// Mode Name, 例如 @&quot;kCFRunLoopDefaultMode&quot;</span></span><br><span class="line">    CFMutableSetRef _sources0;           <span class="comment">//处理APP内部事件，APP自己负责，管理触发</span></span><br><span class="line">    CFMutableSetRef _sources1;           <span class="comment">//由runloop和内核管理，包含一个  mach_port（处理端口类的消息）和一个回调（函数指针），被用于通过内核和其他线程互发消息，这种source能主动唤醒runloop的线程</span></span><br><span class="line">    CFMutableArrayRef _observers;</span><br><span class="line">    CFMutableArrayRef _timers; </span><br><span class="line">    ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><strong>CommonModes</strong>：一个<code>Mode</code>可以将自己标记为<code>Common</code>属性（通过将其<code>ModeName</code>添加到<code>RunLoop</code>的<code>commonModes</code>中）。每当<code>RunLoop</code>的内容发生变化时，<code>RunLoop</code>都会自动将 <code>_commonModeItems</code>里的<code>Source/Observer/Timer</code>同步到具有<code>Common</code>标记的所有<code>Mode</code>里。</p>
+<blockquote>
+<p>主线程的<code>RunLoop</code>里有两个公开预置的<code>Mode</code>,可以用这两个<code>Mode Name</code>来操作其对应的<code>Mode</code>：</p>
+<ul>
+<li><code>kCFRunLoopDefaultMode</code></li>
+<li><code>UITrackingRunLoopMode</code></li>
+</ul>
+<p>这两个<code>Mode</code>都已经被标记为<code>Common</code>属性。<code>DefaultMode</code>是App平时所处的状态，<code>TrackingRunLoopMode</code>是追踪ScrollView滑动时的状态。当你创建一个<code>Timer</code>并加到<code>DefaultMode</code>时，<code>Timer</code>会得到重复回调，但此时滑动一个TableView时，<code>RunLoop</code>会将<code>mode</code>切换为<code>TrackingRunLoopMode</code>，这时<code>Timer</code>就不会被回调，并且也不会影响到滑动操作。</p>
+<p>有时你需要一个<code>Timer</code>，在两个<code>Mode</code>中都能得到回调，一种办法就是将这个<code>Timer</code>分别加入这两个<code>Mode</code>。还有一种方式，就是将<code>Timer</code>加入到顶层的<code>RunLoop</code>的<code>commonModeItems</code>中。<code>commonModeItems</code>被<code>RunLoop</code>自动更新到所有具有<code>Common</code>属性的<code>Mode</code>里去。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="CFRunLoopMode-CFRunLoopModeRef"><a href="#CFRunLoopMode-CFRunLoopModeRef" class="headerlink" title="CFRunLoopMode(CFRunLoopModeRef)"></a>CFRunLoopMode(CFRunLoopModeRef)</h4><p>总共是有五种<code>CFRunLoopMode</code>:</p>
+<ul>
+<li><code>kCFRunLoopDefaultMode</code>：默认模式，主线程是在这个运行模式下运行</li>
+<li><code>UITrackingRunLoopMode</code>：跟踪用户交互事件（用于 ScrollView 追踪触摸滑动，保证界面滑动时不受其他Mode影响）</li>
+<li><code>UIInitializationRunLoopMode</code>：在刚启动App时第进入的第一个 Mode，启动完成后就不再使用</li>
+<li><code>GSEventReceiveRunLoopMode</code>：接受系统内部事件，通常用不到</li>
+<li><code>kCFRunLoopCommonModes</code>：伪模式，不是一种真正的运行模式，是同步Source/Timer/Observer到多个Mode中的一种解决方案</li>
+</ul>
+<p>一个RunLoop 对象中可能包含多个Mode，每次调用 RunLoop 的主函数时，只能指定其中一个 Mode(CurrentMode)。切换 Mode需要退出loop重新指定一个 Mode进入 。主要是为了分隔开不同的 Source、Timer、Observer，让它们之间互不影响。</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gietsxahcdj31gk0s4dj9.jpg" alt="截屏2020-09-03 上午9.15.40"></p>
+<h5 id="CFRunLoopSource"><a href="#CFRunLoopSource" class="headerlink" title="CFRunLoopSource"></a>CFRunLoopSource</h5><p>分为source0和source1两种</p>
+<ul>
+<li><p>sources0 :用户触发的事件。不能主动触发事件，需要手动唤醒线程，将当前线程从内核态切换到用户态。</p>
+<p>使用时，需要先调用<code>CFRunLoopSourceSignal(source)</code>，将这个<code>Source</code>标记为待处理，然后手动调用<code>CFRunLoopWakeUp(runloop)</code>来唤醒<code>RunLoop</code>，让其处理这个事件。</p>
+</li>
+<li><p>sources1 :基于port的，包含一个 mach_port 和一个回调，可监听系统端口和通过内核和其他线程发送的消息，能主动唤醒RunLoop，接收分发系统事件</p>
+</li>
+</ul>
+<h5 id="CFRunLoopTimer"><a href="#CFRunLoopTimer" class="headerlink" title="CFRunLoopTimer"></a>CFRunLoopTimer</h5><p>在预设的时间点唤醒RunLoop执行回调。基于RunLoop的，因此它不是实时的.</p>
+<blockquote>
+<p>CADisplayLink 是一个用于显示的定时器， 它可以让用户程序的显示与屏幕的硬件刷新保持同步，iOS系统中正常的屏幕刷新率为60Hz（60次每秒）。</p>
+<p>FPS监测就是利用屏幕刷新的频率调用CADisplayLink指定的selector，就是说每次屏幕刷新的时候就调用selector，那么只要在selector方法里面统计每秒这个方法执行的次数，通过次数/时间就可以得出当前屏幕的刷新率了。</p>
+</blockquote>
+<h5 id="CFRunLoopObserver"><a href="#CFRunLoopObserver" class="headerlink" title="CFRunLoopObserver"></a>CFRunLoopObserver</h5><p>包含了一个回调(函数指针)，当<code>RunLoop</code>的状态发生变化时，观察者就能通过回调接受到这个变化。</p>
+<p>可以观测的时间点有以下几个：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Run Loop Observer Activities */</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">CF_OPTIONS</span><span class="params">(CFOptionFlags, CFRunLoopActivity)</span> </span>&#123;</span><br><span class="line">    kCFRunLoopEntry = (<span class="number">1U</span>L &lt;&lt; <span class="number">0</span>),         <span class="comment">//RunLoop准备启动，即将进入loop</span></span><br><span class="line">    kCFRunLoopBeforeTimers = (<span class="number">1U</span>L &lt;&lt; <span class="number">1</span>),  <span class="comment">//触发 Timer 回调，RunLoop将要处理一些Timer相关事件</span></span><br><span class="line">    kCFRunLoopBeforeSources = (<span class="number">1U</span>L &lt;&lt; <span class="number">2</span>), <span class="comment">//触发 Source0 回调，RunLoop将要处理一些Source事件</span></span><br><span class="line">    kCFRunLoopBeforeWaiting = (<span class="number">1U</span>L &lt;&lt; <span class="number">5</span>), <span class="comment">//等待 mach_port 消息，RunLoop将要进行休眠状态,即将由用户态切换到内核态</span></span><br><span class="line">    kCFRunLoopAfterWaiting = (<span class="number">1U</span>L &lt;&lt; <span class="number">6</span>),  <span class="comment">//接收 mach_port 消息，RunLoop被唤醒，即从内核态切换到用户态</span></span><br><span class="line">    kCFRunLoopExit = (<span class="number">1U</span>L &lt;&lt; <span class="number">7</span>),          <span class="comment">//RunLoop退出</span></span><br><span class="line">    kCFRunLoopAllActivities = <span class="number">0x0FFFFFFF</span>U <span class="comment">//监听所有状态</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>上面的<code>Source/Timer/Observer</code>被统称为 <strong>mode item</strong>，一个<code>item</code>可以被同时加入多个<code>mode</code>。如果一个<code>mode</code>中一个<code>item</code>都没有，则<code>RunLoop</code>会直接退出，不进入<code>Loop</code>。</p>
+<p><code>CFRunLoop</code>对外暴露的管理 Mode 接口只有下面2个:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CFRunLoopAddCommonMode(CFRunLoopRef runloop, CFStringRef modeName);</span><br><span class="line">CFRunLoopRunInMode(CFStringRef modeName, ...);</span><br></pre></td></tr></table></figure>
+
+<p>Mode 暴露的管理 mode item 的接口有下面几个：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CFRunLoopAddSource(CFRunLoopRef rl, CFRunLoopSourceRef source, CFStringRef modeName);</span><br><span class="line">CFRunLoopAddObserver(CFRunLoopRef rl, CFRunLoopObserverRef observer, CFStringRef modeName);</span><br><span class="line"></span><br><span class="line">CFRunLoopAddTimer(CFRunLoopRef rl, CFRunLoopTimerRef timer, CFStringRef mode);</span><br><span class="line">CFRunLoopRemoveSource(CFRunLoopRef rl, CFRunLoopSourceRef source, CFStringRef modeName);</span><br><span class="line"></span><br><span class="line">CFRunLoopRemoveObserver(CFRunLoopRef rl, CFRunLoopObserverRef observer, CFStringRef modeName);</span><br><span class="line">CFRunLoopRemoveTimer(CFRunLoopRef rl, CFRunLoopTimerRef timer, CFStringRef mode);</span><br></pre></td></tr></table></figure>
+
+<p><code>mode</code>并不像<code>Source/Timer/Observer</code>一样有 Remove 方法，所以<code>mode</code>只能增加，不能减少。你只能通过 <code>modeName</code> 来操作内部的 mode，当你传入一个新的<code>modeName</code> 但 RunLoop 内部没有对应 mode 时，RunLoop会自动帮你创建对应的 <code>CFRunLoopModeRef</code>。</p>
+<h3 id="三、内部实现"><a href="#三、内部实现" class="headerlink" title="三、内部实现"></a>三、内部实现</h3><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1giettavhy8j30xc0poahf.jpg" alt="3344530-0f941859d3fbd597"></p>
+<p>大致逻辑为：<br>1、通知observers RunLoop 即将启动。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// **1.通知Observers：RunLoop即将进入loop</span></span><br><span class="line">    <span class="keyword">if</span> (currentMode-&gt;_observerMask &amp; kCFRunLoopEntry ) __CFRunLoopDoObservers(rl, currentMode, kCFRunLoopEntry);</span><br><span class="line">    <span class="comment">//进入loop循环</span></span><br><span class="line">    result = __CFRunLoopRun(rl, currentMode, seconds, returnAfterSourceHandled, previousMode);</span><br></pre></td></tr></table></figure>
+
+<p>开启一个 do while 来保活线程.</p>
+<p>2、通知观察者即将要处理Timer事件。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通知 Observers RunLoop 会触发 Timer 回调</span></span><br><span class="line"><span class="keyword">if</span> (currentMode-&gt;_observerMask &amp; kCFRunLoopBeforeTimers)</span><br><span class="line">    __CFRunLoopDoObservers(runloop, currentMode, kCFRunLoopBeforeTimers);</span><br></pre></td></tr></table></figure>
+
+<p>3、通知观察者即将要处理source0事件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 通知 Observers RunLoop 会触发 Source0 回调</span><br><span class="line">if (currentMode-&gt;_observerMask &amp; kCFRunLoopBeforeSources)</span><br><span class="line">    __CFRunLoopDoObservers(runloop, currentMode, kCFRunLoopBeforeSources);</span><br><span class="line">    &#x2F;&#x2F; 执行 block</span><br><span class="line">__CFRunLoopDoBlocks(runloop, currentMode);</span><br></pre></td></tr></table></figure>
+
+<p>4、处理source0事件。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// RunLoop触发Source0(非port)回调</span></span><br><span class="line">        Boolean sourceHandledThisLoop = __CFRunLoopDoSources0(rl, rlm, stopAfterHandle);</span><br></pre></td></tr></table></figure>
+
+<p>5、如果基于端口的源(Source1)准备好并处于等待状态，进入步骤9。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (__CFRunLoopServiceMachPort(dispatchPort, &amp;msg,       <span class="keyword">sizeof</span>(msg_buffer), &amp;livePort, <span class="number">0</span>, &amp;voucherState, <span class="literal">NULL</span>)) &#123;</span><br><span class="line">                <span class="keyword">goto</span> handle_msg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>6、通知观察者线程即将进入休眠状态。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Boolean poll = sourceHandledThisLoop || (<span class="number">0U</span>LL == timeout_context-&gt;termTSR);</span><br><span class="line"><span class="keyword">if</span> (!poll &amp;&amp; (currentMode-&gt;_observerMask &amp; kCFRunLoopBeforeWaiting)) &#123;</span><br><span class="line">    __CFRunLoopDoObservers(runloop, currentMode, kCFRunLoopBeforeWaiting);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>7、将线程置于休眠状态，由用户态切换到内核态，直到下面的任一事件发生才唤醒线程。</p>
+<ul>
+<li><p>一个基于 port 的Source1 的事件。</p>
+</li>
+<li><p>Timer 时间到了。</p>
+</li>
+<li><p>RunLoop超时。</p>
+</li>
+<li><p>被其他调用者手动唤醒。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    __CFRunLoopServiceMachPort(waitSet, &amp;msg, <span class="keyword">sizeof</span>(msg_buffer), &amp;livePort) &#123;</span><br><span class="line">        <span class="comment">// 基于 port 的 Source 事件、调用者唤醒</span></span><br><span class="line">        <span class="keyword">if</span> (modeQueuePort != MACH_PORT_NULL &amp;&amp; livePort == modeQueuePort) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// Timer 时间到、RunLoop 超时</span></span><br><span class="line">        <span class="keyword">if</span> (currentMode-&gt;_timerFired) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">&#125; <span class="keyword">while</span> (<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>8、通知观察者线程将被唤醒。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!poll &amp;&amp; (currentMode-&gt;_observerMask &amp; kCFRunLoopAfterWaiting))</span><br><span class="line">    __CFRunLoopDoObservers(runloop, currentMode, kCFRunLoopAfterWaiting);</span><br></pre></td></tr></table></figure>
+
+<p>9、处理唤醒时收到的事件。</p>
+<ul>
+<li><p>如果用户定义的定时器启动，处理定时器事件并重启RunLoop。进入步骤2。</p>
+</li>
+<li><p>如果输入源启动，传递相应的消息。</p>
+</li>
+<li><p>如果RunLoop被显示唤醒而且时间还没超时，重启RunLoop。进入步骤2</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">handle_msg:</span><br><span class="line"><span class="comment">// 如果 Timer 时间到，就触发 Timer 回调</span></span><br><span class="line"><span class="keyword">if</span> (msg-is-timer) &#123;</span><br><span class="line">    __CFRunLoopDoTimers(runloop, currentMode, mach_absolute_time())</span><br><span class="line">&#125; </span><br><span class="line"><span class="comment">// 如果 dispatch 就执行 block</span></span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (msg_is_dispatch) &#123;</span><br><span class="line">    __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__(msg);</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="comment">// Source1 事件的话，就处理这个事件</span></span><br><span class="line"><span class="keyword">else</span> &#123;</span><br><span class="line">    CFRunLoopSourceRef source1 = __CFRunLoopModeFindSourceForMachPort(runloop, currentMode, livePort);</span><br><span class="line">    sourceHandledThisLoop = __CFRunLoopDoSource1(runloop, currentMode, source1, msg);</span><br><span class="line">    <span class="keyword">if</span> (sourceHandledThisLoop) &#123;</span><br><span class="line">        mach_msg(reply, MACH_SEND_MSG, reply);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>判断当前RunLoop状态值，是否停止或继续下一个loop。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">if (sourceHandledThisLoop &amp;&amp; stopAfterHandle) &#123;</span><br><span class="line">     &#x2F;&#x2F; 事件已处理完</span><br><span class="line">    retVal &#x3D; kCFRunLoopRunHandledSource;</span><br><span class="line">&#125; else if (timeout) &#123;</span><br><span class="line">    &#x2F;&#x2F; 超时</span><br><span class="line">    retVal &#x3D; kCFRunLoopRunTimedOut;</span><br><span class="line">&#125; else if (__CFRunLoopIsStopped(runloop)) &#123;</span><br><span class="line">    &#x2F;&#x2F; 外部调用者强制停止</span><br><span class="line">    retVal &#x3D; kCFRunLoopRunStopped;</span><br><span class="line">&#125; else if (__CFRunLoopModeIsEmpty(runloop, currentMode)) &#123;</span><br><span class="line">    &#x2F;&#x2F; mode 为空，RunLoop 结束</span><br><span class="line">    retVal &#x3D; kCFRunLoopRunFinished;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>10、通知观察者RunLoop结束</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// **10.通知Observers：RunLoop即将退出loop</span></span><br><span class="line">    <span class="keyword">if</span> (currentMode-&gt;_observerMask &amp; kCFRunLoopExit ) __CFRunLoopDoObservers(rl, currentMode, kCFRunLoopExit);</span><br><span class="line"></span><br><span class="line">        __CFRunLoopModeUnlock(currentMode);</span><br><span class="line">        __CFRunLoopPopPerRunData(rl, previousPerRun);</span><br><span class="line">    rl-&gt;_currentMode = previousMode;</span><br><span class="line">    __CFRunLoopUnlock(rl);</span><br></pre></td></tr></table></figure>
+
+<p>整个流程如下图：</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1giettlm3udj31hc0u00x8.jpg" alt="5f51c5e05085badb689f01b1e63e1c7d"></p>
+<h2 id="四、应用"><a href="#四、应用" class="headerlink" title="四、应用"></a>四、应用</h2><h4 id="监测卡顿"><a href="#监测卡顿" class="headerlink" title="监测卡顿"></a>监测卡顿</h4><p>导致卡顿问题主要几个原因：</p>
+<ul>
+<li>复杂 UI 、图文混排的绘制量过大；</li>
+<li>在主线程上做网络同步请求；</li>
+<li>在主线程做大量的 IO 操作；</li>
+<li>运算量过大，CPU 持续高占用；</li>
+<li>死锁和主子线程抢锁。</li>
+</ul>
+<p>线程的消息事件是依赖于 NSRunLoop 的，所以从 NSRunLoop 入手，就可以知道主线程上都调用了哪些方法。我们通过监听 NSRunLoop 的6种状态，就能够发现调用方法是否执行时间过长，从而判断出是否会出现卡顿。</p>
+<p>如果 RunLoop 的线程，进入睡眠前方法的执行时间过长而导致无法进入睡眠，或者线程唤醒后接收消息时间过长而无法进入下一步的话，就可以认为是线程受阻了。如果这个线程是主线程的话，表现出来的就是出现了卡顿。</p>
+<p>所以，如果我们要利用 RunLoop 原理来监控卡顿的话，就是要关注这两个阶段。RunLoop 在进入睡眠之前和唤醒后的两个 loop 状态定义的值，分别是 <code>kCFRunLoopBeforeSources </code>（触发 Source0 回调，RunLoop将要处理一些Source事件）和 <code>kCFRunLoopAfterWaiting</code> （接收 mach_port 消息，RunLoop被唤醒，即从内核态切换到用户态），也就是要触发 Source0 回调和接收 mach_port 消息两个状态。</p>
+<blockquote>
+<p>监测FPS也可以粗略监测卡顿，FPS 是一秒显示的帧数，也就是一秒内画面变化数量。</p>
+<p>人眼在24帧就感觉还是很流畅，感受不到卡顿，所以通过FPS监控卡顿不太合适。</p>
+</blockquote>
+<h4 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h4><p>创建一个观察者 runLoopObserver 添加到主线程 RunLoop 的 common 模式下观察。</p>
+<p>然后，创建一个持续的子线程专门用来监控主线程的 RunLoop 状态。</p>
+<p>一旦发现进入睡眠前的 kCFRunLoopBeforeSources 状态，或者唤醒后的状态 kCFRunLoopAfterWaiting，在设置的时间阈值内一直没有变化，即可判定为卡顿。接下来，我们就可以打印堆栈的信息。</p>
+<blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">long</span> semaphoreWait = dispatch_semaphore_wait(dispatchSemaphore, dispatch_time(DISPATCH_TIME_NOW, <span class="number">3</span> * NSEC_PER_SEC));</span><br></pre></td></tr></table></figure>
+
+<p>NSEC_PER_SEC，代表的是触发卡顿的时间阈值，单位是秒,这里设置成3s。</p>
+<p>触发卡顿的时间阈值根据 WatchDog 机制来设置.</p>
+<p>WatchDog 在不同状态下设置的不同时间，如下所示：启动（Launch）：20s；恢复（Resume）：10s；挂起（Suspend）：10s；退出（Quit）：6s；后台（Background）：3min（在 iOS 7 之前，每次申请 10min； 之后改为每次申请 3min，可连续申请，最多申请到 10min）。</p>
+<p>通过 WatchDog 设置的时间，可以把启动的阈值设置为 10 秒，其他状态则都默认设置为 3 秒。总的原则就是，要小于 WatchDog 的限制时间。这个阈值也不用小得太多，原则就是要优先解决用户感知最明显的体验问题。</p>
+</blockquote>
+<h2 id="五、底层实现"><a href="#五、底层实现" class="headerlink" title="五、底层实现"></a>五、底层实现</h2><p>RunLoop在没有消息处理时，休眠已避免资源占用，由用户态切换到内核态(CPU-内核态和用户态)；当有消息需要处理时，立刻被唤醒，由内核态切换到用户态。</p>
+<p><code>RunLoop</code>的核心是基于<code>mach port</code>的，其进入休眠时调用的函数是<code>mach_msg()</code>。</p>
+<p>内核态：系统中既有操作系统的程序，也由普通用户的程序。为了安全和稳定性操作系统的程序不能随便访问,这就是内核态,内核态可以使用所有的硬件资源<br>用户态：不能直接使用系统资源，也不能改变CPU的工作状态，并且只能访问这个用户程序自己的存储空间</p>
+<p>RunLoop这个机制是依靠系统内核来完成。</p>
+<p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gietu0neptj30rw0i2acx.jpg" alt="1782258-e344f28cdf417b49"></p>
+<blockquote>
+<p>深入了解可以参考如下文章：</p>
+<p><a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=http://www.programmer.com.cn/8121/">Mac OS X 背后的故事（三）Mach 之父 Avie Tevanian</a></p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000002400329">Mach</a></p>
+</blockquote>
+<h2 id="六、文章参考"><a href="#六、文章参考" class="headerlink" title="六、文章参考"></a>六、文章参考</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.ibireme.com/2015/05/18/runloop/">深入理解RunLoop</a></p>
+</blockquote>
+<h2 id="Written-By-白迎春"><a href="#Written-By-白迎春" class="headerlink" title="Written By 白迎春"></a>Written By 白迎春</h2>
+  </div>
+  <!--文末结束语-->
+  
+    <div style="text-align:center;color: #ccc;font-size:24px;"> --- 本文结束 <i class="iconfont icon-heartbeat" style="font-size:24px;"></i> The End --- </div>
+  
+  <!--页脚广告-->
+  
+  <div class="mdui-divider"></div>
+  
+  <nav>
+    
+    
+      <a rel="next" class="post-nav-item mdui-float-right" href="/2020/09/03/KVC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
+        <span>KVC实现原理分析</span>
+        <i class="iconfont icon-angle-right"></i>
+      </a>
+    
+  </nav>
+</article>
+
+
+
+
+  <div class="toc-button"  style="z-index: 100;">
+    <button class="mdui-fab mdui-ripple mdui-color-teal" mdui-menu="{target: '#toc'}"><i class="iconfont icon-list"></i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item">
+        <a href="/2020/09/05/Runloop%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/" id="toc-header" class="mdui-ripple">文章目录</a>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Runloop"><span class="toc-number">1.</span> <span class="toc-text">Runloop</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A6%82%E5%BF%B5"><span class="toc-number">1.1.</span> <span class="toc-text">一、概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%92%8C%E7%BA%BF%E7%A8%8B%E5%85%B3%E7%B3%BB"><span class="toc-number">1.1.0.1.</span> <span class="toc-text">和线程关系</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.</span> <span class="toc-text">二、数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CFRunLoopMode-CFRunLoopModeRef"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">CFRunLoopMode(CFRunLoopModeRef)</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#CFRunLoopSource"><span class="toc-number">1.2.0.1.1.</span> <span class="toc-text">CFRunLoopSource</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#CFRunLoopTimer"><span class="toc-number">1.2.0.1.2.</span> <span class="toc-text">CFRunLoopTimer</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#CFRunLoopObserver"><span class="toc-number">1.2.0.1.3.</span> <span class="toc-text">CFRunLoopObserver</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%86%85%E9%83%A8%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.1.</span> <span class="toc-text">三、内部实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%BA%94%E7%94%A8"><span class="toc-number">1.3.</span> <span class="toc-text">四、应用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%91%E6%B5%8B%E5%8D%A1%E9%A1%BF"><span class="toc-number">1.3.0.1.</span> <span class="toc-text">监测卡顿</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.3.0.2.</span> <span class="toc-text">步骤</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%BA%95%E5%B1%82%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.4.</span> <span class="toc-text">五、底层实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%96%87%E7%AB%A0%E5%8F%82%E8%80%83"><span class="toc-number">1.5.</span> <span class="toc-text">六、文章参考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Written-By-%E7%99%BD%E8%BF%8E%E6%98%A5"><span class="toc-number">1.6.</span> <span class="toc-text">Written By 白迎春</span></a></li></ol></li></ol>
+      </li>
+    </ul>
+  </div>
+
+
+
+    <div id="comment" class="mdui-card mdui-p-a-2 mdui-m-b-5">
+      <div class="mdui-tab" mdui-tab>
+        
+          <a href="#comment-tab0" class="mdui-ripple">gitalk</a>
+        
+          <a href="#comment-tab1" class="mdui-ripple">livere</a>
+        
+      </div>
+      
+        <div id="comment-tab0" class="mdui-p-a-2">
+          <div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+    clientID: '',
+    clientSecret: '',
+    repo: '',
+    owner: '',
+    admin: [''],
+    id:  md5(location.pathname) ,
+    distractionFreeMode: 'true',
+  });
+  gitalk.render('gitalk-container');
+</script>
+        </div>
+      
+        <div id="comment-tab1" class="mdui-p-a-2">
+          <div id="lv-container" data-id="city" data-uid="">
+  <script type="text/javascript">
+    (function (d, s) {
+      var j, e = d.getElementsByTagName(s)[0];
+      if (typeof LivereTower === 'function') { return; }
+      j = d.createElement(s);
+      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+      j.async = true;
+      e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+  </script>
+  <noscript>Please enable JavaScript to view the comments powered by LiveRe.</noscript>
+</div>
+        </div>
+      
+    </div>
+
+  </main>
+  <footer id="footer" class="mdui-text-center mdui-m-t-5 mdui-p-b-2 mdui-p-t-4 mdui-color-theme">
+  <div class="mdui-container">
+    <div class="mdui-row">
+      
+        <a href="https://beian.miit.gov.cn" rel="noopener" target="_blank"></a>
+      
+      <span>
+        &copy; 2015 - 2020 
+        
+          <span style="color:#d9333f" class="iconfont icon-heart"></span>
+        
+        dmalliosco
+      </span>
+    </div>
+    <div class="mdui-row">
+      
+        <div class="mdui-col-xs-6 mdui-text-right">
+          <span>Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a></span>
+        </div>
+        <div class="mdui-col-xs-6 mdui-text-left">
+          <span>Theme: <a href="https://github.com/kb1000fx/Meadow" rel="noopener" target="_blank">Meadow</a></span>
+        </div>
+      
+    </div>
+    <div class="mdui-row">
+      
+        <div class="mdui-col-xs-6 mdui-text-right">
+          <span id="busuanzi_container_site_uv" style="display: none;"> <span class="iconfont icon-user"></span>总访客量 <span id="busuanzi_value_site_uv"></span></span>
+        </div>
+        <div class="mdui-col-xs-6 mdui-text-left">
+          <span id="busuanzi_container_site_pv" style="display: none;"> <span class="iconfont icon-eye"></span>总访问量 <span id="busuanzi_value_site_pv"></span></span>
+        </div>
+      
+    </div>
+ </div>
+</footer>
+  
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-teal" style="z-index:100;"><i class="iconfont icon-arrowup"></i></button>
+  
+  
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@8.4.8/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({
+        startOnLoad: true,
+        theme: "default"
+    });</script>
+
+
+
+
+    
+<script src="/js/mdui.min.v1.0.0.js"></script>
+
+
+
+
+<script src="/js/meadow.js"></script>
+
+</body>
+</html >
