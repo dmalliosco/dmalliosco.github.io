@@ -283,6 +283,12 @@
 </li>
 </ul>
 ]]></content>
+      <categories>
+        <category>效率工具</category>
+      </categories>
+      <tags>
+        <tag>实用工具</tag>
+      </tags>
   </entry>
   <entry>
     <title>KVC实现原理分析</title>
@@ -330,6 +336,12 @@
 </ul>
 <h3 id="JsonModel中的使用"><a href="#JsonModel中的使用" class="headerlink" title="JsonModel中的使用"></a>JsonModel中的使用</h3><p>主要是通过KVC进行赋值，例如在赋值的时候，循环遍历model中每一个解析出来的property结构，从dic中拿出对应的value，进行一系列的判断。如果value可用，就进行赋值。如果对应的property是一个jsonmodel的时候，就递归先将子model进行整理解析。如果包含protocol字段，表明是一个array或者dictionary。然后将这个protocol字段的对象解析。</p>
 ]]></content>
+      <categories>
+        <category>技术分享</category>
+      </categories>
+      <tags>
+        <tag>源码分析</tag>
+      </tags>
   </entry>
   <entry>
     <title>hexo使用说明</title>
@@ -524,5 +536,11 @@
 <p><a href="https://blog.ibireme.com/2015/05/18/runloop/">深入理解RunLoop</a></p>
 </blockquote>
 <h2 id="Written-By-白迎春"><a href="#Written-By-白迎春" class="headerlink" title="Written By 白迎春"></a>Written By 白迎春</h2>]]></content>
+      <categories>
+        <category>技术分享</category>
+      </categories>
+      <tags>
+        <tag>源码分析</tag>
+      </tags>
   </entry>
 </search>
