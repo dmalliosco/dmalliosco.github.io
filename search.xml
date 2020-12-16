@@ -356,7 +356,7 @@
 <h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
 
 <p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<p>// submit &amp; save<br>hexo g &amp;&amp; hexo s</p>
+<p>// submit &amp; preview<br>hexo g &amp;&amp; hexo s</p>
 <h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
 
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
@@ -536,7 +536,7 @@
 <h2 id="六、文章参考"><a href="#六、文章参考" class="headerlink" title="六、文章参考"></a>六、文章参考</h2><blockquote>
 <p><a href="https://blog.ibireme.com/2015/05/18/runloop/">深入理解RunLoop</a></p>
 </blockquote>
-<h2 id="Written-By-多点-移动运营研发部-白迎春"><a href="#Written-By-多点-移动运营研发部-白迎春" class="headerlink" title="Written By 多点-移动运营研发部-白迎春"></a>Written By 多点-移动运营研发部-白迎春</h2>]]></content>
+<h4 id="Written-By-多点-移动运营研发部-白迎春"><a href="#Written-By-多点-移动运营研发部-白迎春" class="headerlink" title="Written By 多点-移动运营研发部-白迎春"></a>Written By 多点-移动运营研发部-白迎春</h4>]]></content>
       <categories>
         <category>技术分享</category>
       </categories>
@@ -639,7 +639,7 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[_label1 setContentHuggingPriority:UILayoutPriorityRequired</span><br><span class="line">                           forAxis:UILayoutConstraintAxisHorizontal];</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;设置label1的content compression 为1000</span><br><span class="line">[_label1 setContentCompressionResistancePriority:UILayoutPriorityRequired                                       forAxis:UILayoutConstraintAxisHorizontal];</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;设置右边的label2的content hugging 为1000</span><br><span class="line">[_label2 setContentHuggingPriority:UILayoutPriorityRequired</span><br><span class="line">                           forAxis:UILayoutConstraintAxisHorizontal];</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;设置右边的label2的content compression 为250</span><br><span class="line">[_label2 setContentCompressionResistancePriority:UILayoutPriorityDefaultLow                                         forAxis:UILayoutConstraintAxisHorizontal];</span><br></pre></td></tr></table></figure>
 <p>五、UIStackVIew</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">typedef NS_ENUM(NSInteger, UILayoutConstraintAxis) &#123;</span><br><span class="line">UILayoutConstraintAxisHorizontal &#x3D; 0,&#x2F;&#x2F;水平</span><br><span class="line">UILayoutConstraintAxisVertical &#x3D; 1&#x2F;&#x2F;垂直</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">typedef NS_ENUM(NSInteger, UIStackViewAlignment) &#123;</span><br><span class="line">UIStackViewAlignmentFill,&#x2F;&#x2F;子视图填充StackView</span><br><span class="line">UIStackViewAlignmentLeading,&#x2F;&#x2F;子视图左对齐（axis为垂直方向而言）</span><br><span class="line">UIStackViewAlignmentTop &#x3D; UIStackViewAlignmentLeading,&#x2F;&#x2F;子视图顶部对齐（axis为水平方向而言）</span><br><span class="line">UIStackViewAlignmentFirstBaseline, &#x2F;&#x2F; 按照第一个子视图的文字的第一行对齐，同时保证高度最大的子视图底部对齐（只在axis为水平方向有效）</span><br><span class="line">UIStackViewAlignmentCenter,&#x2F;&#x2F;子视图居中对齐</span><br><span class="line">UIStackViewAlignmentTrailing,&#x2F;&#x2F;子视图右对齐(axis为垂直方向而言）</span><br><span class="line">UIStackViewAlignmentBottom &#x3D; UIStackViewAlignmentTrailing,&#x2F;&#x2F;子视图底部对齐（axis为水平方向而言）</span><br><span class="line">UIStackViewAlignmentLastBaseline, &#x2F;&#x2F; 按照最后一个子视图的文字的最后一行对齐，同时保证高度最大的子视图顶部对齐（只在axis为水平方向有效）</span><br><span class="line">&#125; NS_ENUM_AVAILABLE_IOS(9_0);</span><br><span class="line"></span><br><span class="line">typedef NS_ENUM(NSInteger, UIStackViewDistribution) &#123;</span><br><span class="line">UIStackViewDistributionFill &#x3D; 0, </span><br><span class="line">UIStackViewDistributionFillEqually, </span><br><span class="line">UIStackViewDistributionFillProportionally,</span><br><span class="line">UIStackViewDistributionEqualSpacing, </span><br><span class="line">UIStackViewDistributionEqualCentering,&#125; NS_ENUM_AVAILABLE_IOS(9_0);</span><br></pre></td></tr></table></figure>
-<h2 id="Written-By-多点-移动运营研发部-贺波"><a href="#Written-By-多点-移动运营研发部-贺波" class="headerlink" title="Written By 多点-移动运营研发部-贺波"></a>Written By 多点-移动运营研发部-贺波</h2>]]></content>
+<h4 id="Written-By-多点-移动运营研发部-贺波"><a href="#Written-By-多点-移动运营研发部-贺波" class="headerlink" title="Written By 多点-移动运营研发部-贺波"></a>Written By 多点-移动运营研发部-贺波</h4>]]></content>
       <categories>
         <category>技术分享</category>
       </categories>
