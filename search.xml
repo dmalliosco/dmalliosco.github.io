@@ -938,4 +938,466 @@
         <tag>动画相关</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Android-RecyclerView滚动时干了什么？</title>
+    <url>/2020/12/21/Android-RecyclerView%E6%BB%9A%E5%8A%A8%E6%97%B6%E5%B9%B2%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F/</url>
+    <content><![CDATA[<h1 id="RecyclerView滚动时干了什么？"><a href="#RecyclerView滚动时干了什么？" class="headerlink" title="RecyclerView滚动时干了什么？"></a>RecyclerView滚动时干了什么？</h1><p>谈到RecyclerView的时候，复用机制是我们能脱口而出的优点之一。系统内置的ViewHolder避免了使用ListView时手动去创建ViewHolder的麻烦。关于何时回收View，何时复用View，我们能做到胸有成竹吗？当我们滑动一个RecyclerView时，是先回收View，再复用View？还是先复用View，再回收View呢？答案是都有可能。详情且看下面分析：</p>
+<p><strong>名词解释</strong></p>
+<p><strong>1. 回收：是指View不需要再展示在屏幕中，被回收到回收池中</strong></p>
+<p><strong>2. 复用：本文中的复用是指调用了onCreateViewHolder或者onBindViewHolder方法</strong></p>
+<p><strong>本文大纲</strong></p>
+<p><strong>1. 滑动RV的两个场景</strong></p>
+<p><strong>2. DEMO验证答案</strong></p>
+<p><strong>3. 滑动原理讲解</strong></p>
+<p><strong>4. 源码分析</strong></p>
+<p><strong>5. 提问互动</strong></p>
+<h2 id="1-滑动RV的两个场景"><a href="#1-滑动RV的两个场景" class="headerlink" title="1.滑动RV的两个场景"></a>1.滑动RV的两个场景</h2><h3 id="1-1-场景一"><a href="#1-1-场景一" class="headerlink" title="1.1 场景一 "></a>1.1 场景一 </h3><p>RV中每个Item高度都为100px，最后一个Item超出屏幕50px。RV初始状态如下图        </p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9be83770378a4458b79a0cbf2dc365f7~tplv-k3u1fbpfcp-zoom-1.image" alt="场景一"></p>
+<p>Q1 假设向上滑动40px</p>
+<p>请问是否有View发生回收和复用？如果有，先复用还是先回收？</p>
+<p>$\color{red}{答    回收和复用都没有发生}$</p>
+<p>Q2    假设向上滑动60px</p>
+<p>请问是否有View发生回收和复用？如果有，先复用还是先回收？</p>
+<p>$\color{red}{答    没有发生回收，发生了复用}$</p>
+<p>Q3    假设向上滑动120px</p>
+<p>请问是否有View发生回收和复用？如果有，先复用还是先回收？</p>
+<p>$\color{red}{答    发生了回收和复用。先复用后回收}$</p>
+<h3 id="1-2-场景二"><a href="#1-2-场景二" class="headerlink" title="1.2 场景二"></a>1.2 场景二</h3><p>RV中第一个Item高度为50px，其它都为100px，最后一个Item超出屏幕95px。RV初始状态如下</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cae471defcc04a93a7a0f11e3b85d621~tplv-k3u1fbpfcp-zoom-1.image" alt="场景二"></p>
+<p>Q1    假设向上滑动40px</p>
+<p>请问是否有View发生回收和复用？如果有，先复用还是先回收？</p>
+<p>$\color{red}{答    回收和复用都没有发生}$</p>
+<p>Q2    假设向上滑动60px</p>
+<p>请问是否有View发生回收和复用？如果有，先复用还是先回收？</p>
+<p>$\color{red}{答    发生了回收，没有发生复用}$</p>
+<p>Q3    假设向上滑动120px</p>
+<p>请问是否有View发生回收和复用？如果有，先复用还是先回收？</p>
+<p>$\color{red}{答    发生了回收和复用。先回收后复用}$</p>
+<p>从答案可以看出。回收和复用并没有固定的答案。它因场景而异。下面我们通过案例验证答案真伪。  </p>
+<h2 id="2-DEMO验证答案"><a href="#2-DEMO验证答案" class="headerlink" title="2. DEMO验证答案"></a>2. DEMO验证答案</h2><h3 id="2-1-我们来验证场景一"><a href="#2-1-我们来验证场景一" class="headerlink" title="2.1 我们来验证场景一"></a>2.1 我们来验证场景一</h3><p>程序运行图  </p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5fee2c707893492aa3e158b1ce6a98d6~tplv-k3u1fbpfcp-zoom-1.image"><br>程序代码  </p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RecyclerViewActivity1</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">lateinit</span> <span class="keyword">var</span> mRecyclerView: RecyclerView</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_recycler_view1)</span><br><span class="line">        mRecyclerView = findViewById(R.id.recyclerview)</span><br><span class="line">        mRecyclerView.setHasFixedSize(<span class="literal">true</span>)</span><br><span class="line">        mRecyclerView.setItemViewCacheSize(<span class="number">0</span>)</span><br><span class="line">        mRecyclerView.layoutManager =</span><br><span class="line">            LinearLayoutManager(<span class="keyword">this</span>).apply &#123;</span><br><span class="line">                orientation = LinearLayoutManager.VERTICAL</span><br><span class="line">                isItemPrefetchEnabled = <span class="literal">false</span></span><br><span class="line">            &#125;</span><br><span class="line">        <span class="keyword">val</span> list: MutableList&lt;String&gt; =</span><br><span class="line">            ArrayList()</span><br><span class="line">        repeat(<span class="number">100</span>) &#123;</span><br><span class="line">            list.add(<span class="string">&quot;item <span class="variable">$it</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        mRecyclerView.adapter = MyAdapter(list)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">inner</span> <span class="class"><span class="keyword">class</span> <span class="title">MyAdapter</span></span>(<span class="keyword">val</span> mStrings: MutableList&lt;String&gt;) :</span><br><span class="line">        RecyclerView.Adapter&lt;RecyclerView.ViewHolder&gt;() &#123;</span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateViewHolder</span><span class="params">(parent: <span class="type">ViewGroup</span>, viewType: <span class="type">Int</span>)</span></span>: RecyclerView.ViewHolder &#123;</span><br><span class="line">            println(<span class="string">&quot;RecyclerView 场景一 onCreateViewHolder &quot;</span>)</span><br><span class="line">            <span class="keyword">val</span> view = LayoutInflater.from(parent.context)</span><br><span class="line">                .inflate(R.layout.view_item, parent, <span class="literal">false</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">object</span> : RecyclerView.ViewHolder(view) &#123;&#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">getItemCount</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> mStrings.size</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onBindViewHolder</span><span class="params">(holder: <span class="type">RecyclerView</span>.<span class="type">ViewHolder</span>, position: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">            println(<span class="string">&quot;RecyclerView 场景一 onBindViewHolder <span class="variable">$position</span> &quot;</span>)</span><br><span class="line">            <span class="keyword">val</span> textView = holder.itemView <span class="keyword">as</span> TextView</span><br><span class="line">            textView.layoutParams.height = (resources.displayMetrics.density * <span class="number">100</span>).toInt()</span><br><span class="line">            textView.text = mStrings[position]</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onViewRecycled</span><span class="params">(holder: <span class="type">RecyclerView</span>.<span class="type">ViewHolder</span>)</span></span> &#123;</span><br><span class="line">            println(<span class="string">&quot;RecyclerView 场景一 发生回收 &quot;</span> + (holder.itemView <span class="keyword">as</span> TextView).text)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">super</span>.onViewRecycled(holder)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">scroll120</span><span class="params">(view: <span class="type">View</span>)</span></span> &#123;</span><br><span class="line">        mRecyclerView.scrollBy(<span class="number">0</span>, (resources.displayMetrics.density * <span class="number">120</span>).toInt())</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">scroll60</span><span class="params">(view: <span class="type">View</span>)</span></span> &#123;</span><br><span class="line">        mRecyclerView.scrollBy(<span class="number">0</span>, (resources.displayMetrics.density * <span class="number">60</span>).toInt())</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">scroll40</span><span class="params">(view: <span class="type">View</span>)</span></span> &#123;</span><br><span class="line">        mRecyclerView.scrollBy(<span class="number">0</span>, (resources.displayMetrics.density * <span class="number">40</span>).toInt())</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>日志输出如下</p>
+<blockquote>
+<p>首先进入初始状态</p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 0 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 1 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 2 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 3 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 4 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 5</p>
+</blockquote>
+<blockquote>
+<p>点击上滑40px。打印日志不变。证明 回收和复用都没有发生  </p>
+</blockquote>
+<blockquote>
+<p>点击上滑60px。打印日志如下。证明 没有发生回收，发生了复用</p>
+<p>RecyclerView 场景一 onCreateViewHolder</p>
+<p>RecyclerView 场景一 onBindViewHolder 0</p>
+<p>RecyclerView 场景一 onCreateViewHolder</p>
+<p>RecyclerView 场景一 onBindViewHolder 1</p>
+<p>RecyclerView 场景一 onCreateViewHolder</p>
+<p>RecyclerView 场景一 onBindViewHolder 2</p>
+<p>RecyclerView 场景一 onCreateViewHolder</p>
+<p>RecyclerView 场景一 onBindViewHolder 3</p>
+<p>RecyclerView 场景一 onCreateViewHolder</p>
+<p>RecyclerView 场景一 onBindViewHolder 4</p>
+<p>RecyclerView 场景一 onCreateViewHolder</p>
+<p>RecyclerView 场景一 onBindViewHolder 5</p>
+<p>RecyclerView 场景一 onCreateViewHolder //只发生了复用<br>RecyclerView 场景一 onBindViewHolder 6</p>
+</blockquote>
+<blockquote>
+<p>点击上滑动120px。打印日志如下。证明 发生了回收和复用。先复用后回收</p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 0 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 1 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 2 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 3 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 4 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 5</p>
+<p>RecyclerView 场景一 onCreateViewHolder //先复用 </p>
+<p>RecyclerView 场景一 onBindViewHolder 6</p>
+<p>RecyclerView 场景一 发生回收 item 0  //后回收</p>
+</blockquote>
+<h3 id="2-2-我们来验证场景二"><a href="#2-2-我们来验证场景二" class="headerlink" title="2.2 我们来验证场景二"></a>2.2 我们来验证场景二</h3><p>程序运行图</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b2c035480b14deaa0a9023ba693fdff~tplv-k3u1fbpfcp-zoom-1.image">  </p>
+<p>程序代码</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RecyclerViewActivity2</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">lateinit</span> <span class="keyword">var</span> mRecyclerView: RecyclerView</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_recycler_view2)</span><br><span class="line">        mRecyclerView = findViewById(R.id.recyclerview)</span><br><span class="line">        mRecyclerView.setHasFixedSize(<span class="literal">true</span>)</span><br><span class="line">        mRecyclerView.setItemViewCacheSize(<span class="number">0</span>)</span><br><span class="line">        mRecyclerView.layoutManager =</span><br><span class="line">            LinearLayoutManager(<span class="keyword">this</span>).apply &#123;</span><br><span class="line">                orientation = LinearLayoutManager.VERTICAL</span><br><span class="line">                isItemPrefetchEnabled = <span class="literal">false</span></span><br><span class="line">            &#125;</span><br><span class="line">        <span class="keyword">val</span> list: MutableList&lt;String&gt; =</span><br><span class="line">            ArrayList()</span><br><span class="line">        repeat(<span class="number">100</span>) &#123;</span><br><span class="line">            list.add(<span class="string">&quot;item <span class="variable">$it</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        mRecyclerView.adapter = MyAdapter(list)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">inner</span> <span class="class"><span class="keyword">class</span> <span class="title">MyAdapter</span></span>(<span class="keyword">val</span> mStrings: MutableList&lt;String&gt;) :</span><br><span class="line">        RecyclerView.Adapter&lt;RecyclerView.ViewHolder&gt;() &#123;</span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateViewHolder</span><span class="params">(parent: <span class="type">ViewGroup</span>, viewType: <span class="type">Int</span>)</span></span>: RecyclerView.ViewHolder &#123;</span><br><span class="line">            println(<span class="string">&quot;RecyclerView 场景二 onCreateViewHolder &quot;</span>)</span><br><span class="line">            <span class="keyword">val</span> view = LayoutInflater.from(parent.context)</span><br><span class="line">                .inflate(R.layout.view_item, parent, <span class="literal">false</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">object</span> : RecyclerView.ViewHolder(view) &#123;&#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">getItemCount</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> mStrings.size</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onBindViewHolder</span><span class="params">(holder: <span class="type">RecyclerView</span>.<span class="type">ViewHolder</span>, position: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">            println(<span class="string">&quot;RecyclerView 场景二 onBindViewHolder <span class="variable">$position</span> &quot;</span>)</span><br><span class="line">            <span class="keyword">val</span> textView = holder.itemView <span class="keyword">as</span> TextView</span><br><span class="line">            textView.layoutParams.height =</span><br><span class="line">                <span class="keyword">if</span> (position == <span class="number">0</span>) (resources.displayMetrics.density * <span class="number">50</span>).toInt() <span class="keyword">else</span> (resources.displayMetrics.density * <span class="number">100</span>).toInt()</span><br><span class="line">            textView.text = mStrings[position]</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onViewRecycled</span><span class="params">(holder: <span class="type">RecyclerView</span>.<span class="type">ViewHolder</span>)</span></span> &#123;</span><br><span class="line">            println(<span class="string">&quot;RecyclerView 场景二 发生回收 &quot;</span> + (holder.itemView <span class="keyword">as</span> TextView).text)</span><br><span class="line">            <span class="keyword">super</span>.onViewRecycled(holder)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">scroll120</span><span class="params">(view: <span class="type">View</span>)</span></span> &#123;</span><br><span class="line">        mRecyclerView.scrollBy(<span class="number">0</span>, (resources.displayMetrics.density * <span class="number">120</span>).toInt())</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">scroll60</span><span class="params">(view: <span class="type">View</span>)</span></span> &#123;</span><br><span class="line">        mRecyclerView.scrollBy(<span class="number">0</span>, (resources.displayMetrics.density * <span class="number">60</span>).toInt())</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">scroll40</span><span class="params">(view: <span class="type">View</span>)</span></span> &#123;</span><br><span class="line">        mRecyclerView.scrollBy(<span class="number">0</span>, (resources.displayMetrics.density * <span class="number">40</span>).toInt())</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>日志输出首先进入初始状态</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 0</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 1</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 2</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 3</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 4</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 5</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 6</p>
+</blockquote>
+<blockquote>
+<p>点击上滑40px。打印日志不变。证明 回收和复用都没有发生  </p>
+</blockquote>
+<blockquote>
+<p>点击上滑60px。打印日志如下。证明 发生回收，没有发生复用</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 0</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 1</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 2</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 3</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 4</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 5</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 6</p>
+<p>RecyclerView 场景二 发生回收 item 0   //只发生了回收</p>
+</blockquote>
+<blockquote>
+<p>点击上滑动120px。打印日志如下。证明 发生了回收和复用。先回收后复用</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 0</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 1</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 2</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 3</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 4</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 5</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 6</p>
+<p>RecyclerView 场景二 发生回收 item 0 //先回收</p>
+<p>RecyclerView 场景二 onBindViewHolder 7 //再复用</p>
+</blockquote>
+<h2 id="3-滑动原理分析"><a href="#3-滑动原理分析" class="headerlink" title="3. 滑动原理分析"></a>3. 滑动原理分析</h2><p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4e9e34fd43034173912c8a7fff713f65~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p>如图所示，介绍几个关于坐标的参数  </p>
+<ol>
+<li><p>delta：手指滑动的距离120px。  </p>
+</li>
+<li><p>mOffset：RV最后一个子View的Bottom在屏幕坐标系的Y坐标600px。RV的下一个View(Item7)从mOffset处布局。</p>
+</li>
+<li><p>mScrollingOffset：RV最后一个子view的Bottom距离RV Bottom的距离50px。向上滑动不超过该距离。如超过需创建新的View填充。</p>
+</li>
+<li><p>mVailable：delta-mScrollingOffset。可以填充View的空间。如果大于0表示有空间填充新的View</p>
+</li>
+<li><p>如果delta&lt;mScrollingOffset，mScrollingOffset=delta，mVailable&lt;0  </p>
+</li>
+</ol>
+<p>滑动逻辑如下  </p>
+<ol>
+<li><p> 从RecyclerView的第0个View开始遍历，直到View的Bottom&gt;mScrollingOffset,并记录该View的下标index，回收[0,index)区间的View，index为开区间，如果index&gt;=1,则会将[0,index)区间的View移除屏幕，并按照回收算法放入回收池。具体回收算法先按下不表。</p>
+</li>
+<li><p>如果mVailable&gt;0，则从mOffset处，用新的View填充。mOffset+=新View的高度，mVailable-=新View的高度，mScrollingOffset+=新View的高度，如果mVailable&lt;0，mScrollingOffset+=mVailable。布局完成后用步骤1的算法按需回收上面的View。</p>
+</li>
+<li><p>重复步骤2</p>
+</li>
+<li><p>将RV整体，向上移动delta或者consumed距离(一般是delta距离，但是当RecyclerView下面没有Item时会是具体消耗掉的距离)  </p>
+</li>
+</ol>
+<p>根据此滑动逻辑，我们分析场景一中的向上滑动120px<br><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b422bb36e19245698c2c240890bb5c5f~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p>mOffset = 600px  </p>
+<p>mScrollingOffset = 50px</p>
+<p>mAvailable = 70px</p>
+<p>item1高度100px  </p>
+<ol>
+<li><p>首先从第0个View遍历Bottom&gt;50px。找到item1.bottom=100px，记录index=0。因为index&lt;1。所以不发生回收  </p>
+</li>
+<li><p>mAvailable&gt;0，从Item6的底部，增加View Item7(此处发生复用逻辑)高度为100px，mOffset=700px，mAvailable=-30，mScrollingOffset=mScrollingOffset+100-30=120px。然后检查回收。首先从第0个View遍历Bottom&gt;120px。找到item2.bottom=200px，记录index=1。回收[0,1)区间的View。即回收Item1</p>
+</li>
+<li><p>mAvailable=-30&lt;0,退出填充逻辑</p>
+</li>
+<li><p>整体向上移动120px</p>
+</li>
+</ol>
+<p>我们看到先创建Item7 然后回收Item1。跟日志相符合  </p>
+<p>RecyclerView 场景一 onCreateViewHolder //先复用<br>RecyclerView 场景一 onBindViewHolder 6</p>
+<p>RecyclerView 场景一 发生回收 item 0  //后回收</p>
+<p>同样的逻辑我们也可以分析场景二中的向上滑动120px的情况。场景二会先发生回收，再发生复用。读者可以自己去求证。  </p>
+<h2 id="4-源码分析"><a href="#4-源码分析" class="headerlink" title="4.源码分析"></a>4.源码分析</h2><p>RV的滑动，最终会调用LayoutManager的scrollBy方法。我们使用的是LinearLayoutManager。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//LinearLayoutManager.java</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">scrollBy</span><span class="params">(<span class="keyword">int</span> delta, RecyclerView.Recycler recycler, RecyclerView.State state)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (getChildCount() == <span class="number">0</span> || delta == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ensureLayoutState();</span><br><span class="line">        mLayoutState.mRecycle = <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> layoutDirection = delta &gt; <span class="number">0</span> ? LayoutState.LAYOUT_END : LayoutState.LAYOUT_START;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> absDelta = Math.abs(delta);</span><br><span class="line">        ##代码1 updateLayoutState方法，主要是计算mOffset等参数。</span><br><span class="line">        updateLayoutState(layoutDirection, absDelta, <span class="keyword">true</span>, state);</span><br><span class="line">        ##代码2 fill方法，根据剩余空间，填充View</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> consumed = mLayoutState.mScrollingOffset</span><br><span class="line">                + </span><br><span class="line">                fill(recycler, mLayoutState, state, <span class="keyword">false</span>);</span><br><span class="line">        <span class="keyword">if</span> (consumed &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (DEBUG) &#123;</span><br><span class="line">                Log.d(TAG, <span class="string">&quot;Don&#x27;t have any more elements to scroll&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> scrolled = absDelta &gt; consumed ? layoutDirection * consumed : delta;</span><br><span class="line">        ##代码3 offsetChildren，整体移动RV的子View</span><br><span class="line">        mOrientationHelper.offsetChildren(-scrolled);</span><br><span class="line">        <span class="keyword">if</span> (DEBUG) &#123;</span><br><span class="line">            Log.d(TAG, <span class="string">&quot;scroll req: &quot;</span> + delta + <span class="string">&quot; scrolled: &quot;</span> + scrolled);</span><br><span class="line">        &#125;</span><br><span class="line">        mLayoutState.mLastScrollDelta = scrolled;</span><br><span class="line">        <span class="keyword">return</span> scrolled;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>##代码1 updateLayoutState方法，主要是计算mOffset等参数。</p>
+<p>##代码2 fill方法，根据剩余空间，填充View</p>
+<p>##代码3 offsetChildren，整体移动RV的子View</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//主要是计算</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">updateLayoutState</span><span class="params">(<span class="keyword">int</span> layoutDirection, <span class="keyword">int</span> requiredSpace,</span></span></span><br><span class="line"><span class="function"><span class="params">            <span class="keyword">boolean</span> canUseExistingSpace, RecyclerView.State state)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// If parent provides a hint, don&#x27;t measure unlimited.</span></span><br><span class="line">        mLayoutState.mInfinite = resolveIsInfinite();</span><br><span class="line">        mLayoutState.mLayoutDirection = layoutDirection;</span><br><span class="line">        mReusableIntPair[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        mReusableIntPair[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">        calculateExtraLayoutSpace(state, mReusableIntPair);</span><br><span class="line">        <span class="keyword">int</span> extraForStart = Math.max(<span class="number">0</span>, mReusableIntPair[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">int</span> extraForEnd = Math.max(<span class="number">0</span>, mReusableIntPair[<span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">boolean</span> layoutToEnd = layoutDirection == LayoutState.LAYOUT_END;</span><br><span class="line">        mLayoutState.mExtraFillSpace = layoutToEnd ? extraForEnd : extraForStart;</span><br><span class="line">        mLayoutState.mNoRecycleSpace = layoutToEnd ? extraForStart : extraForEnd;</span><br><span class="line">        <span class="keyword">int</span> scrollingOffset;</span><br><span class="line">        <span class="keyword">if</span> (layoutToEnd) &#123;</span><br><span class="line">            mLayoutState.mExtraFillSpace += mOrientationHelper.getEndPadding();</span><br><span class="line">            <span class="comment">// get the first child in the direction we are going</span></span><br><span class="line">            <span class="keyword">final</span> View child = getChildClosestToEnd();</span><br><span class="line">            <span class="comment">// the direction in which we are traversing children</span></span><br><span class="line">            mLayoutState.mItemDirection = mShouldReverseLayout ? LayoutState.ITEM_DIRECTION_HEAD</span><br><span class="line">                    : LayoutState.ITEM_DIRECTION_TAIL;</span><br><span class="line">            mLayoutState.mCurrentPosition = getPosition(child) + mLayoutState.mItemDirection;</span><br><span class="line">            mLayoutState.mOffset = mOrientationHelper.getDecoratedEnd(child);</span><br><span class="line">            <span class="comment">// calculate how much we can scroll without adding new children (independent of layout)</span></span><br><span class="line">            scrollingOffset = mOrientationHelper.getDecoratedEnd(child)</span><br><span class="line">                    - mOrientationHelper.getEndAfterPadding();</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">final</span> View child = getChildClosestToStart();</span><br><span class="line">            mLayoutState.mExtraFillSpace += mOrientationHelper.getStartAfterPadding();</span><br><span class="line">            mLayoutState.mItemDirection = mShouldReverseLayout ? LayoutState.ITEM_DIRECTION_TAIL</span><br><span class="line">                    : LayoutState.ITEM_DIRECTION_HEAD;</span><br><span class="line">            mLayoutState.mCurrentPosition = getPosition(child) + mLayoutState.mItemDirection;</span><br><span class="line">            mLayoutState.mOffset = mOrientationHelper.getDecoratedStart(child);</span><br><span class="line">            scrollingOffset = -mOrientationHelper.getDecoratedStart(child)</span><br><span class="line">                    + mOrientationHelper.getStartAfterPadding();</span><br><span class="line">        &#125;</span><br><span class="line">        mLayoutState.mAvailable = requiredSpace;</span><br><span class="line">        <span class="keyword">if</span> (canUseExistingSpace) &#123;</span><br><span class="line">            mLayoutState.mAvailable -= scrollingOffset;</span><br><span class="line">        &#125;</span><br><span class="line">        mLayoutState.mScrollingOffset = scrollingOffset;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fill</span><span class="params">(RecyclerView.Recycler recycler, LayoutState layoutState,</span></span></span><br><span class="line"><span class="function"><span class="params">            RecyclerView.State state, <span class="keyword">boolean</span> stopOnFocusable)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// max offset we should set is mFastScroll + available</span></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> start = layoutState.mAvailable;</span><br><span class="line">        <span class="keyword">if</span> (layoutState.mScrollingOffset != LayoutState.SCROLLING_OFFSET_NaN) &#123;</span><br><span class="line">            <span class="comment">// TODO ugly bug fix. should not happen</span></span><br><span class="line">            <span class="keyword">if</span> (layoutState.mAvailable &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                layoutState.mScrollingOffset += layoutState.mAvailable;</span><br><span class="line">            &#125;</span><br><span class="line">            ##代码1 首先判断是否需要回收View</span><br><span class="line">            recycleByLayoutState(recycler, layoutState);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> remainingSpace = layoutState.mAvailable + layoutState.mExtraFillSpace;</span><br><span class="line">        LayoutChunkResult layoutChunkResult = mLayoutChunkResult;</span><br><span class="line">        ##代码2 根据剩余空间，判断是否需要填充View</span><br><span class="line">        <span class="keyword">while</span> ((layoutState.mInfinite || remainingSpace &gt; <span class="number">0</span>) &amp;&amp; layoutState.hasMore(state)) &#123;</span><br><span class="line">            layoutChunkResult.resetInternal();</span><br><span class="line">            <span class="keyword">if</span> (RecyclerView.VERBOSE_TRACING) &#123;</span><br><span class="line">                TraceCompat.beginSection(<span class="string">&quot;LLM LayoutChunk&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            ##代码3 是具体的layout方法</span><br><span class="line">            layoutChunk(recycler, state, layoutState, layoutChunkResult);</span><br><span class="line">            <span class="keyword">if</span> (RecyclerView.VERBOSE_TRACING) &#123;</span><br><span class="line">                TraceCompat.endSection();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (layoutChunkResult.mFinished) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            layoutState.mOffset += layoutChunkResult.mConsumed * layoutState.mLayoutDirection;</span><br><span class="line">            <span class="comment">/**</span></span><br><span class="line"><span class="comment">             * Consume the available space if:</span></span><br><span class="line"><span class="comment">             * * layoutChunk did not request to be ignored</span></span><br><span class="line"><span class="comment">             * * OR we are laying out scrap children</span></span><br><span class="line"><span class="comment">             * * OR we are not doing pre-layout</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="keyword">if</span> (!layoutChunkResult.mIgnoreConsumed || layoutState.mScrapList != <span class="keyword">null</span></span><br><span class="line">                    || !state.isPreLayout()) &#123;</span><br><span class="line">                layoutState.mAvailable -= layoutChunkResult.mConsumed;</span><br><span class="line">                <span class="comment">// we keep a separate remaining space because mAvailable is important for recycling</span></span><br><span class="line">                remainingSpace -= layoutChunkResult.mConsumed;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (layoutState.mScrollingOffset != LayoutState.SCROLLING_OFFSET_NaN) &#123;</span><br><span class="line">                layoutState.mScrollingOffset += layoutChunkResult.mConsumed;</span><br><span class="line">                <span class="keyword">if</span> (layoutState.mAvailable &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                    layoutState.mScrollingOffset += layoutState.mAvailable;</span><br><span class="line">                &#125;</span><br><span class="line">                ##代码4 是layout完成后判断是否需要回收View</span><br><span class="line">                recycleByLayoutState(recycler, layoutState);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (stopOnFocusable &amp;&amp; layoutChunkResult.mFocusable) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (DEBUG) &#123;</span><br><span class="line">            validateChildOrder();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> start - layoutState.mAvailable;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>##代码1，首先判断是否需要回收View</p>
+<p>##代码2，根据剩余空间，判断是否需要填充View</p>
+<p>##代码3 是具体的layout方法</p>
+<p>##代码4 是layout完成后判断是否需要回收View</p>
+<p>本文主要讲解了滑动时的回收和复用的逻辑。具体如何如何回收，如何复用。RecyclerView的三级缓存是如何实现的。且听下回分解。</p>
+<h2 id="5-提问互动"><a href="#5-提问互动" class="headerlink" title="5. 提问互动"></a>5. 提问互动</h2><p>最后为了巩固大家对知识的理解，提出一个问题，请在评论区写出你的答案吧。<br><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b422bb36e19245698c2c240890bb5c5f~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p><strong>问题一 场景一的case3，向上滑动120px，120px大于第一个Item的高度100px，为何不先让Item1先回收掉呢？</strong></p>
+<p><strong>问题二 谷歌这么设计的原因可能是什么？</strong></p>
+<h4 id="Written-By-多点-移动运营研发部-姜斌"><a href="#Written-By-多点-移动运营研发部-姜斌" class="headerlink" title="Written By 多点-移动运营研发部-姜斌"></a>Written By 多点-移动运营研发部-姜斌</h4>]]></content>
+      <categories>
+        <category>技术分享</category>
+      </categories>
+      <tags>
+        <tag>底层原理</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Android事件分发机制分析</title>
+    <url>/2020/12/21/Android%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<h1 id="事件分发机制分析"><a href="#事件分发机制分析" class="headerlink" title="事件分发机制分析"></a>事件分发机制分析</h1><p>Android事件分发是一个老生常谈的知识点。日常开发和求职过程中，都会碰到Android事件分发的问题。</p>
+<p>Android的控件分为两类，ViewGoup和View。ViewGroup是控件的容器，可以包含多个子控件。View是控件的最小单位，它不能包裹其它的View。Android的ViewGroup对应的数据结构是树。</p>
+<p>网上的事件分发的文章大多数是用线性的思维去分析控件树的事件遍历，我深以为不妥，经常让读者云里雾里，只见树木不见森林。</p>
+<p>本文我将从树的深度遍历来讲解DOWN事件的分发流程，从单链表的线性遍历讲解MOVE、UP事件的分发流程。  </p>
+<p><strong>本文大纲</strong></p>
+<p><strong>1. Android控件对应的多叉树</strong> </p>
+<p><strong>2. 手势事件类型</strong>  </p>
+<p><strong>3. 事件分发涉及到的方法</strong></p>
+<p><strong>4. DOWN事件的分发流程</strong></p>
+<p><strong>5. MOVE、UP事件的分发流程</strong></p>
+<p><strong>6. CANCEL事件触发时机以及分发流程</strong></p>
+<p><strong>7. 通过实例讲解事件分发流程</strong></p>
+<h2 id="1-Android控件对应的多叉树"><a href="#1-Android控件对应的多叉树" class="headerlink" title="1. Android控件对应的多叉树"></a>1. Android控件对应的多叉树</h2><p>假设我们有一个这样的场景</p>
+<p>屏幕上有一个FrameLayout名叫vp1。vp1有三个子控件vp2、vp3、vp4，它们的类型是FrameLayout。vp2有三个子控件v1、v2、v3。vp3有三个子控件v4、v5、v6。vp4有三个子控件v7、v8、v9。子控件的类型都是View。为了方便起见我们假设这些控件都是铺满屏幕的。我们将vp1控件树翻译成多叉树。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_ViewGroup%E6%A0%91%E5%BD%A2%E5%9B%BE.png" alt="控件多叉树"></p>
+<p><strong>解释一下树节点ft的含义</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_ViewGroup%E8%8A%82%E7%82%B9.png" alt="ViewGroup节点"></p>
+<p>ft的是ViewGroup类中的mFirtstTouchTarget成员变量的简称。它对应的数据结构是<strong>单链表</strong>。当DOWN事件在onTouchEvent方法中返回true，会<strong>回溯</strong>设置父View的ft指针。</p>
+<p><strong>举个例子</strong></p>
+<p>当DOWN事件从vp1开始分发。<br>假设DOWN事件在v7的onTouchEvent方法中返回true。<br>那么v7的父控件vp4的ft会指向v7(可以这样简单理解，实际上指向的是v7封装的一个TouchTarget对象)。同理vp1的ft会指向vp4。所以就生成了一条vp1-&gt;vp4-&gt;v7的分发路径。这很重要。  </p>
+<p>DOWN事件的分发是从vp1开始，假设所有的ViewGroup都不拦截事件，所有的View都不处理事件。事件会沿着最后一个子控件做深度遍历分发。以下用intercept代替onInterceptTouchEvent，touch代替onTouchEvent。</p>
+<blockquote>
+<p>调用流程如下</p>
+<p>vp1(intercept) -&gt; vp4(intercept) -&gt; v9(touch) -&gt; v8(touch) -&gt;v7 (touch) -&gt; vp4(touch)-&gt; vp3 -&gt; v6(touch) -&gt; v5(touch) -&gt; v4(touch) -&gt; vp3(touch)-&gt; vp2 -&gt; v3(touch) -&gt; v2(touch) -&gt; v1(touch) -&gt; vp2(touch)-&gt; vp1(touch)</p>
+</blockquote>
+<p><strong>这只是DOWN事件分发的一个Case。根据是否拦截，View是否处理事件。它的遍历路径也会不一样。</strong>  </p>
+<p>MOVE、UP事件分发也是从vp1开始。但是他们不同于DOWN事件的分发。它不会进行深度遍历。深度遍历是比较耗时的。如果vp1有后代View分发了事件。那么必然会通过ft生成一条分发路径。MOVE事件只需沿着分发路径线性分发就可以了。还是用上面的例子。如果v7分发了DOWN事件。那么MOVE、UP事件的分发即vp1(intercept) -&gt; vp4(intercept) -&gt; v7(touch)  </p>
+<h2 id="2-手势事件类型"><a href="#2-手势事件类型" class="headerlink" title="2. 手势事件类型"></a>2. 手势事件类型</h2><p>本文主要讲解四种事件类型，DOWN、MOVE、UP、CANCEL。用户划动手机屏幕然后离开。Android系统首先会触发DOWN事件，紧接着一连串的MOVE事件，以UP事件收场。<strong>注意：触摸屏幕，事件之间没有任何依赖。有可能只有其中一种事件被分发。也有可能有多种事件类型被分发</strong>  </p>
+<table>
+<thead>
+<tr>
+<th align="left">事件类型</th>
+<th align="left">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">ACTION_DOWN</td>
+<td align="left">手指按下屏幕</td>
+</tr>
+<tr>
+<td align="left">ACTION_MOVE</td>
+<td align="left">手指划动屏幕</td>
+</tr>
+<tr>
+<td align="left">ACTION_CANCEL</td>
+<td align="left">事件被取消</td>
+</tr>
+<tr>
+<td align="left">ACTION_UP</td>
+<td align="left">手指离开屏幕</td>
+</tr>
+</tbody></table>
+<h2 id="3-事件分发涉及到的方法"><a href="#3-事件分发涉及到的方法" class="headerlink" title="3. 事件分发涉及到的方法"></a>3. 事件分发涉及到的方法</h2><table>
+<thead>
+<tr>
+<th align="left">方法名</th>
+<th align="left">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">dispatchTouchEvent</td>
+<td align="left">事件分发逻辑</td>
+</tr>
+<tr>
+<td align="left">onInterceptTouchEvent</td>
+<td align="left">是否拦截事件 <strong>(ViewGroup专属)</strong></td>
+</tr>
+<tr>
+<td align="left">onTouchEvent</td>
+<td align="left">是否处理事件</td>
+</tr>
+</tbody></table>
+<ol>
+<li><p>dispatchTouchEvent方法是Android系统内部实现的事件分发逻辑。返回值为boolean类型。true表示该View或ViewGroup处理了事件，反之返回false。返回值含义同onTouchEvent的返回值。dispatchTouchEvent与onTouchEvent的区别在于，默认情况下前者的返回值依赖于后者的返回值，而且前者的侧重点在于制定事件分发的流程，后者的侧重点在于View或者ViewGroup是否处理该事件。</p>
+</li>
+<li><p>onInterceptTouchEvent方法是ViewGroup专属的方法。当返回值为true表示ViewGroup(假设vp1)需要拦截掉该事件。这里有两种情况</p>
+<p>2.1   如果vp1的后代view没有处理DOWN事件。那么事件会直接交给vp1的onTouchEvent处理</p>
+<p>2.2  如果vp1的后代v7处理了DOWN事件，此时vp1拦截了MOVE事件。首先会生成CANCEL事件交由vp4分发。先后置空vp4，vp1的ft对象，接下来的MOVE事件同a步骤</p>
+</li>
+<li><p>onTouchEvent方法返回值同dispatchTouchEvent方法。我们首先得明白一点。onTouchEvent返回true会且仅会落到某一个具体的控件上。不会有更多的控件的onTouchEvent返回true，换句话说有且仅有一个控件能够处理事件。<strong>只有DOWN事件的返回值才有意义</strong>。其它类型事件的返回值并不会影响事件分发的流程。我们以v8的onTouchEvent的DOWN事件返回值为例。</p>
+<p>3.1.  v8 DOWN事件返回true。表示v8处理该事件。在v8分发事件之前应该是 vp1(onInterceptTouchEvent) -&gt; vp4(onInterceptTouchEvent) -&gt; v9(onTouchEvent)-&gt; v8(onTouchEvent)。此时v8返回true。系统会中断vp4的child遍历(不再将事件交由v7分发)。向上回溯设置vp4的ft指向v8，vp1的ft指向vp4。</p>
+<p>3.2.  v8 DOWN事件返回false。事件继续交由v8的亲兄弟v7分发。</p>
+</li>
+</ol>
+<h2 id="4-DOWN事件的分发流程"><a href="#4-DOWN事件的分发流程" class="headerlink" title="4.DOWN事件的分发流程"></a>4.DOWN事件的分发流程</h2><p>DOWN事件分发到vp1，会调用vp1的onInterceptTouchEvent。这里有拦截和不拦截两种情况。  </p>
+<ol>
+<li><p>如果返回true，vp1拦截DOWN事件，DOWN事件直接交由vp1的onTouchEvent处理。</p>
+</li>
+<li><p>如果返回false，vp1不拦截DOWN事件，DOWN事件将会交由vp1的最后一个子View分发。即交由vp4分发。</p>
+</li>
+</ol>
+<p>拦截方法以此类推，如果vp4不拦截DOWN事件，将交由v9分发事件。因为v9是View类型。没有拦截方法，所以会直接调用v9的onTouchEvent方法。该方法有处理和不处理两种情况。  </p>
+<ol>
+<li><p>如果返回false，v9不处理事件。那么事件继续向前分发交由v8分发，同理调用v8的onTouchEvent方法，v8不处理事件，继续交由v7处理。v7也不处理，vp4的子View到此遍历完成。此时vp4的ft为空，直接调用vp4的onTouchEvent方法。  </p>
+</li>
+<li><p>如果返回true，v9处理事件。系统会中断vp4的子View遍历，DOWN事件分发结束。同时往上递归回溯设置父View的ft对象。vp4的ft指向v9，vp1的ft指向vp4。  </p>
+<p><strong>总结：DOWN事件是通过深度遍历分发事件的。</strong>  </p>
+</li>
+</ol>
+<h2 id="5-MOVE、UP事件的分发流程"><a href="#5-MOVE、UP事件的分发流程" class="headerlink" title="5. MOVE、UP事件的分发流程"></a>5. MOVE、UP事件的分发流程</h2><p>MOVE事件分发到VP1。它与DOWN事件的区别是，它并不一定会调用onInterceptTouchEvent。它只有当vp1的ft不为空时才会调用onInterceptTouchEvent方法，否则会直接拦截掉事件。</p>
+<ol>
+<li><p> 当vp1的ft为空。直接拦截掉MOVE事件。调用VP1的onTouchEvent方法，注意这里onTouchEvent方法的返回值不会影响事件分发的流程。</p>
+</li>
+<li><p>当vp1的ft不为空(当有后代View的onTouchEvent方法返回了true)。调用onInterceptTouchEvent方法，如果返回true，同上，直接调换用VP1的onTouchEvent方法。如果返回false，会通过ft的单链表线性分发事件。  </p>
+</li>
+</ol>
+<p>UP事件同MOVE事件。这里就不分析了。  </p>
+<p><strong>总结：MOVE、UP事件是通过线性遍历分发的。</strong>  </p>
+<h2 id="6-CANCEL事件触发时机以及分发流程"><a href="#6-CANCEL事件触发时机以及分发流程" class="headerlink" title="6. CANCEL事件触发时机以及分发流程"></a>6. CANCEL事件触发时机以及分发流程</h2><p>前面我们讲到的DOWN、MOVE、UP事件都是由手触摸屏幕产生的。并没有讲到CANCEL是如何产生的。CANCEL不是由手触摸屏幕产生的。它是由系统生成。并且分发给View的。有一种场景会触发系统产生CANCEL事件。<br>还是上面的控件树。假设手机在屏幕的上半部分，所有的ViewGroup都不拦截事件，V9处理DOWN事件，当划动到屏幕的下半部分时，VP1拦截MOVE事件。当手指从上划动到下面时。系统将在vp1处，产生一个CANCEL事件，交由vp4分发。CANCEL事件的分发也是通过ft线性分发。当ViewGroup分发CANCEL事件后，会将ViewGroup的ft置为空。即将VP1，VP4的ft置为空。  </p>
+<h2 id="7-通过实例讲解事件分发流程"><a href="#7-通过实例讲解事件分发流程" class="headerlink" title="7. 通过实例讲解事件分发流程"></a>7. 通过实例讲解事件分发流程</h2><p>本段将通过三个场景实战讲解事件分发流程  </p>
+<p><strong>1.  所有的View都不分发事件，所有的ViewGroup都不拦截事件</strong> </p>
+<p><strong>2.  只有v7 onTouchEvent DOWN事件返回true</strong></p>
+<p><strong>3.  只有v7处理事件，但是vp4在屏幕下半部分拦截MOVE事件</strong></p>
+<p>自定义MyView  </p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyView</span> <span class="meta">@JvmOverloads</span> <span class="keyword">constructor</span></span>(</span><br><span class="line">    context: Context, attrs: AttributeSet? = <span class="literal">null</span>, defStyleAttr: <span class="built_in">Int</span> = <span class="number">0</span></span><br><span class="line">) : View(context, attrs, defStyleAttr) &#123;</span><br><span class="line">    <span class="keyword">var</span> name: String = <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">var</span> mOnTouchValue = <span class="literal">false</span><span class="comment">//是否分发事件</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequiresApi(Build.VERSION_CODES.KITKAT)</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onTouchEvent</span><span class="params">(event: <span class="type">MotionEvent</span>)</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">        Log.d(<span class="string">&quot;MyView&quot;</span>, <span class="string">&quot;<span class="variable">$name</span> onTouchEvent <span class="subst">$&#123;MotionEvent.actionToString(event.action)&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (mOnTouchValue) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(event)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>自定义MyFrameLayout</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyFrameLayout</span> <span class="meta">@JvmOverloads</span> <span class="keyword">constructor</span></span>(</span><br><span class="line">    context: Context, attrs: AttributeSet? = <span class="literal">null</span>, defStyleAttr: <span class="built_in">Int</span> = <span class="number">0</span></span><br><span class="line">) : FrameLayout(context, attrs, defStyleAttr) &#123;</span><br><span class="line">    <span class="keyword">var</span> name: String = <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">var</span> mOnTouchValue = <span class="literal">false</span><span class="comment">//是否分发事件</span></span><br><span class="line">    <span class="keyword">var</span> mDispatchValueSuper = <span class="literal">true</span> <span class="comment">//是否调用super.dispatchTouchEvent,如果false 直接return true</span></span><br><span class="line">    <span class="keyword">var</span> mRegionInterceptor = <span class="literal">false</span><span class="comment">//在某个特定区域 拦截事件</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">dispatchTouchEvent</span><span class="params">(ev: <span class="type">MotionEvent</span>?)</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">if</span> (mDispatchValueSuper) &#123;</span><br><span class="line">            <span class="keyword">super</span>.dispatchTouchEvent(ev)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequiresApi(Build.VERSION_CODES.KITKAT)</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onInterceptTouchEvent</span><span class="params">(ev: <span class="type">MotionEvent</span>)</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">        Log.d(<span class="string">&quot;MyFrameLayout&quot;</span>, <span class="string">&quot;<span class="variable">$name</span> onInterceptTouchEvent <span class="subst">$&#123;MotionEvent.actionToString(ev.action)&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (mRegionInterceptor) &#123;</span><br><span class="line">            <span class="keyword">val</span> touchY = ev?.y</span><br><span class="line">            <span class="keyword">if</span> (touchY != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (touchY &gt; measuredHeight / <span class="number">2</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onInterceptTouchEvent(ev)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequiresApi(Build.VERSION_CODES.KITKAT)</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onTouchEvent</span><span class="params">(event: <span class="type">MotionEvent</span>)</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">        Log.d(<span class="string">&quot;MyFrameLayout&quot;</span>, <span class="string">&quot;<span class="variable">$name</span> onTouchEvent <span class="subst">$&#123;MotionEvent.actionToString(event.action)&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">if</span> (mOnTouchValue) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(event)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>场景一 所有的View都不分发事件，所有的ViewGroup都不拦截事件</strong>  </p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TouchOneActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line"><span class="comment">//        setContentView(R.layout.activity_touch_one)</span></span><br><span class="line">        <span class="comment">//所有的view都不分发事件</span></span><br><span class="line">        <span class="keyword">val</span> view1 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view2 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view3 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> vp2 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp2.addView(view1)</span><br><span class="line">        vp2.addView(view2)</span><br><span class="line">        vp2.addView(view3)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> view4 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view5 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view6 = MyView(<span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp3 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp3.addView(view4)</span><br><span class="line">        vp3.addView(view5)</span><br><span class="line">        vp3.addView(view6)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> view7 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view8 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view9 = MyView(<span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp4 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp4.addView(view7)</span><br><span class="line">        vp4.addView(view8)</span><br><span class="line">        vp4.addView(view9)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp1 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp1.addView(vp2)</span><br><span class="line">        vp1.addView(vp3)</span><br><span class="line">        vp1.addView(vp4)</span><br><span class="line"></span><br><span class="line">        setContentView(vp1)</span><br><span class="line">        view1.name = <span class="string">&quot;view1&quot;</span></span><br><span class="line">        view2.name = <span class="string">&quot;view2&quot;</span></span><br><span class="line">        view3.name = <span class="string">&quot;view3&quot;</span></span><br><span class="line">        view4.name = <span class="string">&quot;view4&quot;</span></span><br><span class="line">        view5.name = <span class="string">&quot;view5&quot;</span></span><br><span class="line">        view6.name = <span class="string">&quot;view6&quot;</span></span><br><span class="line">        view7.name = <span class="string">&quot;view7&quot;</span></span><br><span class="line">        view8.name = <span class="string">&quot;view8&quot;</span></span><br><span class="line">        view9.name = <span class="string">&quot;view9&quot;</span></span><br><span class="line">        vp1.name =<span class="string">&quot;vp1&quot;</span></span><br><span class="line">        vp2.name =<span class="string">&quot;vp2&quot;</span></span><br><span class="line">        vp3.name =<span class="string">&quot;vp3&quot;</span></span><br><span class="line">        vp4.name =<span class="string">&quot;vp4&quot;</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>日志打印如下  </p>
+<blockquote>
+<blockquote>
+<p>Vp1 onInterceptTouchEvent  Down</p>
+<p>Vp4 onInterceptTouchEvent  Down</p>
+<p>V9 onTouchEvent  Down</p>
+<p>V8 onTouchEvent  Down</p>
+<p>V7 onTouchEvent  Down</p>
+<p>Vp4 onTouchEvent  Down</p>
+<p>Vp3 onInterceptTouchEvent  Down</p>
+<p>V6 onTouchEvent  Down</p>
+<p>V5 onTouchEvent  Down</p>
+<p>V4 onTouchEvent  Down</p>
+<p>Vp3 onTouchEvent  Down</p>
+<p>Vp2onInterceptTouchEvent  Down</p>
+<p>V3 onTouchEvent  Down</p>
+<p>V2 onTouchEvent  Down</p>
+<p>V1 onTouchEvent  Down</p>
+<p>Vp2 onTouchEvent  Down</p>
+<p>Vp1 onTouchEvent  Down </p>
+</blockquote>
+</blockquote>
+<p>分发图如下  </p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_DOWN%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%911.jpeg" alt="DOWN事件分发图"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_MOVE%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%911.jpeg" alt="MOVE事件分发图"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_UP%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%911.jpeg" alt="UP事件分发图"> </p>
+<p><strong>场景二 只有v7 onTouchEvent DOWN事件返回true</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TouchTwoActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_touch_two)</span><br><span class="line"></span><br><span class="line">        <span class="comment">//View 7 分发事件</span></span><br><span class="line">        <span class="keyword">val</span> view1 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view2 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view3 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> vp2 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp2.addView(view1)</span><br><span class="line">        vp2.addView(view2)</span><br><span class="line">        vp2.addView(view3)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> view4 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view5 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view6 = MyView(<span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp3 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp3.addView(view4)</span><br><span class="line">        vp3.addView(view5)</span><br><span class="line">        vp3.addView(view6)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> view7 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        view7.mOnTouchValue = <span class="literal">true</span></span><br><span class="line">        <span class="keyword">val</span> view8 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view9 = MyView(<span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp4 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp4.addView(view7)</span><br><span class="line">        vp4.addView(view8)</span><br><span class="line">        vp4.addView(view9)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp1 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp1.addView(vp2)</span><br><span class="line">        vp1.addView(vp3)</span><br><span class="line">        vp1.addView(vp4)</span><br><span class="line"></span><br><span class="line">        setContentView(vp1)</span><br><span class="line">        view1.name = <span class="string">&quot;view1&quot;</span></span><br><span class="line">        view2.name = <span class="string">&quot;view2&quot;</span></span><br><span class="line">        view3.name = <span class="string">&quot;view3&quot;</span></span><br><span class="line">        view4.name = <span class="string">&quot;view4&quot;</span></span><br><span class="line">        view5.name = <span class="string">&quot;view5&quot;</span></span><br><span class="line">        view6.name = <span class="string">&quot;view6&quot;</span></span><br><span class="line">        view7.name = <span class="string">&quot;view7&quot;</span></span><br><span class="line">        view8.name = <span class="string">&quot;view8&quot;</span></span><br><span class="line">        view9.name = <span class="string">&quot;view9&quot;</span></span><br><span class="line">        vp1.name =<span class="string">&quot;vp1&quot;</span></span><br><span class="line">        vp2.name =<span class="string">&quot;vp2&quot;</span></span><br><span class="line">        vp3.name =<span class="string">&quot;vp3&quot;</span></span><br><span class="line">        vp4.name =<span class="string">&quot;vp4&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>日志打印如下  </p>
+<blockquote>
+<blockquote>
+<p>Vp1 onInterceptTouchEvent  Down</p>
+<p>Vp4 onInterceptTouchEvent  Down</p>
+<p>v9 onTouchEvent  Down</p>
+<p>v8 onTouchEvent  Down</p>
+<p>v7 onTouchEvent  Down  # v7消耗掉了事件，中断本层遍历，并回溯设置ft</p>
+<p>Vp1 onInterceptTouchEvent  Move</p>
+<p>Vp4 onInterceptTouchEvent  Move</p>
+<p>v7 onTouchEvent  Move</p>
+<p>Vp1 onInterceptTouchEvent  UP</p>
+<p>Vp4 onInterceptTouchEvent  UP</p>
+<p>v7 onTouchEvent  UP  </p>
+</blockquote>
+</blockquote>
+<p>分发图如下  </p>
+<p>DOWN事件分发图如下。步骤6、7是逻辑。并非实际打印</p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_Down%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%912.jpeg" alt="DOWN事件分发图"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_move%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%912.jpeg" alt="MOVE事件分发图">  </p>
+<p><strong>场景三 只有v7处理事件，但是vp1在屏幕下半部分拦截MOVE事件</strong><br>场景三事件分发比较复杂。因为在ft不为空的ViewGroup上拦截事件会分发CANCEL事件</p>
+<figure class="highlight kotlin"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TouchFourActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_touch_two)</span><br><span class="line"></span><br><span class="line">        <span class="comment">//View 7 分发事件 但是vp1在屏幕下半部分拦截move事件 从上往下滑动</span></span><br><span class="line">        <span class="keyword">val</span> view1 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view2 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view3 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> vp2 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp2.addView(view1)</span><br><span class="line">        vp2.addView(view2)</span><br><span class="line">        vp2.addView(view3)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> view4 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view5 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view6 = MyView(<span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp3 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp3.addView(view4)</span><br><span class="line">        vp3.addView(view5)</span><br><span class="line">        vp3.addView(view6)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> view7 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        view7.mOnTouchValue = <span class="literal">true</span></span><br><span class="line">        <span class="keyword">val</span> view8 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view9 = MyView(<span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp4 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp4.addView(view7)</span><br><span class="line">        vp4.addView(view8)</span><br><span class="line">        vp4.addView(view9)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp1 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp1.addView(vp2)</span><br><span class="line">        vp1.addView(vp3)</span><br><span class="line">        vp1.addView(vp4)</span><br><span class="line"></span><br><span class="line">        setContentView(vp1)</span><br><span class="line">        view1.name = <span class="string">&quot;view1&quot;</span></span><br><span class="line">        view2.name = <span class="string">&quot;view2&quot;</span></span><br><span class="line">        view3.name = <span class="string">&quot;view3&quot;</span></span><br><span class="line">        view4.name = <span class="string">&quot;view4&quot;</span></span><br><span class="line">        view5.name = <span class="string">&quot;view5&quot;</span></span><br><span class="line">        view6.name = <span class="string">&quot;view6&quot;</span></span><br><span class="line">        view7.name = <span class="string">&quot;view7&quot;</span></span><br><span class="line">        view8.name = <span class="string">&quot;view8&quot;</span></span><br><span class="line">        view9.name = <span class="string">&quot;view9&quot;</span></span><br><span class="line">        vp1.name =<span class="string">&quot;vp1&quot;</span></span><br><span class="line">        vp2.name =<span class="string">&quot;vp2&quot;</span></span><br><span class="line">        vp3.name =<span class="string">&quot;vp3&quot;</span></span><br><span class="line">        vp4.name =<span class="string">&quot;vp4&quot;</span></span><br><span class="line">        vp1.mRegionInterceptor=<span class="literal">true</span><span class="comment">//下半屏幕拦截事件</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>日志打印如下  </p>
+<blockquote>
+<blockquote>
+<p>vp1 onInterceptTouchEvent ACTION_DOWN  </p>
+<p>vp4 onInterceptTouchEvent ACTION_DOWN  </p>
+<p>view9 onTouchEvent ACTION_DOWN </p>
+<p>view8 onTouchEvent ACTION_DOWN  </p>
+<p>view7 onTouchEvent ACTION_DOWN </p>
+<p>vp1 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>vp4 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>view7 onTouchEvent ACTION_MOVE </p>
+<p>vp1 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>vp4 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>view7 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>vp4 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>view7 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>vp4 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>view7 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>vp4 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>view7 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>vp4 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>view7 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onInterceptTouchEvent ACTION_MOVE//此时移动到了屏幕下方  </p>
+<p>vp4 onInterceptTouchEvent ACTION_CANCEL  </p>
+<p>view7 onTouchEvent ACTION_CANCEL  </p>
+<p>vp1 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onTouchEvent ACTION_UP</p>
+</blockquote>
+</blockquote>
+<p>在屏幕上半部分滑动事件分发图同场景二</p>
+<p>在屏幕下半部分滑动分发图如下</p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_Move%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%913.jpeg" alt="MOVE事件在屏幕下方被拦截"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_move-up.jpeg" alt="后续MOVE、UP事件分发"></p>
+<p>后续的MOVE和UP都只会分发到vp1的onTouchEvent方法里。因为vp1.parent的ft不为空。vp1的ft为空。<br>Android事件分发比较复杂。建议读者不要走马观花的看本篇文件。可以将树形图画在草稿本上。然后结合源码。挨个练习DOWN、MOVE、UP、CANCEL事件分发的流程。  </p>
+<hr>
+<h4 id="Written-By-多点-移动运营研发部-姜斌"><a href="#Written-By-多点-移动运营研发部-姜斌" class="headerlink" title="Written By 多点-移动运营研发部-姜斌"></a>Written By 多点-移动运营研发部-姜斌</h4><p>如果你有任何问题，欢迎通过以下方式联系我<br><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/byte_station_%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7.jpeg" alt="欢迎扫码关注公众号"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/byte_station_%E5%BE%AE%E4%BF%A1%E5%A5%BD%E5%8F%8B.jpeg" alt="欢迎扫码加微信好友"></p>
+]]></content>
+      <categories>
+        <category>技术分享</category>
+      </categories>
+      <tags>
+        <tag>底层原理</tag>
+      </tags>
+  </entry>
 </search>

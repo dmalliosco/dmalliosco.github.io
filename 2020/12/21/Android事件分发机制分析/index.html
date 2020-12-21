@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <script>if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode)) window.location.href="https://support.dmeng.net/upgrade-your-browser.html?referrer="+encodeURIComponent(window.location.href); </script>
+    
+    
+        <link rel="preload" crossorigin="crossorigin" href="/fonts/roboto/Roboto-Regular.woff2" as="font">
+        <link rel="preload" crossorigin="crossorigin" href="/fonts/roboto/Roboto-Bold.woff2" as="font">
+    
+    
+    
+        <link rel="shortcut icon" href="/icons/favicon.ico">
+    
+
+    
+    
+        
+<link rel="stylesheet" href="/css/mdui.min.v1.0.0.css">
+
+    
+    
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+          
+
+
+    
+    
+    <title>
+        
+            Android事件分发机制分析 | dmalliosco
+        
+    </title>
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body class="mdui-drawer-body-left mdui-appbar-with-toolbar mdui-theme-primary-teal mdui-theme-accent-blue">
+  
+  <header class="mdui-appbar mdui-appbar-fixed">
+  <div id="toolbar" class="mdui-toolbar mdui-color-theme">
+    <button class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="iconfont icon-menu"></i></button>
+    <a href="/" class="mdui-typo-headline">dmalliosco</a>
+    <a href="/" class="header-subtitle mdui-typo-headline">dmalldev</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <button class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: 'search'}"><i class="iconfont icon-search"></i></button>
+  </div>
+</header>
+
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字" onfocus="listenSearchFunc()">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer">
+    <div class="mdui-tab" mdui-tab>
+        <a href="#sidebar-tab1" id="sidebartab" class="mdui-ripple mdui-tab-active">站点概览</a>
+        <a href="#sidebar-tab2" id="sidebartab" class="mdui-ripple">关于</a>
+    </div>
+
+    
+    <div id="sidebar-tab1" class="mdui-p-a-2">
+        <div class="mdui-list">
+            
+                
+                <a href="/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-home"></i>
+                    </div>
+                    <div class="mdui-list-item-content">主页</div>
+                </a>
+            
+                
+                <a href="/tags/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-bookmark"></i>
+                    </div>
+                    <div class="mdui-list-item-content">标签</div>
+                </a>
+            
+                
+                <a href="/categories/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-folder"></i>
+                    </div>
+                    <div class="mdui-list-item-content">分类</div>
+                </a>
+            
+                
+                <a href="/archives/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-archive"></i>
+                    </div>
+                    <div class="mdui-list-item-content">归档</div>
+                </a>
+            
+            <div class="mdui-list-item mdui-ripple">
+                <div class="mdui-list-item-icon">
+                    <i class="iconfont icon-moon"></i>
+                </div>
+                <div class="mdui-list-item-content">夜间模式</div>
+                <label class="mdui-switch" id="darkmode">
+                  <input type="checkbox" id="nightmode_switch"/>
+                  <i class="mdui-switch-icon"></i>
+                </label>
+            </div>           
+        </div>
+    </div>
+
+    
+    <div id="sidebar-tab2" class="mdui-p-a-2">
+        <div class="sidebar-overview">
+            <div class="sidebar-avatar">
+                
+                    <img src="/icons/avatar.gif"/>
+                
+            </div>
+            <div class="sidebar-author-name">dmalliosco</div>
+            <div class="sidebar-description">dmalldev</div>
+        </div>
+        <div class="sidebar-links">
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-mail"></i></span>
+                    <a href="mailto:xxx@xxx.com" class="mdui-chip-title">E-Mail</a>
+                </div>
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-github"></i></span>
+                    <a target="_blank" rel="noopener" href="https://github.com/dmalliosco/" class="mdui-chip-title">GitHub</a>
+                </div>
+            
+        </div>
+        <ul class="mdui-list" mdui-collapse="{accordion: true}">
+            <li class="mdui-collapse-item">
+                <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-link"></i>
+                    </div>
+                    <div class="mdui-list-item-content">友情链接</div>
+                    <div class="mdui-collapse-item-arrow">
+                        <i class="mdui-list-item-icon iconfont icon-angle-down"></i>
+                    </div>
+                </div>
+                <ul id="linksList" class="mdui-collapse-item-body mdui-list mdui-list-dense">
+                    
+                        <a target="_blank" rel="noopener" href="https://garybear.cn/hexo-theme-meadow/" class="mdui-list-item mdui-ripple">
+                            Meadow说明文档
+                        </a>
+                    
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="mdui-divider"></div>
+    
+    
+</aside>
+  
+  <main id="main-contain" class="mdui-container mdui-m-t-5">
+    <article id="article" class="mdui-card mdui-p-b-2 mdui-m-b-5">
+  <header class="mdui-card-media">
+    
+    
+      <div class="post-header"> 
+  <a class="post-header-title" href="/2020/12/21/Android%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/">Android事件分发机制分析</a>
+  <div class="post-header-meta">
+    <span>
+      <span class="iconfont icon-calendar"></span>
+      发布于:&nbsp;2020-12-21
+    </span>
+    <span>
+      <span class="iconfont icon-calendar-check"></span>
+      更新于:&nbsp;2020-12-21
+    </span>
+    <span>
+      <span class="iconfont icon-folder"></span>
+      分类于:&nbsp;<a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>
+    </span>
+    
+      <span>
+        <span class="iconfont icon-eye"></span>
+        阅读次数:&nbsp;
+        <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+      </span>
+    
+  </div>
+</div>   
+    
+
+
+
+    
+    
+    <div class="mdui-card-menu">
+    
+      <button class="mdui-btn mdui-btn-icon mdui-text-color-teal" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="iconfont icon-share"></i></button>
+      <ul class="mdui-menu" id="share_menu">
+        <li class="mdui-menu-item">
+          <a href="http://service.weibo.com/share/share.php?appkey=&title=Android事件分发机制分析&url=http://example.com/2020/12/21/Android%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/&pic=http://example.com/null&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://twitter.com/intent/tweet?text=Android事件分发机制分析&url=http://example.com/2020/12/21/Android%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/&via=dmalliosco" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=http://example.com/2020/12/21/Android%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://plus.google.com/share?url=http://example.com/2020/12/21/Android%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://example.com/2020/12/21/Android%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/&title=Android事件分发机制分析" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="http://connect.qq.com/widget/shareqq/index.html?site=dmalliosco&title=Android事件分发机制分析&summary=dmalldev&pics=http://example.com/null&url=http://example.com/2020/12/21/Android%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://telegram.me/share/url?url=http://example.com/2020/12/21/Android%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/&text=Android事件分发机制分析" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+        </li>
+      </ul>
+    
+  </div>
+  </header>
+  
+  
+  
+  
+  <div class="post-tags">
+    
+      <i class="iconfont icon-tag">
+        <a rel="tag" href = /tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/ >底层原理</a>
+      </i>
+    
+  </div>
+
+  
+  <div class="mdui-card-content mdui-typo mdui-p-x-4">
+    <h1 id="事件分发机制分析"><a href="#事件分发机制分析" class="headerlink" title="事件分发机制分析"></a>事件分发机制分析</h1><p>Android事件分发是一个老生常谈的知识点。日常开发和求职过程中，都会碰到Android事件分发的问题。</p>
+<p>Android的控件分为两类，ViewGoup和View。ViewGroup是控件的容器，可以包含多个子控件。View是控件的最小单位，它不能包裹其它的View。Android的ViewGroup对应的数据结构是树。</p>
+<p>网上的事件分发的文章大多数是用线性的思维去分析控件树的事件遍历，我深以为不妥，经常让读者云里雾里，只见树木不见森林。</p>
+<p>本文我将从树的深度遍历来讲解DOWN事件的分发流程，从单链表的线性遍历讲解MOVE、UP事件的分发流程。  </p>
+<p><strong>本文大纲</strong></p>
+<p><strong>1. Android控件对应的多叉树</strong> </p>
+<p><strong>2. 手势事件类型</strong>  </p>
+<p><strong>3. 事件分发涉及到的方法</strong></p>
+<p><strong>4. DOWN事件的分发流程</strong></p>
+<p><strong>5. MOVE、UP事件的分发流程</strong></p>
+<p><strong>6. CANCEL事件触发时机以及分发流程</strong></p>
+<p><strong>7. 通过实例讲解事件分发流程</strong></p>
+<h2 id="1-Android控件对应的多叉树"><a href="#1-Android控件对应的多叉树" class="headerlink" title="1. Android控件对应的多叉树"></a>1. Android控件对应的多叉树</h2><p>假设我们有一个这样的场景</p>
+<p>屏幕上有一个FrameLayout名叫vp1。vp1有三个子控件vp2、vp3、vp4，它们的类型是FrameLayout。vp2有三个子控件v1、v2、v3。vp3有三个子控件v4、v5、v6。vp4有三个子控件v7、v8、v9。子控件的类型都是View。为了方便起见我们假设这些控件都是铺满屏幕的。我们将vp1控件树翻译成多叉树。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_ViewGroup%E6%A0%91%E5%BD%A2%E5%9B%BE.png" alt="控件多叉树"></p>
+<p><strong>解释一下树节点ft的含义</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_ViewGroup%E8%8A%82%E7%82%B9.png" alt="ViewGroup节点"></p>
+<p>ft的是ViewGroup类中的mFirtstTouchTarget成员变量的简称。它对应的数据结构是<strong>单链表</strong>。当DOWN事件在onTouchEvent方法中返回true，会<strong>回溯</strong>设置父View的ft指针。</p>
+<p><strong>举个例子</strong></p>
+<p>当DOWN事件从vp1开始分发。<br>假设DOWN事件在v7的onTouchEvent方法中返回true。<br>那么v7的父控件vp4的ft会指向v7(可以这样简单理解，实际上指向的是v7封装的一个TouchTarget对象)。同理vp1的ft会指向vp4。所以就生成了一条vp1-&gt;vp4-&gt;v7的分发路径。这很重要。  </p>
+<p>DOWN事件的分发是从vp1开始，假设所有的ViewGroup都不拦截事件，所有的View都不处理事件。事件会沿着最后一个子控件做深度遍历分发。以下用intercept代替onInterceptTouchEvent，touch代替onTouchEvent。</p>
+<blockquote>
+<p>调用流程如下</p>
+<p>vp1(intercept) -&gt; vp4(intercept) -&gt; v9(touch) -&gt; v8(touch) -&gt;v7 (touch) -&gt; vp4(touch)-&gt; vp3 -&gt; v6(touch) -&gt; v5(touch) -&gt; v4(touch) -&gt; vp3(touch)-&gt; vp2 -&gt; v3(touch) -&gt; v2(touch) -&gt; v1(touch) -&gt; vp2(touch)-&gt; vp1(touch)</p>
+</blockquote>
+<p><strong>这只是DOWN事件分发的一个Case。根据是否拦截，View是否处理事件。它的遍历路径也会不一样。</strong>  </p>
+<p>MOVE、UP事件分发也是从vp1开始。但是他们不同于DOWN事件的分发。它不会进行深度遍历。深度遍历是比较耗时的。如果vp1有后代View分发了事件。那么必然会通过ft生成一条分发路径。MOVE事件只需沿着分发路径线性分发就可以了。还是用上面的例子。如果v7分发了DOWN事件。那么MOVE、UP事件的分发即vp1(intercept) -&gt; vp4(intercept) -&gt; v7(touch)  </p>
+<h2 id="2-手势事件类型"><a href="#2-手势事件类型" class="headerlink" title="2. 手势事件类型"></a>2. 手势事件类型</h2><p>本文主要讲解四种事件类型，DOWN、MOVE、UP、CANCEL。用户划动手机屏幕然后离开。Android系统首先会触发DOWN事件，紧接着一连串的MOVE事件，以UP事件收场。<strong>注意：触摸屏幕，事件之间没有任何依赖。有可能只有其中一种事件被分发。也有可能有多种事件类型被分发</strong>  </p>
+<table>
+<thead>
+<tr>
+<th align="left">事件类型</th>
+<th align="left">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">ACTION_DOWN</td>
+<td align="left">手指按下屏幕</td>
+</tr>
+<tr>
+<td align="left">ACTION_MOVE</td>
+<td align="left">手指划动屏幕</td>
+</tr>
+<tr>
+<td align="left">ACTION_CANCEL</td>
+<td align="left">事件被取消</td>
+</tr>
+<tr>
+<td align="left">ACTION_UP</td>
+<td align="left">手指离开屏幕</td>
+</tr>
+</tbody></table>
+<h2 id="3-事件分发涉及到的方法"><a href="#3-事件分发涉及到的方法" class="headerlink" title="3. 事件分发涉及到的方法"></a>3. 事件分发涉及到的方法</h2><table>
+<thead>
+<tr>
+<th align="left">方法名</th>
+<th align="left">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">dispatchTouchEvent</td>
+<td align="left">事件分发逻辑</td>
+</tr>
+<tr>
+<td align="left">onInterceptTouchEvent</td>
+<td align="left">是否拦截事件 <strong>(ViewGroup专属)</strong></td>
+</tr>
+<tr>
+<td align="left">onTouchEvent</td>
+<td align="left">是否处理事件</td>
+</tr>
+</tbody></table>
+<ol>
+<li><p>dispatchTouchEvent方法是Android系统内部实现的事件分发逻辑。返回值为boolean类型。true表示该View或ViewGroup处理了事件，反之返回false。返回值含义同onTouchEvent的返回值。dispatchTouchEvent与onTouchEvent的区别在于，默认情况下前者的返回值依赖于后者的返回值，而且前者的侧重点在于制定事件分发的流程，后者的侧重点在于View或者ViewGroup是否处理该事件。</p>
+</li>
+<li><p>onInterceptTouchEvent方法是ViewGroup专属的方法。当返回值为true表示ViewGroup(假设vp1)需要拦截掉该事件。这里有两种情况</p>
+<p>2.1   如果vp1的后代view没有处理DOWN事件。那么事件会直接交给vp1的onTouchEvent处理</p>
+<p>2.2  如果vp1的后代v7处理了DOWN事件，此时vp1拦截了MOVE事件。首先会生成CANCEL事件交由vp4分发。先后置空vp4，vp1的ft对象，接下来的MOVE事件同a步骤</p>
+</li>
+<li><p>onTouchEvent方法返回值同dispatchTouchEvent方法。我们首先得明白一点。onTouchEvent返回true会且仅会落到某一个具体的控件上。不会有更多的控件的onTouchEvent返回true，换句话说有且仅有一个控件能够处理事件。<strong>只有DOWN事件的返回值才有意义</strong>。其它类型事件的返回值并不会影响事件分发的流程。我们以v8的onTouchEvent的DOWN事件返回值为例。</p>
+<p>3.1.  v8 DOWN事件返回true。表示v8处理该事件。在v8分发事件之前应该是 vp1(onInterceptTouchEvent) -&gt; vp4(onInterceptTouchEvent) -&gt; v9(onTouchEvent)-&gt; v8(onTouchEvent)。此时v8返回true。系统会中断vp4的child遍历(不再将事件交由v7分发)。向上回溯设置vp4的ft指向v8，vp1的ft指向vp4。</p>
+<p>3.2.  v8 DOWN事件返回false。事件继续交由v8的亲兄弟v7分发。</p>
+</li>
+</ol>
+<h2 id="4-DOWN事件的分发流程"><a href="#4-DOWN事件的分发流程" class="headerlink" title="4.DOWN事件的分发流程"></a>4.DOWN事件的分发流程</h2><p>DOWN事件分发到vp1，会调用vp1的onInterceptTouchEvent。这里有拦截和不拦截两种情况。  </p>
+<ol>
+<li><p>如果返回true，vp1拦截DOWN事件，DOWN事件直接交由vp1的onTouchEvent处理。</p>
+</li>
+<li><p>如果返回false，vp1不拦截DOWN事件，DOWN事件将会交由vp1的最后一个子View分发。即交由vp4分发。</p>
+</li>
+</ol>
+<p>拦截方法以此类推，如果vp4不拦截DOWN事件，将交由v9分发事件。因为v9是View类型。没有拦截方法，所以会直接调用v9的onTouchEvent方法。该方法有处理和不处理两种情况。  </p>
+<ol>
+<li><p>如果返回false，v9不处理事件。那么事件继续向前分发交由v8分发，同理调用v8的onTouchEvent方法，v8不处理事件，继续交由v7处理。v7也不处理，vp4的子View到此遍历完成。此时vp4的ft为空，直接调用vp4的onTouchEvent方法。  </p>
+</li>
+<li><p>如果返回true，v9处理事件。系统会中断vp4的子View遍历，DOWN事件分发结束。同时往上递归回溯设置父View的ft对象。vp4的ft指向v9，vp1的ft指向vp4。  </p>
+<p><strong>总结：DOWN事件是通过深度遍历分发事件的。</strong>  </p>
+</li>
+</ol>
+<h2 id="5-MOVE、UP事件的分发流程"><a href="#5-MOVE、UP事件的分发流程" class="headerlink" title="5. MOVE、UP事件的分发流程"></a>5. MOVE、UP事件的分发流程</h2><p>MOVE事件分发到VP1。它与DOWN事件的区别是，它并不一定会调用onInterceptTouchEvent。它只有当vp1的ft不为空时才会调用onInterceptTouchEvent方法，否则会直接拦截掉事件。</p>
+<ol>
+<li><p> 当vp1的ft为空。直接拦截掉MOVE事件。调用VP1的onTouchEvent方法，注意这里onTouchEvent方法的返回值不会影响事件分发的流程。</p>
+</li>
+<li><p>当vp1的ft不为空(当有后代View的onTouchEvent方法返回了true)。调用onInterceptTouchEvent方法，如果返回true，同上，直接调换用VP1的onTouchEvent方法。如果返回false，会通过ft的单链表线性分发事件。  </p>
+</li>
+</ol>
+<p>UP事件同MOVE事件。这里就不分析了。  </p>
+<p><strong>总结：MOVE、UP事件是通过线性遍历分发的。</strong>  </p>
+<h2 id="6-CANCEL事件触发时机以及分发流程"><a href="#6-CANCEL事件触发时机以及分发流程" class="headerlink" title="6. CANCEL事件触发时机以及分发流程"></a>6. CANCEL事件触发时机以及分发流程</h2><p>前面我们讲到的DOWN、MOVE、UP事件都是由手触摸屏幕产生的。并没有讲到CANCEL是如何产生的。CANCEL不是由手触摸屏幕产生的。它是由系统生成。并且分发给View的。有一种场景会触发系统产生CANCEL事件。<br>还是上面的控件树。假设手机在屏幕的上半部分，所有的ViewGroup都不拦截事件，V9处理DOWN事件，当划动到屏幕的下半部分时，VP1拦截MOVE事件。当手指从上划动到下面时。系统将在vp1处，产生一个CANCEL事件，交由vp4分发。CANCEL事件的分发也是通过ft线性分发。当ViewGroup分发CANCEL事件后，会将ViewGroup的ft置为空。即将VP1，VP4的ft置为空。  </p>
+<h2 id="7-通过实例讲解事件分发流程"><a href="#7-通过实例讲解事件分发流程" class="headerlink" title="7. 通过实例讲解事件分发流程"></a>7. 通过实例讲解事件分发流程</h2><p>本段将通过三个场景实战讲解事件分发流程  </p>
+<p><strong>1.  所有的View都不分发事件，所有的ViewGroup都不拦截事件</strong> </p>
+<p><strong>2.  只有v7 onTouchEvent DOWN事件返回true</strong></p>
+<p><strong>3.  只有v7处理事件，但是vp4在屏幕下半部分拦截MOVE事件</strong></p>
+<p>自定义MyView  </p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyView</span> <span class="meta">@JvmOverloads</span> <span class="keyword">constructor</span></span>(</span><br><span class="line">    context: Context, attrs: AttributeSet? = <span class="literal">null</span>, defStyleAttr: <span class="built_in">Int</span> = <span class="number">0</span></span><br><span class="line">) : View(context, attrs, defStyleAttr) &#123;</span><br><span class="line">    <span class="keyword">var</span> name: String = <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">var</span> mOnTouchValue = <span class="literal">false</span><span class="comment">//是否分发事件</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequiresApi(Build.VERSION_CODES.KITKAT)</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onTouchEvent</span><span class="params">(event: <span class="type">MotionEvent</span>)</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">        Log.d(<span class="string">&quot;MyView&quot;</span>, <span class="string">&quot;<span class="variable">$name</span> onTouchEvent <span class="subst">$&#123;MotionEvent.actionToString(event.action)&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (mOnTouchValue) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(event)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>自定义MyFrameLayout</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyFrameLayout</span> <span class="meta">@JvmOverloads</span> <span class="keyword">constructor</span></span>(</span><br><span class="line">    context: Context, attrs: AttributeSet? = <span class="literal">null</span>, defStyleAttr: <span class="built_in">Int</span> = <span class="number">0</span></span><br><span class="line">) : FrameLayout(context, attrs, defStyleAttr) &#123;</span><br><span class="line">    <span class="keyword">var</span> name: String = <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">var</span> mOnTouchValue = <span class="literal">false</span><span class="comment">//是否分发事件</span></span><br><span class="line">    <span class="keyword">var</span> mDispatchValueSuper = <span class="literal">true</span> <span class="comment">//是否调用super.dispatchTouchEvent,如果false 直接return true</span></span><br><span class="line">    <span class="keyword">var</span> mRegionInterceptor = <span class="literal">false</span><span class="comment">//在某个特定区域 拦截事件</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">dispatchTouchEvent</span><span class="params">(ev: <span class="type">MotionEvent</span>?)</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">if</span> (mDispatchValueSuper) &#123;</span><br><span class="line">            <span class="keyword">super</span>.dispatchTouchEvent(ev)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequiresApi(Build.VERSION_CODES.KITKAT)</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onInterceptTouchEvent</span><span class="params">(ev: <span class="type">MotionEvent</span>)</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">        Log.d(<span class="string">&quot;MyFrameLayout&quot;</span>, <span class="string">&quot;<span class="variable">$name</span> onInterceptTouchEvent <span class="subst">$&#123;MotionEvent.actionToString(ev.action)&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (mRegionInterceptor) &#123;</span><br><span class="line">            <span class="keyword">val</span> touchY = ev?.y</span><br><span class="line">            <span class="keyword">if</span> (touchY != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (touchY &gt; measuredHeight / <span class="number">2</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onInterceptTouchEvent(ev)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequiresApi(Build.VERSION_CODES.KITKAT)</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onTouchEvent</span><span class="params">(event: <span class="type">MotionEvent</span>)</span></span>: <span class="built_in">Boolean</span> &#123;</span><br><span class="line">        Log.d(<span class="string">&quot;MyFrameLayout&quot;</span>, <span class="string">&quot;<span class="variable">$name</span> onTouchEvent <span class="subst">$&#123;MotionEvent.actionToString(event.action)&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">if</span> (mOnTouchValue) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(event)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>场景一 所有的View都不分发事件，所有的ViewGroup都不拦截事件</strong>  </p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TouchOneActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line"><span class="comment">//        setContentView(R.layout.activity_touch_one)</span></span><br><span class="line">        <span class="comment">//所有的view都不分发事件</span></span><br><span class="line">        <span class="keyword">val</span> view1 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view2 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view3 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> vp2 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp2.addView(view1)</span><br><span class="line">        vp2.addView(view2)</span><br><span class="line">        vp2.addView(view3)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> view4 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view5 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view6 = MyView(<span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp3 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp3.addView(view4)</span><br><span class="line">        vp3.addView(view5)</span><br><span class="line">        vp3.addView(view6)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> view7 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view8 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view9 = MyView(<span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp4 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp4.addView(view7)</span><br><span class="line">        vp4.addView(view8)</span><br><span class="line">        vp4.addView(view9)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp1 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp1.addView(vp2)</span><br><span class="line">        vp1.addView(vp3)</span><br><span class="line">        vp1.addView(vp4)</span><br><span class="line"></span><br><span class="line">        setContentView(vp1)</span><br><span class="line">        view1.name = <span class="string">&quot;view1&quot;</span></span><br><span class="line">        view2.name = <span class="string">&quot;view2&quot;</span></span><br><span class="line">        view3.name = <span class="string">&quot;view3&quot;</span></span><br><span class="line">        view4.name = <span class="string">&quot;view4&quot;</span></span><br><span class="line">        view5.name = <span class="string">&quot;view5&quot;</span></span><br><span class="line">        view6.name = <span class="string">&quot;view6&quot;</span></span><br><span class="line">        view7.name = <span class="string">&quot;view7&quot;</span></span><br><span class="line">        view8.name = <span class="string">&quot;view8&quot;</span></span><br><span class="line">        view9.name = <span class="string">&quot;view9&quot;</span></span><br><span class="line">        vp1.name =<span class="string">&quot;vp1&quot;</span></span><br><span class="line">        vp2.name =<span class="string">&quot;vp2&quot;</span></span><br><span class="line">        vp3.name =<span class="string">&quot;vp3&quot;</span></span><br><span class="line">        vp4.name =<span class="string">&quot;vp4&quot;</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>日志打印如下  </p>
+<blockquote>
+<blockquote>
+<p>Vp1 onInterceptTouchEvent  Down</p>
+<p>Vp4 onInterceptTouchEvent  Down</p>
+<p>V9 onTouchEvent  Down</p>
+<p>V8 onTouchEvent  Down</p>
+<p>V7 onTouchEvent  Down</p>
+<p>Vp4 onTouchEvent  Down</p>
+<p>Vp3 onInterceptTouchEvent  Down</p>
+<p>V6 onTouchEvent  Down</p>
+<p>V5 onTouchEvent  Down</p>
+<p>V4 onTouchEvent  Down</p>
+<p>Vp3 onTouchEvent  Down</p>
+<p>Vp2onInterceptTouchEvent  Down</p>
+<p>V3 onTouchEvent  Down</p>
+<p>V2 onTouchEvent  Down</p>
+<p>V1 onTouchEvent  Down</p>
+<p>Vp2 onTouchEvent  Down</p>
+<p>Vp1 onTouchEvent  Down </p>
+</blockquote>
+</blockquote>
+<p>分发图如下  </p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_DOWN%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%911.jpeg" alt="DOWN事件分发图"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_MOVE%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%911.jpeg" alt="MOVE事件分发图"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_UP%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%911.jpeg" alt="UP事件分发图"> </p>
+<p><strong>场景二 只有v7 onTouchEvent DOWN事件返回true</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TouchTwoActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_touch_two)</span><br><span class="line"></span><br><span class="line">        <span class="comment">//View 7 分发事件</span></span><br><span class="line">        <span class="keyword">val</span> view1 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view2 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view3 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> vp2 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp2.addView(view1)</span><br><span class="line">        vp2.addView(view2)</span><br><span class="line">        vp2.addView(view3)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> view4 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view5 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view6 = MyView(<span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp3 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp3.addView(view4)</span><br><span class="line">        vp3.addView(view5)</span><br><span class="line">        vp3.addView(view6)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> view7 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        view7.mOnTouchValue = <span class="literal">true</span></span><br><span class="line">        <span class="keyword">val</span> view8 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view9 = MyView(<span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp4 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp4.addView(view7)</span><br><span class="line">        vp4.addView(view8)</span><br><span class="line">        vp4.addView(view9)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp1 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp1.addView(vp2)</span><br><span class="line">        vp1.addView(vp3)</span><br><span class="line">        vp1.addView(vp4)</span><br><span class="line"></span><br><span class="line">        setContentView(vp1)</span><br><span class="line">        view1.name = <span class="string">&quot;view1&quot;</span></span><br><span class="line">        view2.name = <span class="string">&quot;view2&quot;</span></span><br><span class="line">        view3.name = <span class="string">&quot;view3&quot;</span></span><br><span class="line">        view4.name = <span class="string">&quot;view4&quot;</span></span><br><span class="line">        view5.name = <span class="string">&quot;view5&quot;</span></span><br><span class="line">        view6.name = <span class="string">&quot;view6&quot;</span></span><br><span class="line">        view7.name = <span class="string">&quot;view7&quot;</span></span><br><span class="line">        view8.name = <span class="string">&quot;view8&quot;</span></span><br><span class="line">        view9.name = <span class="string">&quot;view9&quot;</span></span><br><span class="line">        vp1.name =<span class="string">&quot;vp1&quot;</span></span><br><span class="line">        vp2.name =<span class="string">&quot;vp2&quot;</span></span><br><span class="line">        vp3.name =<span class="string">&quot;vp3&quot;</span></span><br><span class="line">        vp4.name =<span class="string">&quot;vp4&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>日志打印如下  </p>
+<blockquote>
+<blockquote>
+<p>Vp1 onInterceptTouchEvent  Down</p>
+<p>Vp4 onInterceptTouchEvent  Down</p>
+<p>v9 onTouchEvent  Down</p>
+<p>v8 onTouchEvent  Down</p>
+<p>v7 onTouchEvent  Down  # v7消耗掉了事件，中断本层遍历，并回溯设置ft</p>
+<p>Vp1 onInterceptTouchEvent  Move</p>
+<p>Vp4 onInterceptTouchEvent  Move</p>
+<p>v7 onTouchEvent  Move</p>
+<p>Vp1 onInterceptTouchEvent  UP</p>
+<p>Vp4 onInterceptTouchEvent  UP</p>
+<p>v7 onTouchEvent  UP  </p>
+</blockquote>
+</blockquote>
+<p>分发图如下  </p>
+<p>DOWN事件分发图如下。步骤6、7是逻辑。并非实际打印</p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_Down%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%912.jpeg" alt="DOWN事件分发图"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_move%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%912.jpeg" alt="MOVE事件分发图">  </p>
+<p><strong>场景三 只有v7处理事件，但是vp1在屏幕下半部分拦截MOVE事件</strong><br>场景三事件分发比较复杂。因为在ft不为空的ViewGroup上拦截事件会分发CANCEL事件</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TouchFourActivity</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_touch_two)</span><br><span class="line"></span><br><span class="line">        <span class="comment">//View 7 分发事件 但是vp1在屏幕下半部分拦截move事件 从上往下滑动</span></span><br><span class="line">        <span class="keyword">val</span> view1 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view2 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view3 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> vp2 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp2.addView(view1)</span><br><span class="line">        vp2.addView(view2)</span><br><span class="line">        vp2.addView(view3)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> view4 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view5 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view6 = MyView(<span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp3 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp3.addView(view4)</span><br><span class="line">        vp3.addView(view5)</span><br><span class="line">        vp3.addView(view6)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> view7 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        view7.mOnTouchValue = <span class="literal">true</span></span><br><span class="line">        <span class="keyword">val</span> view8 = MyView(<span class="keyword">this</span>)</span><br><span class="line">        <span class="keyword">val</span> view9 = MyView(<span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp4 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp4.addView(view7)</span><br><span class="line">        vp4.addView(view8)</span><br><span class="line">        vp4.addView(view9)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">val</span> vp1 = MyFrameLayout(<span class="keyword">this</span>)</span><br><span class="line">        vp1.addView(vp2)</span><br><span class="line">        vp1.addView(vp3)</span><br><span class="line">        vp1.addView(vp4)</span><br><span class="line"></span><br><span class="line">        setContentView(vp1)</span><br><span class="line">        view1.name = <span class="string">&quot;view1&quot;</span></span><br><span class="line">        view2.name = <span class="string">&quot;view2&quot;</span></span><br><span class="line">        view3.name = <span class="string">&quot;view3&quot;</span></span><br><span class="line">        view4.name = <span class="string">&quot;view4&quot;</span></span><br><span class="line">        view5.name = <span class="string">&quot;view5&quot;</span></span><br><span class="line">        view6.name = <span class="string">&quot;view6&quot;</span></span><br><span class="line">        view7.name = <span class="string">&quot;view7&quot;</span></span><br><span class="line">        view8.name = <span class="string">&quot;view8&quot;</span></span><br><span class="line">        view9.name = <span class="string">&quot;view9&quot;</span></span><br><span class="line">        vp1.name =<span class="string">&quot;vp1&quot;</span></span><br><span class="line">        vp2.name =<span class="string">&quot;vp2&quot;</span></span><br><span class="line">        vp3.name =<span class="string">&quot;vp3&quot;</span></span><br><span class="line">        vp4.name =<span class="string">&quot;vp4&quot;</span></span><br><span class="line">        vp1.mRegionInterceptor=<span class="literal">true</span><span class="comment">//下半屏幕拦截事件</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>日志打印如下  </p>
+<blockquote>
+<blockquote>
+<p>vp1 onInterceptTouchEvent ACTION_DOWN  </p>
+<p>vp4 onInterceptTouchEvent ACTION_DOWN  </p>
+<p>view9 onTouchEvent ACTION_DOWN </p>
+<p>view8 onTouchEvent ACTION_DOWN  </p>
+<p>view7 onTouchEvent ACTION_DOWN </p>
+<p>vp1 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>vp4 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>view7 onTouchEvent ACTION_MOVE </p>
+<p>vp1 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>vp4 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>view7 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>vp4 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>view7 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>vp4 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>view7 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>vp4 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>view7 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>vp4 onInterceptTouchEvent ACTION_MOVE  </p>
+<p>view7 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onInterceptTouchEvent ACTION_MOVE//此时移动到了屏幕下方  </p>
+<p>vp4 onInterceptTouchEvent ACTION_CANCEL  </p>
+<p>view7 onTouchEvent ACTION_CANCEL  </p>
+<p>vp1 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onTouchEvent ACTION_MOVE  </p>
+<p>vp1 onTouchEvent ACTION_UP</p>
+</blockquote>
+</blockquote>
+<p>在屏幕上半部分滑动事件分发图同场景二</p>
+<p>在屏幕下半部分滑动分发图如下</p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_Move%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%913.jpeg" alt="MOVE事件在屏幕下方被拦截"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/byte_station_move-up.jpeg" alt="后续MOVE、UP事件分发"></p>
+<p>后续的MOVE和UP都只会分发到vp1的onTouchEvent方法里。因为vp1.parent的ft不为空。vp1的ft为空。<br>Android事件分发比较复杂。建议读者不要走马观花的看本篇文件。可以将树形图画在草稿本上。然后结合源码。挨个练习DOWN、MOVE、UP、CANCEL事件分发的流程。  </p>
+<hr>
+<h4 id="Written-By-多点-移动运营研发部-姜斌"><a href="#Written-By-多点-移动运营研发部-姜斌" class="headerlink" title="Written By 多点-移动运营研发部-姜斌"></a>Written By 多点-移动运营研发部-姜斌</h4><p>如果你有任何问题，欢迎通过以下方式联系我<br><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/byte_station_%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7.jpeg" alt="欢迎扫码关注公众号"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/lizijin/bytestation@master/byte_station_%E5%BE%AE%E4%BF%A1%E5%A5%BD%E5%8F%8B.jpeg" alt="欢迎扫码加微信好友"></p>
+
+  </div>
+  <!--文末结束语-->
+  
+    <div style="text-align:center;color: #ccc;font-size:24px;"> --- 本文结束 <i class="iconfont icon-heartbeat" style="font-size:24px;"></i> The End --- </div>
+  
+  <!--页脚广告-->
+  
+  <div class="mdui-divider"></div>
+  
+  <nav>
+    
+      <a rel="prev" class="post-nav-item mdui-float-left" href="/2020/12/21/Android-RecyclerView%E6%BB%9A%E5%8A%A8%E6%97%B6%E5%B9%B2%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F/">
+        <i class="iconfont icon-angle-left"></i>
+        <span>Android-RecyclerView滚动时干了什么？</span>
+      </a>
+    
+    
+      <a rel="next" class="post-nav-item mdui-float-right" href="/2020/12/17/iOS%E5%8A%A8%E7%94%BB%E5%B0%8F%E7%BB%93/">
+        <span>iOS动画小结</span>
+        <i class="iconfont icon-angle-right"></i>
+      </a>
+    
+  </nav>
+</article>
+
+
+
+
+  <div class="toc-button"  style="z-index: 100;">
+    <button class="mdui-fab mdui-ripple mdui-color-teal" mdui-menu="{target: '#toc'}"><i class="iconfont icon-list"></i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item">
+        <a href="/2020/12/21/Android%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/" id="toc-header" class="mdui-ripple">文章目录</a>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">事件分发机制分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Android%E6%8E%A7%E4%BB%B6%E5%AF%B9%E5%BA%94%E7%9A%84%E5%A4%9A%E5%8F%89%E6%A0%91"><span class="toc-number">1.1.</span> <span class="toc-text">1. Android控件对应的多叉树</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%89%8B%E5%8A%BF%E4%BA%8B%E4%BB%B6%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.</span> <span class="toc-text">2. 手势事件类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%B6%89%E5%8F%8A%E5%88%B0%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">3. 事件分发涉及到的方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-DOWN%E4%BA%8B%E4%BB%B6%E7%9A%84%E5%88%86%E5%8F%91%E6%B5%81%E7%A8%8B"><span class="toc-number">1.4.</span> <span class="toc-text">4.DOWN事件的分发流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-MOVE%E3%80%81UP%E4%BA%8B%E4%BB%B6%E7%9A%84%E5%88%86%E5%8F%91%E6%B5%81%E7%A8%8B"><span class="toc-number">1.5.</span> <span class="toc-text">5. MOVE、UP事件的分发流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-CANCEL%E4%BA%8B%E4%BB%B6%E8%A7%A6%E5%8F%91%E6%97%B6%E6%9C%BA%E4%BB%A5%E5%8F%8A%E5%88%86%E5%8F%91%E6%B5%81%E7%A8%8B"><span class="toc-number">1.6.</span> <span class="toc-text">6. CANCEL事件触发时机以及分发流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E9%80%9A%E8%BF%87%E5%AE%9E%E4%BE%8B%E8%AE%B2%E8%A7%A3%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%B5%81%E7%A8%8B"><span class="toc-number">1.7.</span> <span class="toc-text">7. 通过实例讲解事件分发流程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Written-By-%E5%A4%9A%E7%82%B9-%E7%A7%BB%E5%8A%A8%E8%BF%90%E8%90%A5%E7%A0%94%E5%8F%91%E9%83%A8-%E5%A7%9C%E6%96%8C"><span class="toc-number">1.7.0.1.</span> <span class="toc-text">Written By 多点-移动运营研发部-姜斌</span></a></li></ol></li></ol></li></ol></li></ol>
+      </li>
+    </ul>
+  </div>
+
+
+
+    <div id="comment" class="mdui-card mdui-p-a-2 mdui-m-b-5">
+      <div class="mdui-tab" mdui-tab>
+        
+          <a href="#comment-tab0" class="mdui-ripple">gitalk</a>
+        
+          <a href="#comment-tab1" class="mdui-ripple">livere</a>
+        
+      </div>
+      
+        <div id="comment-tab0" class="mdui-p-a-2">
+          <div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+    clientID: '',
+    clientSecret: '',
+    repo: '',
+    owner: '',
+    admin: [''],
+    id:  md5(location.pathname) ,
+    distractionFreeMode: 'true',
+  });
+  gitalk.render('gitalk-container');
+</script>
+        </div>
+      
+        <div id="comment-tab1" class="mdui-p-a-2">
+          <div id="lv-container" data-id="city" data-uid="">
+  <script type="text/javascript">
+    (function (d, s) {
+      var j, e = d.getElementsByTagName(s)[0];
+      if (typeof LivereTower === 'function') { return; }
+      j = d.createElement(s);
+      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+      j.async = true;
+      e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+  </script>
+  <noscript>Please enable JavaScript to view the comments powered by LiveRe.</noscript>
+</div>
+        </div>
+      
+    </div>
+
+  </main>
+  <footer id="footer" class="mdui-text-center mdui-m-t-5 mdui-p-b-2 mdui-p-t-4 mdui-color-theme">
+  <div class="mdui-container">
+    <div class="mdui-row">
+      
+        <a href="https://beian.miit.gov.cn" rel="noopener" target="_blank"></a>
+      
+      <span>
+        &copy; 2015 - 2020 
+        
+          <span style="color:#d9333f" class="iconfont icon-heart"></span>
+        
+        dmalliosco
+      </span>
+    </div>
+    <div class="mdui-row">
+      
+        <div class="mdui-col-xs-6 mdui-text-right">
+          <span>Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a></span>
+        </div>
+        <div class="mdui-col-xs-6 mdui-text-left">
+          <span>Theme: <a href="https://github.com/kb1000fx/Meadow" rel="noopener" target="_blank">Meadow</a></span>
+        </div>
+      
+    </div>
+    <div class="mdui-row">
+      
+        <div class="mdui-col-xs-6 mdui-text-right">
+          <span id="busuanzi_container_site_uv" style="display: none;"> <span class="iconfont icon-user"></span>总访客量 <span id="busuanzi_value_site_uv"></span></span>
+        </div>
+        <div class="mdui-col-xs-6 mdui-text-left">
+          <span id="busuanzi_container_site_pv" style="display: none;"> <span class="iconfont icon-eye"></span>总访问量 <span id="busuanzi_value_site_pv"></span></span>
+        </div>
+      
+    </div>
+ </div>
+</footer>
+  
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-teal" style="z-index:100;"><i class="iconfont icon-arrowup"></i></button>
+  
+  
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@8.4.8/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({
+        startOnLoad: true,
+        theme: "default"
+    });</script>
+
+
+
+
+    
+<script src="/js/mdui.min.v1.0.0.js"></script>
+
+
+
+
+<script src="/js/meadow.js"></script>
+
+</body>
+</html >
