@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <script>if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode)) window.location.href="https://support.dmeng.net/upgrade-your-browser.html?referrer="+encodeURIComponent(window.location.href); </script>
+    
+    
+        <link rel="preload" crossorigin="crossorigin" href="/fonts/roboto/Roboto-Regular.woff2" as="font">
+        <link rel="preload" crossorigin="crossorigin" href="/fonts/roboto/Roboto-Bold.woff2" as="font">
+    
+    
+    
+        <link rel="shortcut icon" href="/icons/favicon.ico">
+    
+
+    
+    
+        
+<link rel="stylesheet" href="/css/mdui.min.v1.0.0.css">
+
+    
+    
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+          
+
+
+    
+    
+    <title>
+        
+            iOS离屏渲染是怎么回事? | dmalliosco
+        
+    </title>
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body class="mdui-drawer-body-left mdui-appbar-with-toolbar mdui-theme-primary-teal mdui-theme-accent-blue">
+  
+  <header class="mdui-appbar mdui-appbar-fixed">
+  <div id="toolbar" class="mdui-toolbar mdui-color-theme">
+    <button class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="iconfont icon-menu"></i></button>
+    <a href="/" class="mdui-typo-headline">dmalliosco</a>
+    <a href="/" class="header-subtitle mdui-typo-headline">dmalldev</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <button class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: 'search'}"><i class="iconfont icon-search"></i></button>
+  </div>
+</header>
+
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字" onfocus="listenSearchFunc()">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer">
+    <div class="mdui-tab" mdui-tab>
+        <a href="#sidebar-tab1" id="sidebartab" class="mdui-ripple mdui-tab-active">站点概览</a>
+        <a href="#sidebar-tab2" id="sidebartab" class="mdui-ripple">关于</a>
+    </div>
+
+    
+    <div id="sidebar-tab1" class="mdui-p-a-2">
+        <div class="mdui-list">
+            
+                
+                <a href="/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-home"></i>
+                    </div>
+                    <div class="mdui-list-item-content">主页</div>
+                </a>
+            
+                
+                <a href="/tags/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-bookmark"></i>
+                    </div>
+                    <div class="mdui-list-item-content">标签</div>
+                </a>
+            
+                
+                <a href="/categories/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-folder"></i>
+                    </div>
+                    <div class="mdui-list-item-content">分类</div>
+                </a>
+            
+                
+                <a href="/archives/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-archive"></i>
+                    </div>
+                    <div class="mdui-list-item-content">归档</div>
+                </a>
+            
+            <div class="mdui-list-item mdui-ripple">
+                <div class="mdui-list-item-icon">
+                    <i class="iconfont icon-moon"></i>
+                </div>
+                <div class="mdui-list-item-content">夜间模式</div>
+                <label class="mdui-switch" id="darkmode">
+                  <input type="checkbox" id="nightmode_switch"/>
+                  <i class="mdui-switch-icon"></i>
+                </label>
+            </div>           
+        </div>
+    </div>
+
+    
+    <div id="sidebar-tab2" class="mdui-p-a-2">
+        <div class="sidebar-overview">
+            <div class="sidebar-avatar">
+                
+                    <img src="/icons/avatar.gif"/>
+                
+            </div>
+            <div class="sidebar-author-name">dmalliosco</div>
+            <div class="sidebar-description">dmalldev</div>
+        </div>
+        <div class="sidebar-links">
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-mail"></i></span>
+                    <a href="mailto:xxx@xxx.com" class="mdui-chip-title">E-Mail</a>
+                </div>
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-github"></i></span>
+                    <a target="_blank" rel="noopener" href="https://github.com/dmalliosco/" class="mdui-chip-title">GitHub</a>
+                </div>
+            
+        </div>
+        <ul class="mdui-list" mdui-collapse="{accordion: true}">
+            <li class="mdui-collapse-item">
+                <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-link"></i>
+                    </div>
+                    <div class="mdui-list-item-content">友情链接</div>
+                    <div class="mdui-collapse-item-arrow">
+                        <i class="mdui-list-item-icon iconfont icon-angle-down"></i>
+                    </div>
+                </div>
+                <ul id="linksList" class="mdui-collapse-item-body mdui-list mdui-list-dense">
+                    
+                        <a target="_blank" rel="noopener" href="https://garybear.cn/hexo-theme-meadow/" class="mdui-list-item mdui-ripple">
+                            Meadow说明文档
+                        </a>
+                    
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="mdui-divider"></div>
+    
+    
+</aside>
+  
+  <main id="main-contain" class="mdui-container mdui-m-t-5">
+    <article id="article" class="mdui-card mdui-p-b-2 mdui-m-b-5">
+  <header class="mdui-card-media">
+    
+    
+      <div class="post-header"> 
+  <a class="post-header-title" href="/2021/02/08/iOS%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B/">iOS离屏渲染是怎么回事?</a>
+  <div class="post-header-meta">
+    <span>
+      <span class="iconfont icon-calendar"></span>
+      发布于:&nbsp;2021-02-08
+    </span>
+    <span>
+      <span class="iconfont icon-calendar-check"></span>
+      更新于:&nbsp;2021-02-08
+    </span>
+    <span>
+      <span class="iconfont icon-folder"></span>
+      分类于:&nbsp;<a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>
+    </span>
+    
+      <span>
+        <span class="iconfont icon-eye"></span>
+        阅读次数:&nbsp;
+        <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+      </span>
+    
+  </div>
+</div>   
+    
+
+
+
+    
+    
+    <div class="mdui-card-menu">
+    
+      <button class="mdui-btn mdui-btn-icon mdui-text-color-teal" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="iconfont icon-share"></i></button>
+      <ul class="mdui-menu" id="share_menu">
+        <li class="mdui-menu-item">
+          <a href="http://service.weibo.com/share/share.php?appkey=&title=iOS离屏渲染是怎么回事?&url=http://example.com/2021/02/08/iOS%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B/&pic=http://example.com/null&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://twitter.com/intent/tweet?text=iOS离屏渲染是怎么回事?&url=http://example.com/2021/02/08/iOS%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B/&via=dmalliosco" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=http://example.com/2021/02/08/iOS%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://plus.google.com/share?url=http://example.com/2021/02/08/iOS%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://example.com/2021/02/08/iOS%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B/&title=iOS离屏渲染是怎么回事?" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="http://connect.qq.com/widget/shareqq/index.html?site=dmalliosco&title=iOS离屏渲染是怎么回事?&summary=dmalldev&pics=http://example.com/null&url=http://example.com/2021/02/08/iOS%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://telegram.me/share/url?url=http://example.com/2021/02/08/iOS%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B/&text=iOS离屏渲染是怎么回事?" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+        </li>
+      </ul>
+    
+  </div>
+  </header>
+  
+  
+  
+  
+  <div class="post-tags">
+    
+      <i class="iconfont icon-tag">
+        <a rel="tag" href = /tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/ >性能优化</a>
+      </i>
+    
+  </div>
+
+  
+  <div class="mdui-card-content mdui-typo mdui-p-x-4">
+    <h1 id="什么是离屏渲染？"><a href="#什么是离屏渲染？" class="headerlink" title="什么是离屏渲染？"></a>什么是离屏渲染？</h1><p>在几乎所有的面试过程中，我们都会被问到一个问题，什么是离屏渲染？为什么我们会被问到这个问题呢？看起来这个问题跟我们的开发并没有任何的关联。</p>
+<h2 id="1-了解CPU和GPU的区别"><a href="#1-了解CPU和GPU的区别" class="headerlink" title="1.了解CPU和GPU的区别"></a>1.了解CPU和GPU的区别</h2><p><strong>CPU</strong>（Central Processing Unit）:现代计算机整个系统的运算核心、控制核心。<br><strong>GPU</strong>（Graphics Processing Unit）:可进行绘图运算工作的专用微型处理器，是连接计算机和显示器终端的纽带。<br><img src="https://s3.ax1x.com/2021/02/08/yUksQe.png" alt="CPU和GPU"></p>
+<p>CPU需要很强的通用性来处理各种不同的数据类型，同时又要逻辑判断又会引入大量的分支跳转和中断的处理。这些都使得CPU的内部结构异常复杂。<br>而GPU面对的则是类型高度统一的、相互无依赖的大规模数据和不需要被打断的纯净的计算环境。</p>
+<p><strong>CPU/GPU的内部组成</strong><br><a target="_blank" rel="noopener" href="https://imgchr.com/i/yUk7Lj"><img src="https://s3.ax1x.com/2021/02/08/yUk7Lj.png" alt="CPU和GPU的内部组成"></a><br>图片来自nVidia CUDA文档。其中绿色的是计算单元，橙红色的是存储单元，橙黄色的是控制单元。</p>
+<p>苹果在各种文档中常常提到的硬件加速器实际上就是GPU。<br>在苹果的系统中，GPU主要负责：<br>1.手机和mac的渲染问题；<br>2.因为其卓越的运算能力，通常还用来处理音视频的编解码/视频滤镜/特效处理/人工智能机器学习计算。</p>
+<h2 id="2-显示器成像的原理（几代显示器的变迁）"><a href="#2-显示器成像的原理（几代显示器的变迁）" class="headerlink" title="2.显示器成像的原理（几代显示器的变迁）"></a>2.显示器成像的原理（几代显示器的变迁）</h2><h3 id="2-1-随机扫描显示"><a href="#2-1-随机扫描显示" class="headerlink" title="2.1 随机扫描显示"></a>2.1 随机扫描显示</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yU8Azj"><img src="https://s3.ax1x.com/2021/02/08/yU8Azj.png" alt="随机扫描显示"></a></p>
+<p>采用随机定位的方式控制电子束的移动，一般会带有图形数据输入设备（例如光笔、作图板、跟踪球等），人机交互性好，与计算机对接方便。<br>优点：电子束随机定位、线条质量好、缓存容量少、人机交互方便；<br>缺点：不能显示太复杂的画面，而且亮度等级和颜色种类较少。</p>
+<h3 id="2-2-光栅扫描显示系统组成"><a href="#2-2-光栅扫描显示系统组成" class="headerlink" title="2.2 光栅扫描显示系统组成"></a>2.2 光栅扫描显示系统组成</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yU8uwV"><img src="https://s3.ax1x.com/2021/02/08/yU8uwV.png" alt="屏幕扫描"></a></p>
+<p>光栅扫描显示：电子束通过偏转不断的从左到右从上到下将图片逐行逐点的扫描到显示屏上，通过控制电子束的强弱来控制黑白灰度等级或彩色的图像。整个显示屏面扫描线为2^n行，每一行又分为2^m个点。这样整个显示屏面就分为了2^n * 2^m个小方块，每个方块就是我们说的一个像素。</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yU8lYF"><img src="https://s3.ax1x.com/2021/02/08/yU8lYF.png" alt="yU8lYF.png"></a><br>  帧缓存存储器(左)    显示器(右)</p>
+<p>我们当前使用的显示器都是彩色的，以彩色的为例，在不经过特殊处理的情况下，我们要显示一个图形，系统会自动生成一个跟屏幕像素一致的帧缓冲区，一个像素点通过红、黄、蓝、透明度4个通道来判定当前的颜色，每个通道占8位，所以帧缓冲区的大小可以等于屏幕像素* 4*8。所以我们显示的任何一个图形，都会先绘制到帧缓冲区然后通过视频控制器绘制到屏幕上。</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yU80YD"><img src="https://s3.ax1x.com/2021/02/08/yU80YD.png" alt="高级光栅扫描显示"></a></p>
+<p>CPU处理好图片生成纹理，通过系统总线将数据传输到GPU处理,处理完毕后放到帧缓冲区,然后通过显示器控制器绘制到显示器屏幕上。</p>
+<h2 id="3-屏幕成像和卡顿问题"><a href="#3-屏幕成像和卡顿问题" class="headerlink" title="3.屏幕成像和卡顿问题"></a>3.屏幕成像和卡顿问题</h2><h3 id="3-1屏幕撕裂"><a href="#3-1屏幕撕裂" class="headerlink" title="3.1屏幕撕裂"></a>3.1屏幕撕裂</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yU86OI"><img src="https://s3.ax1x.com/2021/02/08/yU86OI.png" alt="屏幕撕裂1"></a></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yU8gmt"><img src="https://s3.ax1x.com/2021/02/08/yU8gmt.png" alt="屏幕撕裂2"></a><br>在屏幕扫描的过程中是逐行扫描。最理想的结果是，每一次的扫描，在CPU和GPU协作完成之后，得到结果，然后通过显示控制器显示到显示器上。GPU在显示一个比较复杂的图层的时候，需要消耗时间，例如扫描展示上图的时候，在逐行扫描绘制的到一半的时候，帧缓冲区的内容产生了更新，这时就会出现上半部分是上一帧的数据，下半部分是下一帧的数据，出现屏幕撕裂的现象。<br><a target="_blank" rel="noopener" href="https://imgchr.com/i/yU8RTf"><img src="https://s3.ax1x.com/2021/02/08/yU8RTf.png" alt="缓存区展示"></a></p>
+<h3 id="3-2-垂直同步-双缓存区"><a href="#3-2-垂直同步-双缓存区" class="headerlink" title="3.2 垂直同步+双缓存区"></a>3.2 垂直同步+双缓存区</h3><h4 id="双缓存区"><a href="#双缓存区" class="headerlink" title="双缓存区"></a>双缓存区</h4><p>用两个帧缓冲区来存储数据，来互相交叠的显示图像<br><a target="_blank" rel="noopener" href="https://imgchr.com/i/yU87Xn"><img src="https://s3.ax1x.com/2021/02/08/yU87Xn.png" alt="双缓存区"></a></p>
+<h4 id="垂直同步"><a href="#垂直同步" class="headerlink" title="垂直同步"></a>垂直同步</h4><p>当一个帧缓冲区的数据完成一次完整的屏幕绘制后，会发送一个信号告知此次绘制完成，让GPU切换缓冲区，开始进行下一次绘制，这个信号就是我们说的垂直同步信号。就是上面屏幕扫描示意图上的那根黄色的线。</p>
+<h3 id="3-3-掉帧Jank"><a href="#3-3-掉帧Jank" class="headerlink" title="3.3 掉帧Jank"></a>3.3 掉帧Jank</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yU8L7V"><img src="https://s3.ax1x.com/2021/02/08/yU8L7V.png" alt="掉帧Jank"></a><br>当前屏幕在显示A帧的时候，显示完毕后刷新时发现B帧没有准备好，无法显示B帧，只能继续显示A帧，这个过程叫做掉帧。</p>
+<h3 id="3-4-三缓存区解决掉帧"><a href="#3-4-三缓存区解决掉帧" class="headerlink" title="3.4 三缓存区解决掉帧"></a>3.4 三缓存区解决掉帧</h3><p>为了减少掉帧，可以使用A,B,C 3个缓冲区来处理掉帧。<br>苹果是使用双缓冲区、</p>
+<h3 id="3-5-屏幕卡顿的本质（掉帧的本质）"><a href="#3-5-屏幕卡顿的本质（掉帧的本质）" class="headerlink" title="3.5 屏幕卡顿的本质（掉帧的本质）"></a>3.5 屏幕卡顿的本质（掉帧的本质）</h3><ul>
+<li>CPU和GPU的计算时间过长，导致时间超过了一帧显示时间，在发送垂直同步刷新信号时，没有准备好下一帧的数据，导致掉帧了；（不要把图层数设置的过于复杂）</li>
+<li>双缓存区只是减少屏幕撕裂问题，并不解决掉帧问题。<h2 id="4-渲染流程（屏幕的渲染本质）"><a href="#4-渲染流程（屏幕的渲染本质）" class="headerlink" title="4.渲染流程（屏幕的渲染本质）"></a>4.渲染流程（屏幕的渲染本质）</h2></li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yUG9XR"><img src="https://s3.ax1x.com/2021/02/08/yUG9XR.png" alt="渲染本质"></a><br>一个图形的显示是有CPU和GPU协同完成的，CPU负责Application，图形处理、像素化、光栅化都是由GPU来处理。</p>
+<h3 id="Application"><a href="#Application" class="headerlink" title="Application"></a>Application</h3><p>得到图源和纹理，例如图片的编解码等，由CPU来进行完成。</p>
+<h3 id="Geometry-Processing（图形处理（OpenGL-Metal））"><a href="#Geometry-Processing（图形处理（OpenGL-Metal））" class="headerlink" title="Geometry Processing（图形处理（OpenGL/Metal））"></a>Geometry Processing（图形处理（OpenGL/Metal））</h3><p><strong>顶点着色器</strong>：在这里确定图形具体在硬件显示的位置，将坐标转换成屏幕上的坐标<br><strong>片元着色器</strong>：计算每一个像素点的颜色值</p>
+<h3 id="Rasterization（光栅化）"><a href="#Rasterization（光栅化）" class="headerlink" title="Rasterization（光栅化）"></a>Rasterization（光栅化）</h3><p>将图形的每个像素的颜色计算出来以后，放入帧缓冲区中。<br>Piexl Processing (像素处理)<br>将帧缓冲区中的数据，绘制到屏幕上</p>
+<h2 id="5-CoreAnimation渲染流水线"><a href="#5-CoreAnimation渲染流水线" class="headerlink" title="5.CoreAnimation渲染流水线"></a>5.CoreAnimation渲染流水线</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yUGF76"><img src="https://s3.ax1x.com/2021/02/08/yUGF76.png" alt="渲染流水线"></a><br>在Application中处理事件，处理完毕后提交刚刚的动作，然后在CoreAnimation中解码，解码完毕后将结果放到RunLoop中，在下一次 RunLoop执行到之后，GPU开始进行绘制渲染，渲染完毕后，开始显示。</p>
+<h1 id="离屏渲染是怎么触发的"><a href="#离屏渲染是怎么触发的" class="headerlink" title="离屏渲染是怎么触发的?"></a>离屏渲染是怎么触发的?</h1><h2 id="1-怎么检测离屏渲染"><a href="#1-怎么检测离屏渲染" class="headerlink" title="1.怎么检测离屏渲染"></a>1.怎么检测离屏渲染</h2><p>通过系统的模拟器，可以直接检测离屏渲染<br><a target="_blank" rel="noopener" href="https://imgchr.com/i/yUG7CD"><img src="https://s3.ax1x.com/2021/02/08/yUG7CD.png" alt="检测离屏渲染"></a><br>iOS 9.0以后，苹果对做了优化，对单个图层设置圆角，不会触发离屏渲染</p>
+<h2 id="2-触发离屏渲染的两个原因"><a href="#2-触发离屏渲染的两个原因" class="headerlink" title="2.触发离屏渲染的两个原因"></a>2.触发离屏渲染的两个原因</h2><h3 id="2-1-苹果在显示一些复杂的需求的时候，没有办法一次性完成图层的动作，必须要分步骤完成，因此会产生离屏渲染。"><a href="#2-1-苹果在显示一些复杂的需求的时候，没有办法一次性完成图层的动作，必须要分步骤完成，因此会产生离屏渲染。" class="headerlink" title="2.1 苹果在显示一些复杂的需求的时候，没有办法一次性完成图层的动作，必须要分步骤完成，因此会产生离屏渲染。"></a>2.1 苹果在显示一些复杂的需求的时候，没有办法一次性完成图层的动作，必须要分步骤完成，因此会产生离屏渲染。</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yUJArn"><img src="https://s3.ax1x.com/2021/02/08/yUJArn.png" alt="遮罩产生离屏渲染的过程"></a></p>
+<p>离屏渲染需要开辟额外的存储空间，同时离屏渲染的合成</p>
+<h3 id="2-2-主动打开了光栅化（shouldRaserize）"><a href="#2-2-主动打开了光栅化（shouldRaserize）" class="headerlink" title="2.2 主动打开了光栅化（shouldRaserize）"></a>2.2 主动打开了光栅化（shouldRaserize）</h3><p>开启光栅化后，会触发离屏渲染，GPU 会强制把图层的渲染结果保存下来，方便下次复用。<br>当我们确定必须是使用离屏渲染的时候，可以主动开启光栅化，让离屏渲染缓冲区做复用，来减少性能消耗，例如毛玻璃效果。<br>shouldRasterize 光栅化使用建议：</p>
+<ul>
+<li>如果layer不能被复用，则没有必要打开光栅化；</li>
+<li>如果layer不是静态的，需要被频繁修改，比如处于动画之中，那么开启离屏渲染反而影响效率；</li>
+<li>离屏渲染缓存内容有时间限制，缓存内容100ms内没有被使用，则会被丢弃；</li>
+<li>离屏渲染空间有限，超过2.5倍屏幕像素大小的话，也会失效，且无法复用。 </li>
+</ul>
+<h3 id="3-关于圆角在离屏渲染上的原理探索"><a href="#3-关于圆角在离屏渲染上的原理探索" class="headerlink" title="3.关于圆角在离屏渲染上的原理探索"></a>3.关于圆角在离屏渲染上的原理探索</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yUJZV0"><img src="https://s3.ax1x.com/2021/02/08/yUJZV0.png" alt="原理探索"></a><br>设置layer.cornerRadius只会设置backgroundColor和border的圆角，不会设置content的圆角；除非同时设置了layer.masksToBounds为True（对应view中的clipsToBounds属性）。</p>
+<h4 id="普通渲染的逻辑"><a href="#普通渲染的逻辑" class="headerlink" title="普通渲染的逻辑"></a>普通渲染的逻辑</h4><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yUJJVx"><img src="https://s3.ax1x.com/2021/02/08/yUJJVx.png" alt="普通渲染"></a><br>当subLayer绘制到屏幕上以后，就会将subLayer从帧缓存区中移除，从而节省空间</p>
+<h4 id="离屏渲染的逻辑（圆角）"><a href="#离屏渲染的逻辑（圆角）" class="headerlink" title="离屏渲染的逻辑（圆角）"></a>离屏渲染的逻辑（圆角）</h4><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yUJYa6"><img src="https://s3.ax1x.com/2021/02/08/yUJYa6.png" alt="圆角绘制"></a><br><a target="_blank" rel="noopener" href="https://imgchr.com/i/yUJaGD"><img src="https://s3.ax1x.com/2021/02/08/yUJaGD.png" alt="绘制完成"></a></p>
+<h3 id="4-常见触发离屏渲染的几种情况"><a href="#4-常见触发离屏渲染的几种情况" class="headerlink" title="4.常见触发离屏渲染的几种情况"></a>4.常见触发离屏渲染的几种情况</h3><ul>
+<li>使用了mask的layer（layer.mask）</li>
+<li>需要进行裁剪的layer(layer.masksToBounds/view.clipsToBounds)</li>
+<li>设置了组透明度为YES，并且透明度不为1的layer(layer.allowsGroupOpacity/layer.opacity)</li>
+<li>添加了阴影的layer(layer.shadow*)</li>
+<li>采用了光栅化的layer(layer.shouldRasterize)</li>
+<li>绘制了文字的layer(UILabel,CATextLayer,Core Text 等)</li>
+</ul>
+<h1 id="开发过程中怎么避免离屏渲染"><a href="#开发过程中怎么避免离屏渲染" class="headerlink" title="开发过程中怎么避免离屏渲染?"></a>开发过程中怎么避免离屏渲染?</h1><h2 id="1-避免圆角离屏渲染的手段"><a href="#1-避免圆角离屏渲染的手段" class="headerlink" title="1.避免圆角离屏渲染的手段"></a>1.避免圆角离屏渲染的手段</h2><ul>
+<li>不要使用不必要的 mask，可以预处理图片为圆形，通过 Core Graphics手动绘制圆角。</li>
+<li>使用中间为圆形透明的白色背景视图覆盖。但这种方式不能解决背景色为图片或渐变色的情况。</li>
+<li>用 UIBezierPath 贝塞尔曲线绘制闭合带圆角的矩形，再将不带圆角的 layer 渲染成图片，添加到贝塞尔矩形中。这种方法效率更高，但是 layer 的布局一旦改变，贝塞尔曲线都需要手动地重新绘制，稍微麻烦。<h2 id="2-项目中使用圆角避免离屏渲染的方案"><a href="#2-项目中使用圆角避免离屏渲染的方案" class="headerlink" title="2.项目中使用圆角避免离屏渲染的方案"></a>2.项目中使用圆角避免离屏渲染的方案</h2></li>
+<li>对于单一图层，例如UIImageView只有图片没有背景色、单纯的一个UIView等。直接使用系统提供的layer.cornorRadius；</li>
+<li>能够使用中间为圆形透明的白色背景视图覆盖方式进行的，优先使用这种方法。</li>
+<li>使用Core Graphics +贝塞尔曲线绘制圆角的方式，牺牲CPU计算</li>
+</ul>
+<h1 id="常用控件对于集中设置圆角方式的比较"><a href="#常用控件对于集中设置圆角方式的比较" class="headerlink" title="常用控件对于集中设置圆角方式的比较"></a>常用控件对于集中设置圆角方式的比较</h1><p>UIButton （设置背景图）</p>
+<table>
+<thead>
+<tr>
+<th>圆角的形式</th>
+<th>产生效果</th>
+<th>占用内存</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>layer.cornerRadius + clipsToBounds</td>
+<td>产生离屏渲染</td>
+<td>内存占用10M</td>
+</tr>
+<tr>
+<td>imageView.layer.cornerRadius + clipsToBounds</td>
+<td>不发生离屏渲染</td>
+<td>占用内存10.2M</td>
+</tr>
+<tr>
+<td>Core Graphics绘制图片圆角</td>
+<td>不发生离屏渲染</td>
+<td>占用内存9.9M</td>
+</tr>
+</tbody></table>
+<h2 id="3-项目中对离屏渲染的优化"><a href="#3-项目中对离屏渲染的优化" class="headerlink" title="3.项目中对离屏渲染的优化"></a>3.项目中对离屏渲染的优化</h2><ul>
+<li>使用AsyncDisplayKit</li>
+<li>预处理:CoreGraphics进行圆角剪切</li>
+<li>视频圆角：添加一个图层盖住 （addsubview）</li>
+<li>图片没有背景颜色 ，放心大胆的用layer.cornerRadius</li>
+<li>阴影使用shawdowPath绘制</li>
+<li>需要使用mask遮罩时，将shouldRasterize打开</li>
+<li>用模糊效果，别用系统的，用开源的手动去渲染</li>
+</ul>
+<h4 id="Written-By-多点-移动运营研发部-童庆"><a href="#Written-By-多点-移动运营研发部-童庆" class="headerlink" title="Written By 多点-移动运营研发部-童庆"></a>Written By 多点-移动运营研发部-童庆</h4>
+  </div>
+  <!--文末结束语-->
+  
+    <div style="text-align:center;color: #ccc;font-size:24px;"> --- 本文结束 <i class="iconfont icon-heartbeat" style="font-size:24px;"></i> The End --- </div>
+  
+  <!--页脚广告-->
+  
+  <div class="mdui-divider"></div>
+  
+  <nav>
+    
+    
+      <a rel="next" class="post-nav-item mdui-float-right" href="/2020/12/30/%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86%E5%B0%8F%E7%BB%93-%E7%90%86%E8%AE%BA%E7%AF%87/">
+        <span>网络知识小结-理论篇</span>
+        <i class="iconfont icon-angle-right"></i>
+      </a>
+    
+  </nav>
+</article>
+
+
+
+
+  <div class="toc-button"  style="z-index: 100;">
+    <button class="mdui-fab mdui-ripple mdui-color-teal" mdui-menu="{target: '#toc'}"><i class="iconfont icon-list"></i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item">
+        <a href="/2021/02/08/iOS%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B/" id="toc-header" class="mdui-ripple">文章目录</a>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">什么是离屏渲染？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BA%86%E8%A7%A3CPU%E5%92%8CGPU%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">1.1.</span> <span class="toc-text">1.了解CPU和GPU的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%98%BE%E7%A4%BA%E5%99%A8%E6%88%90%E5%83%8F%E7%9A%84%E5%8E%9F%E7%90%86%EF%BC%88%E5%87%A0%E4%BB%A3%E6%98%BE%E7%A4%BA%E5%99%A8%E7%9A%84%E5%8F%98%E8%BF%81%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">2.显示器成像的原理（几代显示器的变迁）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E9%9A%8F%E6%9C%BA%E6%89%AB%E6%8F%8F%E6%98%BE%E7%A4%BA"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 随机扫描显示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%85%89%E6%A0%85%E6%89%AB%E6%8F%8F%E6%98%BE%E7%A4%BA%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 光栅扫描显示系统组成</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%B1%8F%E5%B9%95%E6%88%90%E5%83%8F%E5%92%8C%E5%8D%A1%E9%A1%BF%E9%97%AE%E9%A2%98"><span class="toc-number">1.3.</span> <span class="toc-text">3.屏幕成像和卡顿问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1%E5%B1%8F%E5%B9%95%E6%92%95%E8%A3%82"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1屏幕撕裂</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%9E%82%E7%9B%B4%E5%90%8C%E6%AD%A5-%E5%8F%8C%E7%BC%93%E5%AD%98%E5%8C%BA"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2 垂直同步+双缓存区</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%8C%E7%BC%93%E5%AD%98%E5%8C%BA"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">双缓存区</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9E%82%E7%9B%B4%E5%90%8C%E6%AD%A5"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">垂直同步</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%8E%89%E5%B8%A7Jank"><span class="toc-number">1.3.3.</span> <span class="toc-text">3.3 掉帧Jank</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E4%B8%89%E7%BC%93%E5%AD%98%E5%8C%BA%E8%A7%A3%E5%86%B3%E6%8E%89%E5%B8%A7"><span class="toc-number">1.3.4.</span> <span class="toc-text">3.4 三缓存区解决掉帧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-%E5%B1%8F%E5%B9%95%E5%8D%A1%E9%A1%BF%E7%9A%84%E6%9C%AC%E8%B4%A8%EF%BC%88%E6%8E%89%E5%B8%A7%E7%9A%84%E6%9C%AC%E8%B4%A8%EF%BC%89"><span class="toc-number">1.3.5.</span> <span class="toc-text">3.5 屏幕卡顿的本质（掉帧的本质）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%B8%B2%E6%9F%93%E6%B5%81%E7%A8%8B%EF%BC%88%E5%B1%8F%E5%B9%95%E7%9A%84%E6%B8%B2%E6%9F%93%E6%9C%AC%E8%B4%A8%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">4.渲染流程（屏幕的渲染本质）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Application"><span class="toc-number">1.4.1.</span> <span class="toc-text">Application</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Geometry-Processing%EF%BC%88%E5%9B%BE%E5%BD%A2%E5%A4%84%E7%90%86%EF%BC%88OpenGL-Metal%EF%BC%89%EF%BC%89"><span class="toc-number">1.4.2.</span> <span class="toc-text">Geometry Processing（图形处理（OpenGL&#x2F;Metal））</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Rasterization%EF%BC%88%E5%85%89%E6%A0%85%E5%8C%96%EF%BC%89"><span class="toc-number">1.4.3.</span> <span class="toc-text">Rasterization（光栅化）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-CoreAnimation%E6%B8%B2%E6%9F%93%E6%B5%81%E6%B0%B4%E7%BA%BF"><span class="toc-number">1.5.</span> <span class="toc-text">5.CoreAnimation渲染流水线</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E6%98%AF%E6%80%8E%E4%B9%88%E8%A7%A6%E5%8F%91%E7%9A%84"><span class="toc-number">2.</span> <span class="toc-text">离屏渲染是怎么触发的?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%80%8E%E4%B9%88%E6%A3%80%E6%B5%8B%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93"><span class="toc-number">2.1.</span> <span class="toc-text">1.怎么检测离屏渲染</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%A7%A6%E5%8F%91%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E7%9A%84%E4%B8%A4%E4%B8%AA%E5%8E%9F%E5%9B%A0"><span class="toc-number">2.2.</span> <span class="toc-text">2.触发离屏渲染的两个原因</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E8%8B%B9%E6%9E%9C%E5%9C%A8%E6%98%BE%E7%A4%BA%E4%B8%80%E4%BA%9B%E5%A4%8D%E6%9D%82%E7%9A%84%E9%9C%80%E6%B1%82%E7%9A%84%E6%97%B6%E5%80%99%EF%BC%8C%E6%B2%A1%E6%9C%89%E5%8A%9E%E6%B3%95%E4%B8%80%E6%AC%A1%E6%80%A7%E5%AE%8C%E6%88%90%E5%9B%BE%E5%B1%82%E7%9A%84%E5%8A%A8%E4%BD%9C%EF%BC%8C%E5%BF%85%E9%A1%BB%E8%A6%81%E5%88%86%E6%AD%A5%E9%AA%A4%E5%AE%8C%E6%88%90%EF%BC%8C%E5%9B%A0%E6%AD%A4%E4%BC%9A%E4%BA%A7%E7%94%9F%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E3%80%82"><span class="toc-number">2.2.1.</span> <span class="toc-text">2.1 苹果在显示一些复杂的需求的时候，没有办法一次性完成图层的动作，必须要分步骤完成，因此会产生离屏渲染。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E4%B8%BB%E5%8A%A8%E6%89%93%E5%BC%80%E4%BA%86%E5%85%89%E6%A0%85%E5%8C%96%EF%BC%88shouldRaserize%EF%BC%89"><span class="toc-number">2.2.2.</span> <span class="toc-text">2.2 主动打开了光栅化（shouldRaserize）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%85%B3%E4%BA%8E%E5%9C%86%E8%A7%92%E5%9C%A8%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E4%B8%8A%E7%9A%84%E5%8E%9F%E7%90%86%E6%8E%A2%E7%B4%A2"><span class="toc-number">2.2.3.</span> <span class="toc-text">3.关于圆角在离屏渲染上的原理探索</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%99%AE%E9%80%9A%E6%B8%B2%E6%9F%93%E7%9A%84%E9%80%BB%E8%BE%91"><span class="toc-number">2.2.3.1.</span> <span class="toc-text">普通渲染的逻辑</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E7%9A%84%E9%80%BB%E8%BE%91%EF%BC%88%E5%9C%86%E8%A7%92%EF%BC%89"><span class="toc-number">2.2.3.2.</span> <span class="toc-text">离屏渲染的逻辑（圆角）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%B8%B8%E8%A7%81%E8%A7%A6%E5%8F%91%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E7%9A%84%E5%87%A0%E7%A7%8D%E6%83%85%E5%86%B5"><span class="toc-number">2.2.4.</span> <span class="toc-text">4.常见触发离屏渲染的几种情况</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E8%BF%87%E7%A8%8B%E4%B8%AD%E6%80%8E%E4%B9%88%E9%81%BF%E5%85%8D%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93"><span class="toc-number">3.</span> <span class="toc-text">开发过程中怎么避免离屏渲染?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%81%BF%E5%85%8D%E5%9C%86%E8%A7%92%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E7%9A%84%E6%89%8B%E6%AE%B5"><span class="toc-number">3.1.</span> <span class="toc-text">1.避免圆角离屏渲染的手段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%9C%86%E8%A7%92%E9%81%BF%E5%85%8D%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E7%9A%84%E6%96%B9%E6%A1%88"><span class="toc-number">3.2.</span> <span class="toc-text">2.项目中使用圆角避免离屏渲染的方案</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%8E%A7%E4%BB%B6%E5%AF%B9%E4%BA%8E%E9%9B%86%E4%B8%AD%E8%AE%BE%E7%BD%AE%E5%9C%86%E8%A7%92%E6%96%B9%E5%BC%8F%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-number">4.</span> <span class="toc-text">常用控件对于集中设置圆角方式的比较</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%AF%B9%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E7%9A%84%E4%BC%98%E5%8C%96"><span class="toc-number">4.1.</span> <span class="toc-text">3.项目中对离屏渲染的优化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Written-By-%E5%A4%9A%E7%82%B9-%E7%A7%BB%E5%8A%A8%E8%BF%90%E8%90%A5%E7%A0%94%E5%8F%91%E9%83%A8-%E7%AB%A5%E5%BA%86"><span class="toc-number">4.1.0.1.</span> <span class="toc-text">Written By 多点-移动运营研发部-童庆</span></a></li></ol></li></ol></li></ol></li></ol>
+      </li>
+    </ul>
+  </div>
+
+
+
+    <div id="comment" class="mdui-card mdui-p-a-2 mdui-m-b-5">
+      <div class="mdui-tab" mdui-tab>
+        
+          <a href="#comment-tab0" class="mdui-ripple">gitalk</a>
+        
+          <a href="#comment-tab1" class="mdui-ripple">livere</a>
+        
+      </div>
+      
+        <div id="comment-tab0" class="mdui-p-a-2">
+          <div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+    clientID: '',
+    clientSecret: '',
+    repo: '',
+    owner: '',
+    admin: [''],
+    id:  md5(location.pathname) ,
+    distractionFreeMode: 'true',
+  });
+  gitalk.render('gitalk-container');
+</script>
+        </div>
+      
+        <div id="comment-tab1" class="mdui-p-a-2">
+          <div id="lv-container" data-id="city" data-uid="">
+  <script type="text/javascript">
+    (function (d, s) {
+      var j, e = d.getElementsByTagName(s)[0];
+      if (typeof LivereTower === 'function') { return; }
+      j = d.createElement(s);
+      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+      j.async = true;
+      e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+  </script>
+  <noscript>Please enable JavaScript to view the comments powered by LiveRe.</noscript>
+</div>
+        </div>
+      
+    </div>
+
+  </main>
+  <footer id="footer" class="mdui-text-center mdui-m-t-5 mdui-p-b-2 mdui-p-t-4 mdui-color-theme">
+  <div class="mdui-container">
+    <div class="mdui-row">
+      
+        <a href="https://beian.miit.gov.cn" rel="noopener" target="_blank"></a>
+      
+      <span>
+        &copy; 2015 - 2021 
+        
+          <span style="color:#d9333f" class="iconfont icon-heart"></span>
+        
+        dmalliosco
+      </span>
+    </div>
+    <div class="mdui-row">
+      
+        <div class="mdui-col-xs-6 mdui-text-right">
+          <span>Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a></span>
+        </div>
+        <div class="mdui-col-xs-6 mdui-text-left">
+          <span>Theme: <a href="https://github.com/kb1000fx/Meadow" rel="noopener" target="_blank">Meadow</a></span>
+        </div>
+      
+    </div>
+    <div class="mdui-row">
+      
+        <div class="mdui-col-xs-6 mdui-text-right">
+          <span id="busuanzi_container_site_uv" style="display: none;"> <span class="iconfont icon-user"></span>总访客量 <span id="busuanzi_value_site_uv"></span></span>
+        </div>
+        <div class="mdui-col-xs-6 mdui-text-left">
+          <span id="busuanzi_container_site_pv" style="display: none;"> <span class="iconfont icon-eye"></span>总访问量 <span id="busuanzi_value_site_pv"></span></span>
+        </div>
+      
+    </div>
+ </div>
+</footer>
+  
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-teal" style="z-index:100;"><i class="iconfont icon-arrowup"></i></button>
+  
+  
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@8.4.8/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({
+        startOnLoad: true,
+        theme: "default"
+    });</script>
+
+
+
+
+    
+<script src="/js/mdui.min.v1.0.0.js"></script>
+
+
+
+
+<script src="/js/meadow.js"></script>
+
+</body>
+</html >

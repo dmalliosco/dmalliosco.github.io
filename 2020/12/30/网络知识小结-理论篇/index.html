@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <script>if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode)) window.location.href="https://support.dmeng.net/upgrade-your-browser.html?referrer="+encodeURIComponent(window.location.href); </script>
+    
+    
+        <link rel="preload" crossorigin="crossorigin" href="/fonts/roboto/Roboto-Regular.woff2" as="font">
+        <link rel="preload" crossorigin="crossorigin" href="/fonts/roboto/Roboto-Bold.woff2" as="font">
+    
+    
+    
+        <link rel="shortcut icon" href="/icons/favicon.ico">
+    
+
+    
+    
+        
+<link rel="stylesheet" href="/css/mdui.min.v1.0.0.css">
+
+    
+    
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+          
+
+
+    
+    
+    <title>
+        
+            网络知识小结-理论篇 | dmalliosco
+        
+    </title>
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body class="mdui-drawer-body-left mdui-appbar-with-toolbar mdui-theme-primary-teal mdui-theme-accent-blue">
+  
+  <header class="mdui-appbar mdui-appbar-fixed">
+  <div id="toolbar" class="mdui-toolbar mdui-color-theme">
+    <button class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="iconfont icon-menu"></i></button>
+    <a href="/" class="mdui-typo-headline">dmalliosco</a>
+    <a href="/" class="header-subtitle mdui-typo-headline">dmalldev</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <button class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: 'search'}"><i class="iconfont icon-search"></i></button>
+  </div>
+</header>
+
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字" onfocus="listenSearchFunc()">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer">
+    <div class="mdui-tab" mdui-tab>
+        <a href="#sidebar-tab1" id="sidebartab" class="mdui-ripple mdui-tab-active">站点概览</a>
+        <a href="#sidebar-tab2" id="sidebartab" class="mdui-ripple">关于</a>
+    </div>
+
+    
+    <div id="sidebar-tab1" class="mdui-p-a-2">
+        <div class="mdui-list">
+            
+                
+                <a href="/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-home"></i>
+                    </div>
+                    <div class="mdui-list-item-content">主页</div>
+                </a>
+            
+                
+                <a href="/tags/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-bookmark"></i>
+                    </div>
+                    <div class="mdui-list-item-content">标签</div>
+                </a>
+            
+                
+                <a href="/categories/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-folder"></i>
+                    </div>
+                    <div class="mdui-list-item-content">分类</div>
+                </a>
+            
+                
+                <a href="/archives/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-archive"></i>
+                    </div>
+                    <div class="mdui-list-item-content">归档</div>
+                </a>
+            
+            <div class="mdui-list-item mdui-ripple">
+                <div class="mdui-list-item-icon">
+                    <i class="iconfont icon-moon"></i>
+                </div>
+                <div class="mdui-list-item-content">夜间模式</div>
+                <label class="mdui-switch" id="darkmode">
+                  <input type="checkbox" id="nightmode_switch"/>
+                  <i class="mdui-switch-icon"></i>
+                </label>
+            </div>           
+        </div>
+    </div>
+
+    
+    <div id="sidebar-tab2" class="mdui-p-a-2">
+        <div class="sidebar-overview">
+            <div class="sidebar-avatar">
+                
+                    <img src="/icons/avatar.gif"/>
+                
+            </div>
+            <div class="sidebar-author-name">dmalliosco</div>
+            <div class="sidebar-description">dmalldev</div>
+        </div>
+        <div class="sidebar-links">
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-mail"></i></span>
+                    <a href="mailto:xxx@xxx.com" class="mdui-chip-title">E-Mail</a>
+                </div>
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-github"></i></span>
+                    <a target="_blank" rel="noopener" href="https://github.com/dmalliosco/" class="mdui-chip-title">GitHub</a>
+                </div>
+            
+        </div>
+        <ul class="mdui-list" mdui-collapse="{accordion: true}">
+            <li class="mdui-collapse-item">
+                <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-link"></i>
+                    </div>
+                    <div class="mdui-list-item-content">友情链接</div>
+                    <div class="mdui-collapse-item-arrow">
+                        <i class="mdui-list-item-icon iconfont icon-angle-down"></i>
+                    </div>
+                </div>
+                <ul id="linksList" class="mdui-collapse-item-body mdui-list mdui-list-dense">
+                    
+                        <a target="_blank" rel="noopener" href="https://garybear.cn/hexo-theme-meadow/" class="mdui-list-item mdui-ripple">
+                            Meadow说明文档
+                        </a>
+                    
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="mdui-divider"></div>
+    
+    
+</aside>
+  
+  <main id="main-contain" class="mdui-container mdui-m-t-5">
+    <article id="article" class="mdui-card mdui-p-b-2 mdui-m-b-5">
+  <header class="mdui-card-media">
+    
+    
+      <div class="post-header"> 
+  <a class="post-header-title" href="/2020/12/30/%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86%E5%B0%8F%E7%BB%93-%E7%90%86%E8%AE%BA%E7%AF%87/">网络知识小结-理论篇</a>
+  <div class="post-header-meta">
+    <span>
+      <span class="iconfont icon-calendar"></span>
+      发布于:&nbsp;2020-12-30
+    </span>
+    <span>
+      <span class="iconfont icon-calendar-check"></span>
+      更新于:&nbsp;2021-02-08
+    </span>
+    <span>
+      <span class="iconfont icon-folder"></span>
+      分类于:&nbsp;<a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>
+    </span>
+    
+      <span>
+        <span class="iconfont icon-eye"></span>
+        阅读次数:&nbsp;
+        <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+      </span>
+    
+  </div>
+</div>   
+    
+
+
+
+    
+    
+    <div class="mdui-card-menu">
+    
+      <button class="mdui-btn mdui-btn-icon mdui-text-color-teal" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="iconfont icon-share"></i></button>
+      <ul class="mdui-menu" id="share_menu">
+        <li class="mdui-menu-item">
+          <a href="http://service.weibo.com/share/share.php?appkey=&title=网络知识小结-理论篇&url=http://example.com/2020/12/30/%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86%E5%B0%8F%E7%BB%93-%E7%90%86%E8%AE%BA%E7%AF%87/&pic=http://example.com/null&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://twitter.com/intent/tweet?text=网络知识小结-理论篇&url=http://example.com/2020/12/30/%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86%E5%B0%8F%E7%BB%93-%E7%90%86%E8%AE%BA%E7%AF%87/&via=dmalliosco" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=http://example.com/2020/12/30/%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86%E5%B0%8F%E7%BB%93-%E7%90%86%E8%AE%BA%E7%AF%87/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://plus.google.com/share?url=http://example.com/2020/12/30/%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86%E5%B0%8F%E7%BB%93-%E7%90%86%E8%AE%BA%E7%AF%87/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://example.com/2020/12/30/%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86%E5%B0%8F%E7%BB%93-%E7%90%86%E8%AE%BA%E7%AF%87/&title=网络知识小结-理论篇" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="http://connect.qq.com/widget/shareqq/index.html?site=dmalliosco&title=网络知识小结-理论篇&summary=dmalldev&pics=http://example.com/null&url=http://example.com/2020/12/30/%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86%E5%B0%8F%E7%BB%93-%E7%90%86%E8%AE%BA%E7%AF%87/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://telegram.me/share/url?url=http://example.com/2020/12/30/%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86%E5%B0%8F%E7%BB%93-%E7%90%86%E8%AE%BA%E7%AF%87/&text=网络知识小结-理论篇" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+        </li>
+      </ul>
+    
+  </div>
+  </header>
+  
+  
+  
+  
+  <div class="post-tags">
+    
+      <i class="iconfont icon-tag">
+        <a rel="tag" href = /tags/%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86/ >网络知识</a>
+      </i>
+    
+  </div>
+
+  
+  <div class="mdui-card-content mdui-typo mdui-p-x-4">
+    <p><strong>如今互联网时代，差不多每人都有一个终端能够浏览网上的信息。那这些终端是怎么连接到网上并浏览信息的呢？要想了解这些知识，就要从网络的基础知识开始说起。</strong></p>
+<h2 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h2><h4 id="nbsp-nbsp-nbsp-nbsp-互联网的起源可以追溯到1960年代美国联邦政府委托进行的一项研究，目的是创建容错与电脑网络的通信。互联网的前身ARPANET最初在1980年代作为区域学术和军事网络连接的骨干。"><a href="#nbsp-nbsp-nbsp-nbsp-互联网的起源可以追溯到1960年代美国联邦政府委托进行的一项研究，目的是创建容错与电脑网络的通信。互联网的前身ARPANET最初在1980年代作为区域学术和军事网络连接的骨干。" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;互联网的起源可以追溯到1960年代美国联邦政府委托进行的一项研究，目的是创建容错与电脑网络的通信。互联网的前身ARPANET最初在1980年代作为区域学术和军事网络连接的骨干。"></a>&nbsp;&nbsp;&nbsp;&nbsp;互联网的起源可以追溯到1960年代美国联邦政府委托进行的一项研究，目的是创建容错与电脑网络的通信。互联网的前身ARPANET最初在1980年代作为区域学术和军事网络连接的骨干。</h4><h4 id="nbsp-nbsp-nbsp-nbsp-1974年，罗伯特·卡恩和文顿·瑟夫提出TCP-IP，定义在电脑网络之间传送报文的方法。1986年，美国国家科学基金会创建超级电脑中心与学术机构之间互联基于TCP-IP技术的骨干网络NSFNET，速度由最初的56kbit-s，接着为T1（1-5Mbit-s），最后发展至T3（45Mbit-s）。商业互联网服务提供商（ISP）出现于1980年代末和1990年代初。ARPANET于1990年退役。"><a href="#nbsp-nbsp-nbsp-nbsp-1974年，罗伯特·卡恩和文顿·瑟夫提出TCP-IP，定义在电脑网络之间传送报文的方法。1986年，美国国家科学基金会创建超级电脑中心与学术机构之间互联基于TCP-IP技术的骨干网络NSFNET，速度由最初的56kbit-s，接着为T1（1-5Mbit-s），最后发展至T3（45Mbit-s）。商业互联网服务提供商（ISP）出现于1980年代末和1990年代初。ARPANET于1990年退役。" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;1974年，罗伯特·卡恩和文顿·瑟夫提出TCP/IP，定义在电脑网络之间传送报文的方法。1986年，美国国家科学基金会创建超级电脑中心与学术机构之间互联基于TCP/IP技术的骨干网络NSFNET，速度由最初的56kbit/s，接着为T1（1.5Mbit/s），最后发展至T3（45Mbit/s）。商业互联网服务提供商（ISP）出现于1980年代末和1990年代初。ARPANET于1990年退役。"></a>&nbsp;&nbsp;&nbsp;&nbsp;1974年，罗伯特·卡恩和文顿·瑟夫提出TCP/IP，定义在电脑网络之间传送报文的方法。1986年，美国国家科学基金会创建超级电脑中心与学术机构之间互联基于TCP/IP技术的骨干网络NSFNET，速度由最初的56kbit/s，接着为T1（1.5Mbit/s），最后发展至T3（45Mbit/s）。商业互联网服务提供商（ISP）出现于1980年代末和1990年代初。ARPANET于1990年退役。</h4><h2 id="网络基础"><a href="#网络基础" class="headerlink" title="网络基础"></a>网络基础</h2><h4 id="nbsp-nbsp-nbsp-nbsp-网络通信的实现，分了好几层，每一层都有自己特有的功能，而且每一层都靠下一层的支持。用户接触到，只是最上面的一层，称为应用层。如果要深入理解互联网，必须从最下层开始，自下而上理解每一层的功能。"><a href="#nbsp-nbsp-nbsp-nbsp-网络通信的实现，分了好几层，每一层都有自己特有的功能，而且每一层都靠下一层的支持。用户接触到，只是最上面的一层，称为应用层。如果要深入理解互联网，必须从最下层开始，自下而上理解每一层的功能。" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;网络通信的实现，分了好几层，每一层都有自己特有的功能，而且每一层都靠下一层的支持。用户接触到，只是最上面的一层，称为应用层。如果要深入理解互联网，必须从最下层开始，自下而上理解每一层的功能。"></a>&nbsp;&nbsp;&nbsp;&nbsp;网络通信的实现，分了好几层，每一层都有自己特有的功能，而且每一层都靠下一层的支持。用户接触到，只是最上面的一层，称为应用层。如果要深入理解互联网，必须从最下层开始，自下而上理解每一层的功能。</h4><h5 id="网络分层模型有三种："><a href="#网络分层模型有三种：" class="headerlink" title="网络分层模型有三种："></a>网络分层模型有三种：</h5><blockquote>
+<blockquote>
+<p>网络分层</p>
+<blockquote>
+<p>OSI七层<br>理论五层<br>TCP/IP 四层模型</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<hr>
+<h5 id="分层模型概览："><a href="#分层模型概览：" class="headerlink" title="分层模型概览："></a>分层模型概览：</h5><blockquote>
+<h3 id="OSI七层"><a href="#OSI七层" class="headerlink" title="OSI七层"></a>OSI七层</h3><blockquote>
+<p>应用层<br>表示层<br>回话层<br>传输层<br>网络层<br>数据链路层<br>物理层</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>理论五层</p>
+<blockquote>
+<p>应用层<br>传输层<br>网络层<br>数据链路层<br>物理层  </p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>TCP/IP 四层模型</p>
+<blockquote>
+<p>应用层<br>传输层<br>网际层<br>网络接口层</p>
+</blockquote>
+</blockquote>
+<p><img src="https://s3.ax1x.com/2020/12/27/r5s32n.png" alt="网络分层图"></p>
+<h3 id="基于理论五层"><a href="#基于理论五层" class="headerlink" title="基于理论五层"></a><strong>基于理论五层</strong></h3><p>各层的作用如下：</p>
+<ul>
+<li>应用层(Application Layer)<ul>
+<li>直接为用户的应用进程提供服务</li>
+<li>常见的协议有 HTTP、HTTPS、SMTP、TELNET等</li>
+</ul>
+</li>
+<li>传输层(Transport Layer)<ul>
+<li>传输层任务是为应用层进行通信的两个进程之间提供一个可靠的 <strong>端到端</strong> 服务，使它们看不到传输层以下的数据通信的细节。</li>
+<li><strong>端到端</strong> 的意思是数据来自某个<strong>端口</strong>，再传送给指定的<strong>端口</strong></li>
+<li><strong>端口</strong>：一个0到65535间的整数，用来指定特定应用程序</li>
+<li>常见的协议有TCP、UDP等</li>
+</ul>
+</li>
+<li>网络层<ul>
+<li>网络层的任务是选择合适的路由，使分组能够准确的按照地址找到目的地，并给交付目的地的传输层。</li>
+<li>网络层协议为IP协议</li>
+</ul>
+</li>
+<li>数据链路层<ul>
+<li>数据链路层是将数据组合为一个个的<strong>帧</strong>，确定电信号的数据包格式。</li>
+<li>数据链路层的协议为<strong>以太网</strong>协议</li>
+</ul>
+</li>
+<li>物理层<ul>
+<li>物理层定义了把电脑之间连接起来所用设备的标准，在网络中的网络信号都是通过<strong>0和1</strong>的电信号进行传输的。</li>
+</ul>
+</li>
+</ul>
+<p>越下面的层，越靠近硬件；越上面的层，越靠近用户。</p>
+<h3 id="理论解读"><a href="#理论解读" class="headerlink" title="理论解读"></a>理论解读</h3><h4 id="物理层"><a href="#物理层" class="headerlink" title="物理层"></a>物理层</h4><ul>
+<li>数字信号通过编码器转化为电信号</li>
+<li>电信号通过滤波器、模拟信号转换器译码成数字信号</li>
+</ul>
+<h4 id="数据链路层"><a href="#数据链路层" class="headerlink" title="数据链路层"></a>数据链路层</h4><ul>
+<li><p>以太网协议即指导文档规范</p>
+<ul>
+<li>规定一组电信号构成一个数据包，叫做**帧(frame)**，每一帧分为两部分：标头（Head）和数据（Data）。</li>
+<li>标头长度固定，18个字节（1Byte=8bit），数据最短46字节，最长1500字节，因此总数据包最短就是64字节，最长就是1518字节。</li>
+<li>标头就是数据包的一些说明项，比如：发送者MAC地址，接收者MAC地址，数据类型等；数据就是发送的具体内容。</li>
+<li>由于链路层存在MTU（最大传输单元 Maximum transmission unit）的限制，如果网络层的报文超过MTU，那就必须进行分片。</li>
+</ul>
+</li>
+<li><p>网卡地址（MAC)</p>
+<ul>
+<li>mac地址全世界独一无二，长度是48个二进制位，通常用12个十六进制数表示。</li>
+</ul>
+</li>
+<li><p>广播</p>
+<ul>
+<li>一块网卡怎么会知道另一块网卡的MAC地址，<strong>ARP协议，地址解析协议（Address Resolution Protocol）</strong><ul>
+<li>用于根据给定<strong>网络层地址</strong>，IPv4或IPv6，查找其对应的<strong>数据链路层地址</strong>，例如MAC地址；这里用到了<strong>ARP 高速缓存</strong>，在同一局域网内，通过ARP高速缓存，找与IP地址对应的MAC地址。</li>
+<li>ARP 协议是局域网内部的协议。如果局域网中找不到对应的MAC地址，就把数据包传送到两个子网连接处的网关，让网关去处理。</li>
+</ul>
+</li>
+<li>有了接收方MAC地址，怎么发送过去<ul>
+<li>向本局域网内的所有计算机发广播，让接收到广播的每台计算机自己去判断，是否为接收方。</li>
+<li>如果局域网内计算机太多，如果每台都在发报文、接报文，那会引起广播风暴。那如果避免这种情况的出现，就需要引入一套新的地址。这就导致了网络层的出现，网络层定义出网络地址，网络地址能够区分不同的计算机是否属于同一个<strong>子网络</strong>。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h4><ul>
+<li>网络地址的制定标准是<strong>IP协议</strong><ul>
+<li>通过IP协议定义出来的地址是IP地址，现有标准是IPV4和IPV6。</li>
+<li>通过IP地址，如何判断两台计算机是否属于同一个子网络？这就需要子网掩码。两个IP地址与子网掩码进行<strong>按位与</strong>运算，结果相同则在同一子网，否则不在。</li>
+<li>IP数据包，根据IP协议发送的数据。也分为<strong>标头</strong>和<strong>数据</strong>两个部分，其中标头长度是20-60字节（IPV6固定为40字节），整个数据包的总长度最大为65535（2^16）字节，数据包就是 65535 -（20~60）（IPV6是固定的40）。</li>
+<li>源IP地址，目的IP地址，8未TTL，time to live，生存时间等。</li>
+</ul>
+</li>
+</ul>
+<h4 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h4><ul>
+<li><p>传输的数据包到底给谁用？<strong>传输层</strong></p>
+<ul>
+<li>传输层的功能，就是建立<strong>端口到端口</strong>的通信。相比于传输层，网络层则是建立<strong>主机到主机</strong>的通信。只要确定主机和端口，就能实现程序之间的交流。Unix系统把主机和端口，叫做<strong>套接字（socket）</strong>。</li>
+</ul>
+</li>
+<li><p>UDP</p>
+<ul>
+<li>UDP协议：用户数据报协议。数据报传输需要加入端口信息，UDP协议就由此产生。<ul>
+<li>UDP协议比较简单，容易实现，但缺点是可靠性较差，一旦数据包发出，无法知道对方是否收到。不检查数据包是否到达、网络是否拥塞等情况。</li>
+<li>格式几乎就是在数据前面加上端口号。</li>
+<li>16位源端口号+16位目的端口号+16位UDP长度+16位UDP校验+数据（可有可无），这样UDP的标头，固定是8字节（64位）。<img src="https://s3.ax1x.com/2021/02/08/yUplGQ.png" alt="UDP数据包"></li>
+<li>再加上IP包之后，整个以太网数据包就是：<img src="https://s3.ax1x.com/2021/02/08/yUpYq0.png" alt="以太网数据包"></li>
+</ul>
+</li>
+<li>UDP中一个包的大小最大能有多大<ul>
+<li>局域网环境下，建议将UDP数据控制在1472字节以下。为什么是<strong>1472字节</strong>？以太网的数据帧长度必须在46-1500字节之间，这是以太网的物理特性决定的，这个1500字节是链路层的MTU（最大传输单元）。这个MTU是链路层的数据区，不包含链路层的首部和尾部的18个字节（发送者MAC地址+接收者MAC地址+数据类型，各6个字节），因为以太网协议帧最长是1518字节。而网络层IP数据报有最小20字节的限制，所以IP数据包的数据区长度最大是1480字节。而这1480字节就是存放TCP报文或UDP数据报的。因为UDP数据报的首部8字节，所以UDP数据报的数据区最大长度为1472字节。基于数据尽量不分片的原则，建议UDP的数据控制在1472字节以下为好。</li>
+<li>Internet编程时，建议将UDP数据控制在548字节以下。ipv4协议规定ip层的最小重组缓冲区大小为576字节。由于UDP的标头是8字节，IP包的标头是20-60字节，所以UDP的数据长度控制在<strong>548字节（576-8-20）</strong>以内。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>TCP协议：传输控制协议</p>
+<ul>
+<li>由于UDP协议的不可靠性，TCP协议就此诞生，与UDP不同的是TCP的确认机制，每发出一个数据包都要求确认。如果有一个数据包遗失，就收不到确认，发出方就知道有必要重发这个数据包了。</li>
+<li>TCP还提供<strong>拥塞控制</strong>用于缓解<strong>网络拥堵</strong>。</li>
+<li>TCP协议能够确保数据不会遗失。它的缺点是过程复杂、实现困难、消耗较多的资源。<img src="https://s3.ax1x.com/2021/02/08/yUp7Lt.png" alt="TCP数据格式"></li>
+<li>TCP标头在20-60字节之间，除了源端口号和目的端口号之外，还包含了序号、确认号等各种信息，用于保证可靠连接与数据重发。</li>
+<li>TCP数据包也是内嵌在IP数据包的数据部分，TCP数据包没有长度限制，理论上可以无限长，但为了不分割，通常TCP数据包的长度不超过IP数据包的长度。<img src="https://s3.ax1x.com/2021/02/08/yU9FoT.png"></li>
+<li>发送数据拼装过程<br><img src="https://s3.ax1x.com/2021/02/08/yU90Tf.png" alt="拼装过程"></li>
+</ul>
+</li>
+</ul>
+<h6 id="TCP为什么可靠"><a href="#TCP为什么可靠" class="headerlink" title="TCP为什么可靠"></a>TCP为什么可靠</h6><ul>
+<li>确认应答机制<ul>
+<li>TCP中将每个字节的数据都进行了编号，就是同步序列号（SYN）</li>
+</ul>
+</li>
+<li>超时重传机制<ul>
+<li>有了序列号之后，为了准确送达数据，就有了超时重传。在发送端数据发出后，一定时间没有接收到确认，发送端就会重传数据。没有接收确认的原因，有可能是数据丢失，还有可能是网络拥堵，如果是网络拥堵，重传的数据，对于接收端是重复数据，这时接收端就需要根据序列号进行去重。</li>
+</ul>
+</li>
+<li>流量控制<ul>
+<li>接收处理数据的速度是一定的，如果发送端发送数据的速度太快，就有可能把接收端的缓存打满，如果接收端不进行流量控制，就会导致数据丢包的现象。TCP支持根据接收端的处理能力，来决定发送端的发送速度，这个机制就叫流量控制。</li>
+<li>TCP的首部有控制窗口大小的字段，里面存放着窗口大小信息。</li>
+<li>接收端会根据缓冲区大小，灵活调整流量窗口大小</li>
+<li>如果接收端缓冲区满了,发送端不再发送数据，发送端需要定期发送一个试探窗口，目的是为了接收端的缓冲区有空间时及时告诉给发送端。</li>
+</ul>
+</li>
+<li>拥塞窗口<ul>
+<li>拥塞控制是防止过多的数据注入到网络中，防止网络中的路由器或链路过载，是一个全局性的过程</li>
+<li>拥塞控制机制<ul>
+<li>慢开始</li>
+<li>拥塞控制</li>
+<li>快重传</li>
+<li>快恢复</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h4><ul>
+<li>规定应用程序的数据格式，例如：Email、WWW、FTP、HTTP(s)等</li>
+<li>直接面对用户</li>
+<li>应用数据直接放TCP或UDP数据包的数据部分<img src="https://s3.ax1x.com/2021/02/08/yU9SQs.png"></li>
+</ul>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a><strong>参考</strong></h3><ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.im/post/6876860213991833613?utm_source=gold_browser_extension">https://juejin.im/post/6876860213991833613?utm_source=gold_browser_extension</a></li>
+</ul>
+<h4 id="Written-By-多点-移动运营研发部-任冰"><a href="#Written-By-多点-移动运营研发部-任冰" class="headerlink" title="Written By 多点-移动运营研发部-任冰"></a>Written By 多点-移动运营研发部-任冰</h4>
+  </div>
+  <!--文末结束语-->
+  
+    <div style="text-align:center;color: #ccc;font-size:24px;"> --- 本文结束 <i class="iconfont icon-heartbeat" style="font-size:24px;"></i> The End --- </div>
+  
+  <!--页脚广告-->
+  
+  <div class="mdui-divider"></div>
+  
+  <nav>
+    
+      <a rel="prev" class="post-nav-item mdui-float-left" href="/2021/02/08/iOS%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B/">
+        <i class="iconfont icon-angle-left"></i>
+        <span>iOS离屏渲染是怎么回事?</span>
+      </a>
+    
+    
+      <a rel="next" class="post-nav-item mdui-float-right" href="/2020/12/21/Android-RecyclerView%E6%BB%9A%E5%8A%A8%E6%97%B6%E5%B9%B2%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F/">
+        <span>Android-RecyclerView滚动时干了什么？</span>
+        <i class="iconfont icon-angle-right"></i>
+      </a>
+    
+  </nav>
+</article>
+
+
+
+
+  <div class="toc-button"  style="z-index: 100;">
+    <button class="mdui-fab mdui-ripple mdui-color-teal" mdui-menu="{target: '#toc'}"><i class="iconfont icon-list"></i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item">
+        <a href="/2020/12/30/%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86%E5%B0%8F%E7%BB%93-%E7%90%86%E8%AE%BA%E7%AF%87/" id="toc-header" class="mdui-ripple">文章目录</a>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%B7%E6%BA%90"><span class="toc-number">1.</span> <span class="toc-text">起源</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#nbsp-nbsp-nbsp-nbsp-%E4%BA%92%E8%81%94%E7%BD%91%E7%9A%84%E8%B5%B7%E6%BA%90%E5%8F%AF%E4%BB%A5%E8%BF%BD%E6%BA%AF%E5%88%B01960%E5%B9%B4%E4%BB%A3%E7%BE%8E%E5%9B%BD%E8%81%94%E9%82%A6%E6%94%BF%E5%BA%9C%E5%A7%94%E6%89%98%E8%BF%9B%E8%A1%8C%E7%9A%84%E4%B8%80%E9%A1%B9%E7%A0%94%E7%A9%B6%EF%BC%8C%E7%9B%AE%E7%9A%84%E6%98%AF%E5%88%9B%E5%BB%BA%E5%AE%B9%E9%94%99%E4%B8%8E%E7%94%B5%E8%84%91%E7%BD%91%E7%BB%9C%E7%9A%84%E9%80%9A%E4%BF%A1%E3%80%82%E4%BA%92%E8%81%94%E7%BD%91%E7%9A%84%E5%89%8D%E8%BA%ABARPANET%E6%9C%80%E5%88%9D%E5%9C%A81980%E5%B9%B4%E4%BB%A3%E4%BD%9C%E4%B8%BA%E5%8C%BA%E5%9F%9F%E5%AD%A6%E6%9C%AF%E5%92%8C%E5%86%9B%E4%BA%8B%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E7%9A%84%E9%AA%A8%E5%B9%B2%E3%80%82"><span class="toc-number">1.0.1.</span> <span class="toc-text">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;互联网的起源可以追溯到1960年代美国联邦政府委托进行的一项研究，目的是创建容错与电脑网络的通信。互联网的前身ARPANET最初在1980年代作为区域学术和军事网络连接的骨干。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#nbsp-nbsp-nbsp-nbsp-1974%E5%B9%B4%EF%BC%8C%E7%BD%97%E4%BC%AF%E7%89%B9%C2%B7%E5%8D%A1%E6%81%A9%E5%92%8C%E6%96%87%E9%A1%BF%C2%B7%E7%91%9F%E5%A4%AB%E6%8F%90%E5%87%BATCP-IP%EF%BC%8C%E5%AE%9A%E4%B9%89%E5%9C%A8%E7%94%B5%E8%84%91%E7%BD%91%E7%BB%9C%E4%B9%8B%E9%97%B4%E4%BC%A0%E9%80%81%E6%8A%A5%E6%96%87%E7%9A%84%E6%96%B9%E6%B3%95%E3%80%821986%E5%B9%B4%EF%BC%8C%E7%BE%8E%E5%9B%BD%E5%9B%BD%E5%AE%B6%E7%A7%91%E5%AD%A6%E5%9F%BA%E9%87%91%E4%BC%9A%E5%88%9B%E5%BB%BA%E8%B6%85%E7%BA%A7%E7%94%B5%E8%84%91%E4%B8%AD%E5%BF%83%E4%B8%8E%E5%AD%A6%E6%9C%AF%E6%9C%BA%E6%9E%84%E4%B9%8B%E9%97%B4%E4%BA%92%E8%81%94%E5%9F%BA%E4%BA%8ETCP-IP%E6%8A%80%E6%9C%AF%E7%9A%84%E9%AA%A8%E5%B9%B2%E7%BD%91%E7%BB%9CNSFNET%EF%BC%8C%E9%80%9F%E5%BA%A6%E7%94%B1%E6%9C%80%E5%88%9D%E7%9A%8456kbit-s%EF%BC%8C%E6%8E%A5%E7%9D%80%E4%B8%BAT1%EF%BC%881-5Mbit-s%EF%BC%89%EF%BC%8C%E6%9C%80%E5%90%8E%E5%8F%91%E5%B1%95%E8%87%B3T3%EF%BC%8845Mbit-s%EF%BC%89%E3%80%82%E5%95%86%E4%B8%9A%E4%BA%92%E8%81%94%E7%BD%91%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E5%95%86%EF%BC%88ISP%EF%BC%89%E5%87%BA%E7%8E%B0%E4%BA%8E1980%E5%B9%B4%E4%BB%A3%E6%9C%AB%E5%92%8C1990%E5%B9%B4%E4%BB%A3%E5%88%9D%E3%80%82ARPANET%E4%BA%8E1990%E5%B9%B4%E9%80%80%E5%BD%B9%E3%80%82"><span class="toc-number">1.0.2.</span> <span class="toc-text">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;1974年，罗伯特·卡恩和文顿·瑟夫提出TCP&#x2F;IP，定义在电脑网络之间传送报文的方法。1986年，美国国家科学基金会创建超级电脑中心与学术机构之间互联基于TCP&#x2F;IP技术的骨干网络NSFNET，速度由最初的56kbit&#x2F;s，接着为T1（1.5Mbit&#x2F;s），最后发展至T3（45Mbit&#x2F;s）。商业互联网服务提供商（ISP）出现于1980年代末和1990年代初。ARPANET于1990年退役。</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80"><span class="toc-number">2.</span> <span class="toc-text">网络基础</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#nbsp-nbsp-nbsp-nbsp-%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%EF%BC%8C%E5%88%86%E4%BA%86%E5%A5%BD%E5%87%A0%E5%B1%82%EF%BC%8C%E6%AF%8F%E4%B8%80%E5%B1%82%E9%83%BD%E6%9C%89%E8%87%AA%E5%B7%B1%E7%89%B9%E6%9C%89%E7%9A%84%E5%8A%9F%E8%83%BD%EF%BC%8C%E8%80%8C%E4%B8%94%E6%AF%8F%E4%B8%80%E5%B1%82%E9%83%BD%E9%9D%A0%E4%B8%8B%E4%B8%80%E5%B1%82%E7%9A%84%E6%94%AF%E6%8C%81%E3%80%82%E7%94%A8%E6%88%B7%E6%8E%A5%E8%A7%A6%E5%88%B0%EF%BC%8C%E5%8F%AA%E6%98%AF%E6%9C%80%E4%B8%8A%E9%9D%A2%E7%9A%84%E4%B8%80%E5%B1%82%EF%BC%8C%E7%A7%B0%E4%B8%BA%E5%BA%94%E7%94%A8%E5%B1%82%E3%80%82%E5%A6%82%E6%9E%9C%E8%A6%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E4%BA%92%E8%81%94%E7%BD%91%EF%BC%8C%E5%BF%85%E9%A1%BB%E4%BB%8E%E6%9C%80%E4%B8%8B%E5%B1%82%E5%BC%80%E5%A7%8B%EF%BC%8C%E8%87%AA%E4%B8%8B%E8%80%8C%E4%B8%8A%E7%90%86%E8%A7%A3%E6%AF%8F%E4%B8%80%E5%B1%82%E7%9A%84%E5%8A%9F%E8%83%BD%E3%80%82"><span class="toc-number">2.0.1.</span> <span class="toc-text">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;网络通信的实现，分了好几层，每一层都有自己特有的功能，而且每一层都靠下一层的支持。用户接触到，只是最上面的一层，称为应用层。如果要深入理解互联网，必须从最下层开始，自下而上理解每一层的功能。</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%88%86%E5%B1%82%E6%A8%A1%E5%9E%8B%E6%9C%89%E4%B8%89%E7%A7%8D%EF%BC%9A"><span class="toc-number">2.0.1.1.</span> <span class="toc-text">网络分层模型有三种：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%86%E5%B1%82%E6%A8%A1%E5%9E%8B%E6%A6%82%E8%A7%88%EF%BC%9A"><span class="toc-number">2.0.1.2.</span> <span class="toc-text">分层模型概览：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OSI%E4%B8%83%E5%B1%82"><span class="toc-number">2.1.</span> <span class="toc-text">OSI七层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E7%90%86%E8%AE%BA%E4%BA%94%E5%B1%82"><span class="toc-number">2.2.</span> <span class="toc-text">基于理论五层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%90%86%E8%AE%BA%E8%A7%A3%E8%AF%BB"><span class="toc-number">2.3.</span> <span class="toc-text">理论解读</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%A9%E7%90%86%E5%B1%82"><span class="toc-number">2.3.1.</span> <span class="toc-text">物理层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82"><span class="toc-number">2.3.2.</span> <span class="toc-text">数据链路层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%B1%82"><span class="toc-number">2.3.3.</span> <span class="toc-text">网络层</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%A0%E8%BE%93%E5%B1%82"><span class="toc-number">2.3.4.</span> <span class="toc-text">传输层</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#TCP%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E9%9D%A0"><span class="toc-number">2.3.4.0.1.</span> <span class="toc-text">TCP为什么可靠</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82"><span class="toc-number">2.3.5.</span> <span class="toc-text">应用层</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">2.4.</span> <span class="toc-text">参考</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Written-By-%E5%A4%9A%E7%82%B9-%E7%A7%BB%E5%8A%A8%E8%BF%90%E8%90%A5%E7%A0%94%E5%8F%91%E9%83%A8-%E4%BB%BB%E5%86%B0"><span class="toc-number">2.4.1.</span> <span class="toc-text">Written By 多点-移动运营研发部-任冰</span></a></li></ol></li></ol></li></ol>
+      </li>
+    </ul>
+  </div>
+
+
+
+    <div id="comment" class="mdui-card mdui-p-a-2 mdui-m-b-5">
+      <div class="mdui-tab" mdui-tab>
+        
+          <a href="#comment-tab0" class="mdui-ripple">gitalk</a>
+        
+          <a href="#comment-tab1" class="mdui-ripple">livere</a>
+        
+      </div>
+      
+        <div id="comment-tab0" class="mdui-p-a-2">
+          <div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+    clientID: '',
+    clientSecret: '',
+    repo: '',
+    owner: '',
+    admin: [''],
+    id:  md5(location.pathname) ,
+    distractionFreeMode: 'true',
+  });
+  gitalk.render('gitalk-container');
+</script>
+        </div>
+      
+        <div id="comment-tab1" class="mdui-p-a-2">
+          <div id="lv-container" data-id="city" data-uid="">
+  <script type="text/javascript">
+    (function (d, s) {
+      var j, e = d.getElementsByTagName(s)[0];
+      if (typeof LivereTower === 'function') { return; }
+      j = d.createElement(s);
+      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+      j.async = true;
+      e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+  </script>
+  <noscript>Please enable JavaScript to view the comments powered by LiveRe.</noscript>
+</div>
+        </div>
+      
+    </div>
+
+  </main>
+  <footer id="footer" class="mdui-text-center mdui-m-t-5 mdui-p-b-2 mdui-p-t-4 mdui-color-theme">
+  <div class="mdui-container">
+    <div class="mdui-row">
+      
+        <a href="https://beian.miit.gov.cn" rel="noopener" target="_blank"></a>
+      
+      <span>
+        &copy; 2015 - 2021 
+        
+          <span style="color:#d9333f" class="iconfont icon-heart"></span>
+        
+        dmalliosco
+      </span>
+    </div>
+    <div class="mdui-row">
+      
+        <div class="mdui-col-xs-6 mdui-text-right">
+          <span>Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a></span>
+        </div>
+        <div class="mdui-col-xs-6 mdui-text-left">
+          <span>Theme: <a href="https://github.com/kb1000fx/Meadow" rel="noopener" target="_blank">Meadow</a></span>
+        </div>
+      
+    </div>
+    <div class="mdui-row">
+      
+        <div class="mdui-col-xs-6 mdui-text-right">
+          <span id="busuanzi_container_site_uv" style="display: none;"> <span class="iconfont icon-user"></span>总访客量 <span id="busuanzi_value_site_uv"></span></span>
+        </div>
+        <div class="mdui-col-xs-6 mdui-text-left">
+          <span id="busuanzi_container_site_pv" style="display: none;"> <span class="iconfont icon-eye"></span>总访问量 <span id="busuanzi_value_site_pv"></span></span>
+        </div>
+      
+    </div>
+ </div>
+</footer>
+  
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-teal" style="z-index:100;"><i class="iconfont icon-arrowup"></i></button>
+  
+  
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@8.4.8/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({
+        startOnLoad: true,
+        theme: "default"
+    });</script>
+
+
+
+
+    
+<script src="/js/mdui.min.v1.0.0.js"></script>
+
+
+
+
+<script src="/js/meadow.js"></script>
+
+</body>
+</html >
