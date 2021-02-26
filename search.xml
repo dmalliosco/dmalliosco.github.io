@@ -1403,8 +1403,7 @@
   <entry>
     <title>网络知识小结-理论篇</title>
     <url>/2020/12/30/%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86%E5%B0%8F%E7%BB%93-%E7%90%86%E8%AE%BA%E7%AF%87/</url>
-    <content><![CDATA[<p><strong>如今互联网时代，差不多每人都有一个终端能够浏览网上的信息。那这些终端是怎么连接到网上并浏览信息的呢？要想了解这些知识，就要从网络的基础知识开始说起。</strong></p>
-<h2 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h2><h4 id="nbsp-nbsp-nbsp-nbsp-互联网的起源可以追溯到1960年代美国联邦政府委托进行的一项研究，目的是创建容错与电脑网络的通信。互联网的前身ARPANET最初在1980年代作为区域学术和军事网络连接的骨干。"><a href="#nbsp-nbsp-nbsp-nbsp-互联网的起源可以追溯到1960年代美国联邦政府委托进行的一项研究，目的是创建容错与电脑网络的通信。互联网的前身ARPANET最初在1980年代作为区域学术和军事网络连接的骨干。" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;互联网的起源可以追溯到1960年代美国联邦政府委托进行的一项研究，目的是创建容错与电脑网络的通信。互联网的前身ARPANET最初在1980年代作为区域学术和军事网络连接的骨干。"></a>&nbsp;&nbsp;&nbsp;&nbsp;互联网的起源可以追溯到1960年代美国联邦政府委托进行的一项研究，目的是创建容错与电脑网络的通信。互联网的前身ARPANET最初在1980年代作为区域学术和军事网络连接的骨干。</h4><h4 id="nbsp-nbsp-nbsp-nbsp-1974年，罗伯特·卡恩和文顿·瑟夫提出TCP-IP，定义在电脑网络之间传送报文的方法。1986年，美国国家科学基金会创建超级电脑中心与学术机构之间互联基于TCP-IP技术的骨干网络NSFNET，速度由最初的56kbit-s，接着为T1（1-5Mbit-s），最后发展至T3（45Mbit-s）。商业互联网服务提供商（ISP）出现于1980年代末和1990年代初。ARPANET于1990年退役。"><a href="#nbsp-nbsp-nbsp-nbsp-1974年，罗伯特·卡恩和文顿·瑟夫提出TCP-IP，定义在电脑网络之间传送报文的方法。1986年，美国国家科学基金会创建超级电脑中心与学术机构之间互联基于TCP-IP技术的骨干网络NSFNET，速度由最初的56kbit-s，接着为T1（1-5Mbit-s），最后发展至T3（45Mbit-s）。商业互联网服务提供商（ISP）出现于1980年代末和1990年代初。ARPANET于1990年退役。" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;1974年，罗伯特·卡恩和文顿·瑟夫提出TCP/IP，定义在电脑网络之间传送报文的方法。1986年，美国国家科学基金会创建超级电脑中心与学术机构之间互联基于TCP/IP技术的骨干网络NSFNET，速度由最初的56kbit/s，接着为T1（1.5Mbit/s），最后发展至T3（45Mbit/s）。商业互联网服务提供商（ISP）出现于1980年代末和1990年代初。ARPANET于1990年退役。"></a>&nbsp;&nbsp;&nbsp;&nbsp;1974年，罗伯特·卡恩和文顿·瑟夫提出TCP/IP，定义在电脑网络之间传送报文的方法。1986年，美国国家科学基金会创建超级电脑中心与学术机构之间互联基于TCP/IP技术的骨干网络NSFNET，速度由最初的56kbit/s，接着为T1（1.5Mbit/s），最后发展至T3（45Mbit/s）。商业互联网服务提供商（ISP）出现于1980年代末和1990年代初。ARPANET于1990年退役。</h4><h2 id="网络基础"><a href="#网络基础" class="headerlink" title="网络基础"></a>网络基础</h2><h4 id="nbsp-nbsp-nbsp-nbsp-网络通信的实现，分了好几层，每一层都有自己特有的功能，而且每一层都靠下一层的支持。用户接触到，只是最上面的一层，称为应用层。如果要深入理解互联网，必须从最下层开始，自下而上理解每一层的功能。"><a href="#nbsp-nbsp-nbsp-nbsp-网络通信的实现，分了好几层，每一层都有自己特有的功能，而且每一层都靠下一层的支持。用户接触到，只是最上面的一层，称为应用层。如果要深入理解互联网，必须从最下层开始，自下而上理解每一层的功能。" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;网络通信的实现，分了好几层，每一层都有自己特有的功能，而且每一层都靠下一层的支持。用户接触到，只是最上面的一层，称为应用层。如果要深入理解互联网，必须从最下层开始，自下而上理解每一层的功能。"></a>&nbsp;&nbsp;&nbsp;&nbsp;网络通信的实现，分了好几层，每一层都有自己特有的功能，而且每一层都靠下一层的支持。用户接触到，只是最上面的一层，称为应用层。如果要深入理解互联网，必须从最下层开始，自下而上理解每一层的功能。</h4><h5 id="网络分层模型有三种："><a href="#网络分层模型有三种：" class="headerlink" title="网络分层模型有三种："></a>网络分层模型有三种：</h5><blockquote>
+    <content><![CDATA[<h5 id="如今互联网时代，差不多每人都有一个终端能够浏览网上的信息。那这些终端是怎么连接到网上并浏览信息的呢？要想了解这些知识，就要从网络的基础知识开始说起。"><a href="#如今互联网时代，差不多每人都有一个终端能够浏览网上的信息。那这些终端是怎么连接到网上并浏览信息的呢？要想了解这些知识，就要从网络的基础知识开始说起。" class="headerlink" title="如今互联网时代，差不多每人都有一个终端能够浏览网上的信息。那这些终端是怎么连接到网上并浏览信息的呢？要想了解这些知识，就要从网络的基础知识开始说起。"></a>如今互联网时代，差不多每人都有一个终端能够浏览网上的信息。那这些终端是怎么连接到网上并浏览信息的呢？要想了解这些知识，就要从网络的基础知识开始说起。</h5><h4 id="起源"><a href="#起源" class="headerlink" title="起源"></a>起源</h4><h5 id="nbsp-nbsp-nbsp-nbsp-互联网的起源可以追溯到1960年代美国联邦政府委托进行的一项研究，目的是创建容错与电脑网络的通信。互联网的前身ARPANET最初在1980年代作为区域学术和军事网络连接的骨干。"><a href="#nbsp-nbsp-nbsp-nbsp-互联网的起源可以追溯到1960年代美国联邦政府委托进行的一项研究，目的是创建容错与电脑网络的通信。互联网的前身ARPANET最初在1980年代作为区域学术和军事网络连接的骨干。" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;互联网的起源可以追溯到1960年代美国联邦政府委托进行的一项研究，目的是创建容错与电脑网络的通信。互联网的前身ARPANET最初在1980年代作为区域学术和军事网络连接的骨干。"></a>&nbsp;&nbsp;&nbsp;&nbsp;互联网的起源可以追溯到1960年代美国联邦政府委托进行的一项研究，目的是创建容错与电脑网络的通信。互联网的前身ARPANET最初在1980年代作为区域学术和军事网络连接的骨干。</h5><h5 id="nbsp-nbsp-nbsp-nbsp-1974年，罗伯特·卡恩和文顿·瑟夫提出TCP-IP，定义在电脑网络之间传送报文的方法。1986年，美国国家科学基金会创建超级电脑中心与学术机构之间互联基于TCP-IP技术的骨干网络NSFNET，速度由最初的56kbit-s，接着为T1（1-5Mbit-s），最后发展至T3（45Mbit-s）。商业互联网服务提供商（ISP）出现于1980年代末和1990年代初。ARPANET于1990年退役。"><a href="#nbsp-nbsp-nbsp-nbsp-1974年，罗伯特·卡恩和文顿·瑟夫提出TCP-IP，定义在电脑网络之间传送报文的方法。1986年，美国国家科学基金会创建超级电脑中心与学术机构之间互联基于TCP-IP技术的骨干网络NSFNET，速度由最初的56kbit-s，接着为T1（1-5Mbit-s），最后发展至T3（45Mbit-s）。商业互联网服务提供商（ISP）出现于1980年代末和1990年代初。ARPANET于1990年退役。" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;1974年，罗伯特·卡恩和文顿·瑟夫提出TCP/IP，定义在电脑网络之间传送报文的方法。1986年，美国国家科学基金会创建超级电脑中心与学术机构之间互联基于TCP/IP技术的骨干网络NSFNET，速度由最初的56kbit/s，接着为T1（1.5Mbit/s），最后发展至T3（45Mbit/s）。商业互联网服务提供商（ISP）出现于1980年代末和1990年代初。ARPANET于1990年退役。"></a>&nbsp;&nbsp;&nbsp;&nbsp;1974年，罗伯特·卡恩和文顿·瑟夫提出TCP/IP，定义在电脑网络之间传送报文的方法。1986年，美国国家科学基金会创建超级电脑中心与学术机构之间互联基于TCP/IP技术的骨干网络NSFNET，速度由最初的56kbit/s，接着为T1（1.5Mbit/s），最后发展至T3（45Mbit/s）。商业互联网服务提供商（ISP）出现于1980年代末和1990年代初。ARPANET于1990年退役。</h5><h4 id="网络基础"><a href="#网络基础" class="headerlink" title="网络基础"></a>网络基础</h4><h5 id="nbsp-nbsp-nbsp-nbsp-网络通信的实现，分了好几层，每一层都有自己特有的功能，而且每一层都靠下一层的支持。用户接触到，只是最上面的一层，称为应用层。如果要深入理解互联网，必须从最下层开始，自下而上理解每一层的功能。"><a href="#nbsp-nbsp-nbsp-nbsp-网络通信的实现，分了好几层，每一层都有自己特有的功能，而且每一层都靠下一层的支持。用户接触到，只是最上面的一层，称为应用层。如果要深入理解互联网，必须从最下层开始，自下而上理解每一层的功能。" class="headerlink" title="&nbsp;&nbsp;&nbsp;&nbsp;网络通信的实现，分了好几层，每一层都有自己特有的功能，而且每一层都靠下一层的支持。用户接触到，只是最上面的一层，称为应用层。如果要深入理解互联网，必须从最下层开始，自下而上理解每一层的功能。"></a>&nbsp;&nbsp;&nbsp;&nbsp;网络通信的实现，分了好几层，每一层都有自己特有的功能，而且每一层都靠下一层的支持。用户接触到，只是最上面的一层，称为应用层。如果要深入理解互联网，必须从最下层开始，自下而上理解每一层的功能。</h5><h5 id="网络分层模型有三种："><a href="#网络分层模型有三种：" class="headerlink" title="网络分层模型有三种："></a>网络分层模型有三种：</h5><blockquote>
 <blockquote>
 <p>网络分层</p>
 <blockquote>
@@ -1514,8 +1513,8 @@
 <li>UDP协议：用户数据报协议。数据报传输需要加入端口信息，UDP协议就由此产生。<ul>
 <li>UDP协议比较简单，容易实现，但缺点是可靠性较差，一旦数据包发出，无法知道对方是否收到。不检查数据包是否到达、网络是否拥塞等情况。</li>
 <li>格式几乎就是在数据前面加上端口号。</li>
-<li>16位源端口号+16位目的端口号+16位UDP长度+16位UDP校验+数据（可有可无），这样UDP的标头，固定是8字节（64位）。<img src="https://s3.ax1x.com/2021/02/08/yUplGQ.png" alt="UDP数据包"></li>
-<li>再加上IP包之后，整个以太网数据包就是：<img src="https://s3.ax1x.com/2021/02/08/yUpYq0.png" alt="以太网数据包"></li>
+<li>16位源端口号+16位目的端口号+16位UDP长度+16位UDP校验+数据（可有可无），这样UDP的标头，固定是8字节（64位）。<img src="https://s3.ax1x.com/2021/01/06/sVtLUP.png" alt="UDP数据包"></li>
+<li>再加上IP包之后，整个以太网数据包就是：<img src="https://s3.ax1x.com/2021/01/06/sVU6Fx.png" alt="以太网数据包"></li>
 </ul>
 </li>
 <li>UDP中一个包的大小最大能有多大<ul>
@@ -1529,10 +1528,10 @@
 <ul>
 <li>由于UDP协议的不可靠性，TCP协议就此诞生，与UDP不同的是TCP的确认机制，每发出一个数据包都要求确认。如果有一个数据包遗失，就收不到确认，发出方就知道有必要重发这个数据包了。</li>
 <li>TCP还提供<strong>拥塞控制</strong>用于缓解<strong>网络拥堵</strong>。</li>
-<li>TCP协议能够确保数据不会遗失。它的缺点是过程复杂、实现困难、消耗较多的资源。<img src="https://s3.ax1x.com/2021/02/08/yUp7Lt.png" alt="TCP数据格式"></li>
+<li>TCP协议能够确保数据不会遗失。它的缺点是过程复杂、实现困难、消耗较多的资源。<img src="https://s3.ax1x.com/2021/02/20/y4hyUs.png" alt="TCP数据格式"></li>
 <li>TCP标头在20-60字节之间，除了源端口号和目的端口号之外，还包含了序号、确认号等各种信息，用于保证可靠连接与数据重发。</li>
-<li>TCP数据包也是内嵌在IP数据包的数据部分，TCP数据包没有长度限制，理论上可以无限长，但为了不分割，通常TCP数据包的长度不超过IP数据包的长度。<img src="https://s3.ax1x.com/2021/02/08/yU9FoT.png"></li>
-<li>发送数据拼装过程<br><img src="https://s3.ax1x.com/2021/02/08/yU90Tf.png" alt="拼装过程"></li>
+<li>TCP数据包也是内嵌在IP数据包的数据部分，TCP数据包没有长度限制，理论上可以无限长，但为了不分割，通常TCP数据包的长度不超过IP数据包的长度。<img src="https://s3.ax1x.com/2021/02/20/y4hTa9.png" alt="y4hTa9.png"></li>
+<li>发送数据拼装过程<img src="https://s3.ax1x.com/2021/02/20/y44VsS.png" alt="拼装过程"></li>
 </ul>
 </li>
 </ul>
@@ -1567,10 +1566,44 @@
 <h4 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h4><ul>
 <li>规定应用程序的数据格式，例如：Email、WWW、FTP、HTTP(s)等</li>
 <li>直接面对用户</li>
-<li>应用数据直接放TCP或UDP数据包的数据部分<img src="https://s3.ax1x.com/2021/02/08/yU9SQs.png"></li>
+<li>应用数据直接放TCP或UDP数据包的数据部分<img src="https://s3.ax1x.com/2021/02/20/y44QGq.png" alt="y44QGq.png"></li>
 </ul>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a><strong>参考</strong></h3><ul>
+<h3 id="Wireshark-实践"><a href="#Wireshark-实践" class="headerlink" title="Wireshark 实践"></a>Wireshark 实践</h3><h5 id="UDP数据包分析"><a href="#UDP数据包分析" class="headerlink" title="UDP数据包分析"></a>UDP数据包分析</h5><ul>
+<li>Wireshark 抓UDP包<img src="https://s3.ax1x.com/2021/02/20/y4LTOI.png" alt="UDP数据包"></li>
+<li>从抓包数据可以看出UDP协议数据是封装了要传输的数据和UDP标头数据<img src="https://s3.ax1x.com/2021/02/20/y4LxpQ.png" alt="UDP数据详情"></li>
+<li>IP协议数据包<img src="https://s3.ax1x.com/2021/02/20/y4Ogjs.png" alt="IP协议"></li>
+<li>以太网协议数据包<img src="https://s3.ax1x.com/2021/02/20/y4Ogjs.png" alt="以太网数据包"></li>
+</ul>
+<h5 id="TCP数据包分析"><a href="#TCP数据包分析" class="headerlink" title="TCP数据包分析"></a>TCP数据包分析</h5><h6 id="TCP-三次握手"><a href="#TCP-三次握手" class="headerlink" title="TCP 三次握手"></a><strong>TCP 三次握手</strong></h6><ul>
+<li>TCP三次握手 <img src="https://s3.ax1x.com/2021/02/20/y4XLRg.png" alt="三次握手"></li>
+<li>TCP第一次握手<img src="https://s3.ax1x.com/2021/02/20/y4jlWD.png" alt="第一次握手"></li>
+<li>TCP第二次握手<img src="https://s3.ax1x.com/2021/02/20/y4jhfU.png" alt="第二次握手"></li>
+<li>TCP第三次握手<img src="https://s3.ax1x.com/2021/02/20/y4v3NV.png" alt="第三次握手"></li>
+<li>TCP数据<img src="https://s3.ax1x.com/2021/02/20/y4vau9.png" alt="TCP数据"></li>
+</ul>
+<h6 id="TCP-四次挥手"><a href="#TCP-四次挥手" class="headerlink" title="TCP 四次挥手"></a><strong>TCP 四次挥手</strong></h6><ul>
+<li>客户端向服务端发送关闭请求</li>
+<li>服务端接受到请求向客户端发送待关闭通知</li>
+<li>服务端发送结束请求，并进入LAST_ACK状态，等待来自客户端的最后一个ACK。</li>
+<li>客户端收到服务端的已关闭信息之后发送一个确认包，并进入TIME_WAIT状态。</li>
+</ul>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul>
+<li><a href="https://mp.weixin.qq.com/s/4WT7gnXxNk2C_iMRCgA_jA">https://mp.weixin.qq.com/s/4WT7gnXxNk2C_iMRCgA_jA</a></li>
 <li><a href="https://juejin.im/post/6876860213991833613?utm_source=gold_browser_extension">https://juejin.im/post/6876860213991833613?utm_source=gold_browser_extension</a></li>
+<li><a href="https://juejin.im/entry/6844903666445451272">https://juejin.im/entry/6844903666445451272</a></li>
+<li><a href="https://www.cnblogs.com/steven520213/p/8005258.html">https://www.cnblogs.com/steven520213/p/8005258.html</a></li>
+<li><a href="http://www.9upk.com/article/2537.html">http://www.9upk.com/article/2537.html</a></li>
+<li><a href="https://mp.weixin.qq.com/s/4WT7gnXxNk2C_iMRCgA_jA">https://mp.weixin.qq.com/s/4WT7gnXxNk2C_iMRCgA_jA</a></li>
+<li><a href="https://blog.csdn.net/wojiaopanpan/article/details/69944970">https://blog.csdn.net/wojiaopanpan/article/details/69944970</a></li>
+<li><a href="https://mp.weixin.qq.com/s/9llz-yGUbYgP2kmcwwkJdA">https://mp.weixin.qq.com/s/9llz-yGUbYgP2kmcwwkJdA</a></li>
+<li><a href="https://hit-alibaba.github.io/interview/basic/network/TCP.html">https://hit-alibaba.github.io/interview/basic/network/TCP.html</a></li>
+<li><a href="https://github.com/facebookarchive/SocketRocket">https://github.com/facebookarchive/SocketRocket</a></li>
+<li><a href="https://github.com/pkyeck/socket.IO-objc">https://github.com/pkyeck/socket.IO-objc</a></li>
+<li><a href="https://github.com/robbiehanson/CocoaAsyncSocket">https://github.com/robbiehanson/CocoaAsyncSocket</a></li>
+<li><a href="https://github.com/socketio/socket.io">https://github.com/socketio/socket.io</a></li>
+<li><a href="https://github.com/CoderJackyHuang/iOS-Socket-C-Version">https://github.com/CoderJackyHuang/iOS-Socket-C-Version</a></li>
+<li><a href="https://juejin.cn/post/6844903958624878606">https://juejin.cn/post/6844903958624878606</a></li>
+<li><a href="https://blog.csdn.net/guoyuqi0554/article/details/17678459">https://blog.csdn.net/guoyuqi0554/article/details/17678459</a></li>
 </ul>
 <h4 id="Written-By-多点-移动运营研发部-任冰"><a href="#Written-By-多点-移动运营研发部-任冰" class="headerlink" title="Written By 多点-移动运营研发部-任冰"></a>Written By 多点-移动运营研发部-任冰</h4>]]></content>
       <categories>
@@ -1578,108 +1611,6 @@
       </categories>
       <tags>
         <tag>网络知识</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>iOS离屏渲染是怎么回事?</title>
-    <url>/2021/02/08/iOS%E7%A6%BB%E5%B1%8F%E6%B8%B2%E6%9F%93%E6%98%AF%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B/</url>
-    <content><![CDATA[<h1 id="什么是离屏渲染？"><a href="#什么是离屏渲染？" class="headerlink" title="什么是离屏渲染？"></a>什么是离屏渲染？</h1><p>在几乎所有的面试过程中，我们都会被问到一个问题，什么是离屏渲染？为什么我们会被问到这个问题呢？看起来这个问题跟我们的开发并没有任何的关联。</p>
-<h2 id="1-了解CPU和GPU的区别"><a href="#1-了解CPU和GPU的区别" class="headerlink" title="1.了解CPU和GPU的区别"></a>1.了解CPU和GPU的区别</h2><p><strong>CPU</strong>（Central Processing Unit）:现代计算机整个系统的运算核心、控制核心。<br><strong>GPU</strong>（Graphics Processing Unit）:可进行绘图运算工作的专用微型处理器，是连接计算机和显示器终端的纽带。<br><img src="https://s3.ax1x.com/2021/02/08/yUksQe.png" alt="CPU和GPU"></p>
-<p>CPU需要很强的通用性来处理各种不同的数据类型，同时又要逻辑判断又会引入大量的分支跳转和中断的处理。这些都使得CPU的内部结构异常复杂。<br>而GPU面对的则是类型高度统一的、相互无依赖的大规模数据和不需要被打断的纯净的计算环境。</p>
-<p><strong>CPU/GPU的内部组成</strong><br><a href="https://imgchr.com/i/yUk7Lj"><img src="https://s3.ax1x.com/2021/02/08/yUk7Lj.png" alt="CPU和GPU的内部组成"></a><br>图片来自nVidia CUDA文档。其中绿色的是计算单元，橙红色的是存储单元，橙黄色的是控制单元。</p>
-<p>苹果在各种文档中常常提到的硬件加速器实际上就是GPU。<br>在苹果的系统中，GPU主要负责：<br>1.手机和mac的渲染问题；<br>2.因为其卓越的运算能力，通常还用来处理音视频的编解码/视频滤镜/特效处理/人工智能机器学习计算。</p>
-<h2 id="2-显示器成像的原理（几代显示器的变迁）"><a href="#2-显示器成像的原理（几代显示器的变迁）" class="headerlink" title="2.显示器成像的原理（几代显示器的变迁）"></a>2.显示器成像的原理（几代显示器的变迁）</h2><h3 id="2-1-随机扫描显示"><a href="#2-1-随机扫描显示" class="headerlink" title="2.1 随机扫描显示"></a>2.1 随机扫描显示</h3><p><a href="https://imgchr.com/i/yU8Azj"><img src="https://s3.ax1x.com/2021/02/08/yU8Azj.png" alt="随机扫描显示"></a></p>
-<p>采用随机定位的方式控制电子束的移动，一般会带有图形数据输入设备（例如光笔、作图板、跟踪球等），人机交互性好，与计算机对接方便。<br>优点：电子束随机定位、线条质量好、缓存容量少、人机交互方便；<br>缺点：不能显示太复杂的画面，而且亮度等级和颜色种类较少。</p>
-<h3 id="2-2-光栅扫描显示系统组成"><a href="#2-2-光栅扫描显示系统组成" class="headerlink" title="2.2 光栅扫描显示系统组成"></a>2.2 光栅扫描显示系统组成</h3><p><a href="https://imgchr.com/i/yU8uwV"><img src="https://s3.ax1x.com/2021/02/08/yU8uwV.png" alt="屏幕扫描"></a></p>
-<p>光栅扫描显示：电子束通过偏转不断的从左到右从上到下将图片逐行逐点的扫描到显示屏上，通过控制电子束的强弱来控制黑白灰度等级或彩色的图像。整个显示屏面扫描线为2^n行，每一行又分为2^m个点。这样整个显示屏面就分为了2^n * 2^m个小方块，每个方块就是我们说的一个像素。</p>
-<p><a href="https://imgchr.com/i/yU8lYF"><img src="https://s3.ax1x.com/2021/02/08/yU8lYF.png" alt="yU8lYF.png"></a><br>  帧缓存存储器(左)    显示器(右)</p>
-<p>我们当前使用的显示器都是彩色的，以彩色的为例，在不经过特殊处理的情况下，我们要显示一个图形，系统会自动生成一个跟屏幕像素一致的帧缓冲区，一个像素点通过红、黄、蓝、透明度4个通道来判定当前的颜色，每个通道占8位，所以帧缓冲区的大小可以等于屏幕像素* 4*8。所以我们显示的任何一个图形，都会先绘制到帧缓冲区然后通过视频控制器绘制到屏幕上。</p>
-<p><a href="https://imgchr.com/i/yU80YD"><img src="https://s3.ax1x.com/2021/02/08/yU80YD.png" alt="高级光栅扫描显示"></a></p>
-<p>CPU处理好图片生成纹理，通过系统总线将数据传输到GPU处理,处理完毕后放到帧缓冲区,然后通过显示器控制器绘制到显示器屏幕上。</p>
-<h2 id="3-屏幕成像和卡顿问题"><a href="#3-屏幕成像和卡顿问题" class="headerlink" title="3.屏幕成像和卡顿问题"></a>3.屏幕成像和卡顿问题</h2><h3 id="3-1屏幕撕裂"><a href="#3-1屏幕撕裂" class="headerlink" title="3.1屏幕撕裂"></a>3.1屏幕撕裂</h3><p><a href="https://imgchr.com/i/yU86OI"><img src="https://s3.ax1x.com/2021/02/08/yU86OI.png" alt="屏幕撕裂1"></a></p>
-<p><a href="https://imgchr.com/i/yU8gmt"><img src="https://s3.ax1x.com/2021/02/08/yU8gmt.png" alt="屏幕撕裂2"></a><br>在屏幕扫描的过程中是逐行扫描。最理想的结果是，每一次的扫描，在CPU和GPU协作完成之后，得到结果，然后通过显示控制器显示到显示器上。GPU在显示一个比较复杂的图层的时候，需要消耗时间，例如扫描展示上图的时候，在逐行扫描绘制的到一半的时候，帧缓冲区的内容产生了更新，这时就会出现上半部分是上一帧的数据，下半部分是下一帧的数据，出现屏幕撕裂的现象。<br><a href="https://imgchr.com/i/yU8RTf"><img src="https://s3.ax1x.com/2021/02/08/yU8RTf.png" alt="缓存区展示"></a></p>
-<h3 id="3-2-垂直同步-双缓存区"><a href="#3-2-垂直同步-双缓存区" class="headerlink" title="3.2 垂直同步+双缓存区"></a>3.2 垂直同步+双缓存区</h3><h4 id="双缓存区"><a href="#双缓存区" class="headerlink" title="双缓存区"></a>双缓存区</h4><p>用两个帧缓冲区来存储数据，来互相交叠的显示图像<br><a href="https://imgchr.com/i/yU87Xn"><img src="https://s3.ax1x.com/2021/02/08/yU87Xn.png" alt="双缓存区"></a></p>
-<h4 id="垂直同步"><a href="#垂直同步" class="headerlink" title="垂直同步"></a>垂直同步</h4><p>当一个帧缓冲区的数据完成一次完整的屏幕绘制后，会发送一个信号告知此次绘制完成，让GPU切换缓冲区，开始进行下一次绘制，这个信号就是我们说的垂直同步信号。就是上面屏幕扫描示意图上的那根黄色的线。</p>
-<h3 id="3-3-掉帧Jank"><a href="#3-3-掉帧Jank" class="headerlink" title="3.3 掉帧Jank"></a>3.3 掉帧Jank</h3><p><a href="https://imgchr.com/i/yU8L7V"><img src="https://s3.ax1x.com/2021/02/08/yU8L7V.png" alt="掉帧Jank"></a><br>当前屏幕在显示A帧的时候，显示完毕后刷新时发现B帧没有准备好，无法显示B帧，只能继续显示A帧，这个过程叫做掉帧。</p>
-<h3 id="3-4-三缓存区解决掉帧"><a href="#3-4-三缓存区解决掉帧" class="headerlink" title="3.4 三缓存区解决掉帧"></a>3.4 三缓存区解决掉帧</h3><p>为了减少掉帧，可以使用A,B,C 3个缓冲区来处理掉帧。<br>苹果是使用双缓冲区、</p>
-<h3 id="3-5-屏幕卡顿的本质（掉帧的本质）"><a href="#3-5-屏幕卡顿的本质（掉帧的本质）" class="headerlink" title="3.5 屏幕卡顿的本质（掉帧的本质）"></a>3.5 屏幕卡顿的本质（掉帧的本质）</h3><ul>
-<li>CPU和GPU的计算时间过长，导致时间超过了一帧显示时间，在发送垂直同步刷新信号时，没有准备好下一帧的数据，导致掉帧了；（不要把图层数设置的过于复杂）</li>
-<li>双缓存区只是减少屏幕撕裂问题，并不解决掉帧问题。<h2 id="4-渲染流程（屏幕的渲染本质）"><a href="#4-渲染流程（屏幕的渲染本质）" class="headerlink" title="4.渲染流程（屏幕的渲染本质）"></a>4.渲染流程（屏幕的渲染本质）</h2></li>
-</ul>
-<p><a href="https://imgchr.com/i/yUG9XR"><img src="https://s3.ax1x.com/2021/02/08/yUG9XR.png" alt="渲染本质"></a><br>一个图形的显示是有CPU和GPU协同完成的，CPU负责Application，图形处理、像素化、光栅化都是由GPU来处理。</p>
-<h3 id="Application"><a href="#Application" class="headerlink" title="Application"></a>Application</h3><p>得到图源和纹理，例如图片的编解码等，由CPU来进行完成。</p>
-<h3 id="Geometry-Processing（图形处理（OpenGL-Metal））"><a href="#Geometry-Processing（图形处理（OpenGL-Metal））" class="headerlink" title="Geometry Processing（图形处理（OpenGL/Metal））"></a>Geometry Processing（图形处理（OpenGL/Metal））</h3><p><strong>顶点着色器</strong>：在这里确定图形具体在硬件显示的位置，将坐标转换成屏幕上的坐标<br><strong>片元着色器</strong>：计算每一个像素点的颜色值</p>
-<h3 id="Rasterization（光栅化）"><a href="#Rasterization（光栅化）" class="headerlink" title="Rasterization（光栅化）"></a>Rasterization（光栅化）</h3><p>将图形的每个像素的颜色计算出来以后，放入帧缓冲区中。<br>Piexl Processing (像素处理)<br>将帧缓冲区中的数据，绘制到屏幕上</p>
-<h2 id="5-CoreAnimation渲染流水线"><a href="#5-CoreAnimation渲染流水线" class="headerlink" title="5.CoreAnimation渲染流水线"></a>5.CoreAnimation渲染流水线</h2><p><a href="https://imgchr.com/i/yUGF76"><img src="https://s3.ax1x.com/2021/02/08/yUGF76.png" alt="渲染流水线"></a><br>在Application中处理事件，处理完毕后提交刚刚的动作，然后在CoreAnimation中解码，解码完毕后将结果放到RunLoop中，在下一次 RunLoop执行到之后，GPU开始进行绘制渲染，渲染完毕后，开始显示。</p>
-<h1 id="离屏渲染是怎么触发的"><a href="#离屏渲染是怎么触发的" class="headerlink" title="离屏渲染是怎么触发的?"></a>离屏渲染是怎么触发的?</h1><h2 id="1-怎么检测离屏渲染"><a href="#1-怎么检测离屏渲染" class="headerlink" title="1.怎么检测离屏渲染"></a>1.怎么检测离屏渲染</h2><p>通过系统的模拟器，可以直接检测离屏渲染<br><a href="https://imgchr.com/i/yUG7CD"><img src="https://s3.ax1x.com/2021/02/08/yUG7CD.png" alt="检测离屏渲染"></a><br>iOS 9.0以后，苹果对做了优化，对单个图层设置圆角，不会触发离屏渲染</p>
-<h2 id="2-触发离屏渲染的两个原因"><a href="#2-触发离屏渲染的两个原因" class="headerlink" title="2.触发离屏渲染的两个原因"></a>2.触发离屏渲染的两个原因</h2><h3 id="2-1-苹果在显示一些复杂的需求的时候，没有办法一次性完成图层的动作，必须要分步骤完成，因此会产生离屏渲染。"><a href="#2-1-苹果在显示一些复杂的需求的时候，没有办法一次性完成图层的动作，必须要分步骤完成，因此会产生离屏渲染。" class="headerlink" title="2.1 苹果在显示一些复杂的需求的时候，没有办法一次性完成图层的动作，必须要分步骤完成，因此会产生离屏渲染。"></a>2.1 苹果在显示一些复杂的需求的时候，没有办法一次性完成图层的动作，必须要分步骤完成，因此会产生离屏渲染。</h3><p><a href="https://imgchr.com/i/yUJArn"><img src="https://s3.ax1x.com/2021/02/08/yUJArn.png" alt="遮罩产生离屏渲染的过程"></a></p>
-<p>离屏渲染需要开辟额外的存储空间，同时离屏渲染的合成</p>
-<h3 id="2-2-主动打开了光栅化（shouldRaserize）"><a href="#2-2-主动打开了光栅化（shouldRaserize）" class="headerlink" title="2.2 主动打开了光栅化（shouldRaserize）"></a>2.2 主动打开了光栅化（shouldRaserize）</h3><p>开启光栅化后，会触发离屏渲染，GPU 会强制把图层的渲染结果保存下来，方便下次复用。<br>当我们确定必须是使用离屏渲染的时候，可以主动开启光栅化，让离屏渲染缓冲区做复用，来减少性能消耗，例如毛玻璃效果。<br>shouldRasterize 光栅化使用建议：</p>
-<ul>
-<li>如果layer不能被复用，则没有必要打开光栅化；</li>
-<li>如果layer不是静态的，需要被频繁修改，比如处于动画之中，那么开启离屏渲染反而影响效率；</li>
-<li>离屏渲染缓存内容有时间限制，缓存内容100ms内没有被使用，则会被丢弃；</li>
-<li>离屏渲染空间有限，超过2.5倍屏幕像素大小的话，也会失效，且无法复用。 </li>
-</ul>
-<h3 id="3-关于圆角在离屏渲染上的原理探索"><a href="#3-关于圆角在离屏渲染上的原理探索" class="headerlink" title="3.关于圆角在离屏渲染上的原理探索"></a>3.关于圆角在离屏渲染上的原理探索</h3><p><a href="https://imgchr.com/i/yUJZV0"><img src="https://s3.ax1x.com/2021/02/08/yUJZV0.png" alt="原理探索"></a><br>设置layer.cornerRadius只会设置backgroundColor和border的圆角，不会设置content的圆角；除非同时设置了layer.masksToBounds为True（对应view中的clipsToBounds属性）。</p>
-<h4 id="普通渲染的逻辑"><a href="#普通渲染的逻辑" class="headerlink" title="普通渲染的逻辑"></a>普通渲染的逻辑</h4><p><a href="https://imgchr.com/i/yUJJVx"><img src="https://s3.ax1x.com/2021/02/08/yUJJVx.png" alt="普通渲染"></a><br>当subLayer绘制到屏幕上以后，就会将subLayer从帧缓存区中移除，从而节省空间</p>
-<h4 id="离屏渲染的逻辑（圆角）"><a href="#离屏渲染的逻辑（圆角）" class="headerlink" title="离屏渲染的逻辑（圆角）"></a>离屏渲染的逻辑（圆角）</h4><p><a href="https://imgchr.com/i/yUJYa6"><img src="https://s3.ax1x.com/2021/02/08/yUJYa6.png" alt="圆角绘制"></a><br><a href="https://imgchr.com/i/yUJaGD"><img src="https://s3.ax1x.com/2021/02/08/yUJaGD.png" alt="绘制完成"></a></p>
-<h3 id="4-常见触发离屏渲染的几种情况"><a href="#4-常见触发离屏渲染的几种情况" class="headerlink" title="4.常见触发离屏渲染的几种情况"></a>4.常见触发离屏渲染的几种情况</h3><ul>
-<li>使用了mask的layer（layer.mask）</li>
-<li>需要进行裁剪的layer(layer.masksToBounds/view.clipsToBounds)</li>
-<li>设置了组透明度为YES，并且透明度不为1的layer(layer.allowsGroupOpacity/layer.opacity)</li>
-<li>添加了阴影的layer(layer.shadow*)</li>
-<li>采用了光栅化的layer(layer.shouldRasterize)</li>
-<li>绘制了文字的layer(UILabel,CATextLayer,Core Text 等)</li>
-</ul>
-<h1 id="开发过程中怎么避免离屏渲染"><a href="#开发过程中怎么避免离屏渲染" class="headerlink" title="开发过程中怎么避免离屏渲染?"></a>开发过程中怎么避免离屏渲染?</h1><h2 id="1-避免圆角离屏渲染的手段"><a href="#1-避免圆角离屏渲染的手段" class="headerlink" title="1.避免圆角离屏渲染的手段"></a>1.避免圆角离屏渲染的手段</h2><ul>
-<li>不要使用不必要的 mask，可以预处理图片为圆形，通过 Core Graphics手动绘制圆角。</li>
-<li>使用中间为圆形透明的白色背景视图覆盖。但这种方式不能解决背景色为图片或渐变色的情况。</li>
-<li>用 UIBezierPath 贝塞尔曲线绘制闭合带圆角的矩形，再将不带圆角的 layer 渲染成图片，添加到贝塞尔矩形中。这种方法效率更高，但是 layer 的布局一旦改变，贝塞尔曲线都需要手动地重新绘制，稍微麻烦。<h2 id="2-项目中使用圆角避免离屏渲染的方案"><a href="#2-项目中使用圆角避免离屏渲染的方案" class="headerlink" title="2.项目中使用圆角避免离屏渲染的方案"></a>2.项目中使用圆角避免离屏渲染的方案</h2></li>
-<li>对于单一图层，例如UIImageView只有图片没有背景色、单纯的一个UIView等。直接使用系统提供的layer.cornorRadius；</li>
-<li>能够使用中间为圆形透明的白色背景视图覆盖方式进行的，优先使用这种方法。</li>
-<li>使用Core Graphics +贝塞尔曲线绘制圆角的方式，牺牲CPU计算</li>
-</ul>
-<h1 id="常用控件对于集中设置圆角方式的比较"><a href="#常用控件对于集中设置圆角方式的比较" class="headerlink" title="常用控件对于集中设置圆角方式的比较"></a>常用控件对于集中设置圆角方式的比较</h1><p>UIButton （设置背景图）</p>
-<table>
-<thead>
-<tr>
-<th>圆角的形式</th>
-<th>产生效果</th>
-<th>占用内存</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>layer.cornerRadius + clipsToBounds</td>
-<td>产生离屏渲染</td>
-<td>内存占用10M</td>
-</tr>
-<tr>
-<td>imageView.layer.cornerRadius + clipsToBounds</td>
-<td>不发生离屏渲染</td>
-<td>占用内存10.2M</td>
-</tr>
-<tr>
-<td>Core Graphics绘制图片圆角</td>
-<td>不发生离屏渲染</td>
-<td>占用内存9.9M</td>
-</tr>
-</tbody></table>
-<h2 id="3-项目中对离屏渲染的优化"><a href="#3-项目中对离屏渲染的优化" class="headerlink" title="3.项目中对离屏渲染的优化"></a>3.项目中对离屏渲染的优化</h2><ul>
-<li>使用AsyncDisplayKit</li>
-<li>预处理:CoreGraphics进行圆角剪切</li>
-<li>视频圆角：添加一个图层盖住 （addsubview）</li>
-<li>图片没有背景颜色 ，放心大胆的用layer.cornerRadius</li>
-<li>阴影使用shawdowPath绘制</li>
-<li>需要使用mask遮罩时，将shouldRasterize打开</li>
-<li>用模糊效果，别用系统的，用开源的手动去渲染</li>
-</ul>
-<h4 id="Written-By-多点-移动运营研发部-童庆"><a href="#Written-By-多点-移动运营研发部-童庆" class="headerlink" title="Written By 多点-移动运营研发部-童庆"></a>Written By 多点-移动运营研发部-童庆</h4>]]></content>
-      <categories>
-        <category>技术分享</category>
-      </categories>
-      <tags>
-        <tag>性能优化</tag>
       </tags>
   </entry>
 </search>
