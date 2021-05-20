@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <script>if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode)) window.location.href="https://support.dmeng.net/upgrade-your-browser.html?referrer="+encodeURIComponent(window.location.href); </script>
+    
+    
+        <link rel="preload" crossorigin="crossorigin" href="/fonts/roboto/Roboto-Regular.woff2" as="font">
+        <link rel="preload" crossorigin="crossorigin" href="/fonts/roboto/Roboto-Bold.woff2" as="font">
+    
+    
+    
+        <link rel="shortcut icon" href="/icons/favicon.ico">
+    
+
+    
+    
+        
+<link rel="stylesheet" href="/css/mdui.min.v1.0.0.css">
+
+    
+    
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+          
+
+
+    
+    
+    <title>
+        
+            CodeSnippets使用说明 | dmalliosco
+        
+    </title>
+    
+    
+<meta name="generator" content="Hexo 5.1.1"></head>
+<body class="mdui-drawer-body-left mdui-appbar-with-toolbar mdui-theme-primary-teal mdui-theme-accent-blue">
+  
+  <header class="mdui-appbar mdui-appbar-fixed">
+  <div id="toolbar" class="mdui-toolbar mdui-color-theme">
+    <button class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="iconfont icon-menu"></i></button>
+    <a href="/" class="mdui-typo-headline">dmalliosco</a>
+    <a href="/" class="header-subtitle mdui-typo-headline">dmalldev</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <button class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: 'search'}"><i class="iconfont icon-search"></i></button>
+  </div>
+</header>
+
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字" onfocus="listenSearchFunc()">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer">
+    <div class="mdui-tab" mdui-tab>
+        <a href="#sidebar-tab1" id="sidebartab" class="mdui-ripple mdui-tab-active">站点概览</a>
+        <a href="#sidebar-tab2" id="sidebartab" class="mdui-ripple">关于</a>
+    </div>
+
+    
+    <div id="sidebar-tab1" class="mdui-p-a-2">
+        <div class="mdui-list">
+            
+                
+                <a href="/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-home"></i>
+                    </div>
+                    <div class="mdui-list-item-content">主页</div>
+                </a>
+            
+                
+                <a href="/tags/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-bookmark"></i>
+                    </div>
+                    <div class="mdui-list-item-content">标签</div>
+                </a>
+            
+                
+                <a href="/categories/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-folder"></i>
+                    </div>
+                    <div class="mdui-list-item-content">分类</div>
+                </a>
+            
+                
+                <a href="/archives/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-archive"></i>
+                    </div>
+                    <div class="mdui-list-item-content">归档</div>
+                </a>
+            
+            <div class="mdui-list-item mdui-ripple">
+                <div class="mdui-list-item-icon">
+                    <i class="iconfont icon-moon"></i>
+                </div>
+                <div class="mdui-list-item-content">夜间模式</div>
+                <label class="mdui-switch" id="darkmode">
+                  <input type="checkbox" id="nightmode_switch"/>
+                  <i class="mdui-switch-icon"></i>
+                </label>
+            </div>           
+        </div>
+    </div>
+
+    
+    <div id="sidebar-tab2" class="mdui-p-a-2">
+        <div class="sidebar-overview">
+            <div class="sidebar-avatar">
+                
+                    <img src="/icons/avatar.gif"/>
+                
+            </div>
+            <div class="sidebar-author-name">dmalliosco</div>
+            <div class="sidebar-description">dmalldev</div>
+        </div>
+        <div class="sidebar-links">
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-mail"></i></span>
+                    <a href="mailto:xxx@xxx.com" class="mdui-chip-title">E-Mail</a>
+                </div>
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-github"></i></span>
+                    <a target="_blank" rel="noopener" href="https://github.com/dmalliosco/" class="mdui-chip-title">GitHub</a>
+                </div>
+            
+        </div>
+        <ul class="mdui-list" mdui-collapse="{accordion: true}">
+            <li class="mdui-collapse-item">
+                <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-link"></i>
+                    </div>
+                    <div class="mdui-list-item-content">友情链接</div>
+                    <div class="mdui-collapse-item-arrow">
+                        <i class="mdui-list-item-icon iconfont icon-angle-down"></i>
+                    </div>
+                </div>
+                <ul id="linksList" class="mdui-collapse-item-body mdui-list mdui-list-dense">
+                    
+                        <a target="_blank" rel="noopener" href="https://garybear.cn/hexo-theme-meadow/" class="mdui-list-item mdui-ripple">
+                            Meadow说明文档
+                        </a>
+                    
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="mdui-divider"></div>
+    
+    
+</aside>
+  
+  <main id="main-contain" class="mdui-container mdui-m-t-5">
+    <article id="article" class="mdui-card mdui-p-b-2 mdui-m-b-5">
+  <header class="mdui-card-media">
+    
+    
+      <div class="post-header"> 
+  <a class="post-header-title" href="/2020/06/04/CodeSnippets%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/">CodeSnippets使用说明</a>
+  <div class="post-header-meta">
+    <span>
+      <span class="iconfont icon-calendar"></span>
+      发布于:&nbsp;2020-06-04
+    </span>
+    <span>
+      <span class="iconfont icon-calendar-check"></span>
+      更新于:&nbsp;2020-09-05
+    </span>
+    <span>
+      <span class="iconfont icon-folder"></span>
+      分类于:&nbsp;<a class="category-link" href="/categories/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">效率工具</a>
+    </span>
+    
+      <span>
+        <span class="iconfont icon-eye"></span>
+        阅读次数:&nbsp;
+        <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+      </span>
+    
+  </div>
+</div>   
+    
+
+
+
+    
+    
+    <div class="mdui-card-menu">
+    
+      <button class="mdui-btn mdui-btn-icon mdui-text-color-teal" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="iconfont icon-share"></i></button>
+      <ul class="mdui-menu" id="share_menu">
+        <li class="mdui-menu-item">
+          <a href="http://service.weibo.com/share/share.php?appkey=&title=CodeSnippets使用说明&url=http://example.com/2020/06/04/CodeSnippets%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/&pic=http://example.com/null&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://twitter.com/intent/tweet?text=CodeSnippets使用说明&url=http://example.com/2020/06/04/CodeSnippets%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/&via=dmalliosco" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=http://example.com/2020/06/04/CodeSnippets%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://plus.google.com/share?url=http://example.com/2020/06/04/CodeSnippets%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://example.com/2020/06/04/CodeSnippets%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/&title=CodeSnippets使用说明" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="http://connect.qq.com/widget/shareqq/index.html?site=dmalliosco&title=CodeSnippets使用说明&summary=dmalldev&pics=http://example.com/null&url=http://example.com/2020/06/04/CodeSnippets%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://telegram.me/share/url?url=http://example.com/2020/06/04/CodeSnippets%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/&text=CodeSnippets使用说明" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+        </li>
+      </ul>
+    
+  </div>
+  </header>
+  
+  
+  
+  
+  <div class="post-tags">
+    
+      <i class="iconfont icon-tag">
+        <a rel="tag" href = /tags/%E5%AE%9E%E7%94%A8%E5%B7%A5%E5%85%B7/ >实用工具</a>
+      </i>
+    
+  </div>
+
+  
+  <div class="mdui-card-content mdui-typo mdui-p-x-4">
+    <h3 id="CodeSnippets"><a href="#CodeSnippets" class="headerlink" title="CodeSnippets"></a>CodeSnippets</h3><h3 id="使用方式："><a href="#使用方式：" class="headerlink" title="使用方式："></a>使用方式：</h3><ul>
+<li>第一种 前往文件夹：<br>前往文件夹：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~&#x2F;Library&#x2F;Developer&#x2F;Xcode&#x2F;UserData&#x2F;CodeSnippets</span><br></pre></td></tr></table></figure>
+然后复制粘贴即可</li>
+<li>第二种 执行脚本即可<br>进入到当前文件根目录。然后执行脚本即可。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh DMCodeSnippets.sh</span><br></pre></td></tr></table></figure>
+如果没有权限,在终端添加<code>sudo</code>,输入电脑密码，执行脚本即可。<br><code>sudo sh  DMCodeSnippets.sh</code></li>
+</ul>
+<h4 id="说明："><a href="#说明：" class="headerlink" title="说明："></a>说明：</h4><table>
+<thead>
+<tr>
+<th>快捷方式</th>
+<th>功能</th>
+<th>实现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DMArray</td>
+<td>不可变数组的声明</td>
+<td>@property (nonatomic, copy) NSArray *&lt;#array#&gt;;</td>
+</tr>
+<tr>
+<td>DMBOOL</td>
+<td>基本数据类型BOOL</td>
+<td>@property (nonatomic, assign) BOOL  &lt;#bool#&gt;;</td>
+</tr>
+<tr>
+<td>DMDictionary</td>
+<td>不可变字典属性声明</td>
+<td>@property (nonatomic, copy) NSDictionary *&lt;#dictionary#&gt;;</td>
+</tr>
+<tr>
+<td>DMMutableDictInterface</td>
+<td>可变字典属性声明</td>
+<td>@property (nonatomic, strong) NSMutableDictionary *&lt;#mutableDictionary#&gt;;</td>
+</tr>
+<tr>
+<td>DMMutableDictLazyLoading</td>
+<td>可变字典懒加载</td>
+<td>实现见下面</td>
+</tr>
+<tr>
+<td>DMInteger</td>
+<td>NSInteger基本数据类型</td>
+<td>@property (nonatomic, assign) NSInteger  &lt;#integer#&gt;;</td>
+</tr>
+<tr>
+<td>DMString</td>
+<td>字符串声明</td>
+<td>@property (nonatomic, copy) NSString *&lt;#string#&gt;;</td>
+</tr>
+<tr>
+<td>DMMutableArrayInterface</td>
+<td>可变数组声明</td>
+<td>@property (nonatomic, strong) NSMutableArray *&lt;#mutableArray#&gt;;</td>
+</tr>
+<tr>
+<td>DMMutableArrayLazyLoading</td>
+<td>可变数组懒加载</td>
+<td>实现见下面</td>
+</tr>
+<tr>
+<td>DMLabelInterface</td>
+<td>UILabel声明</td>
+<td>@property (nonatomic, strong) UILabel *&lt;#contentLabel#&gt;;</td>
+</tr>
+<tr>
+<td>DMLabelLazyLoading</td>
+<td>UILabel懒加载</td>
+<td>实现见下面</td>
+</tr>
+<tr>
+<td>DMButtonInterface</td>
+<td>UIButton声明</td>
+<td>@property (nonatomic, strong) UIButton *&lt;#customBtn#&gt;;</td>
+</tr>
+<tr>
+<td>DMButtonLazyLoading</td>
+<td>UIButton懒加载</td>
+<td>实现见下面</td>
+</tr>
+<tr>
+<td>DMImageViewInterface</td>
+<td>UIImageView声明</td>
+<td>@property (nonatomic, strong) UIImageView *&lt;#iconImageView#&gt;;</td>
+</tr>
+<tr>
+<td>DMImageViewLazyLoading</td>
+<td>UIImageView懒加载</td>
+<td>实现见下面</td>
+</tr>
+<tr>
+<td>DMViewInterface</td>
+<td>UIView声明</td>
+<td>@property (nonatomic, strong) UIView *&lt;#contentView#&gt;;</td>
+</tr>
+<tr>
+<td>DMViewLazyLoading</td>
+<td>UIView懒加载</td>
+<td>实现见下面</td>
+</tr>
+<tr>
+<td>DMPragmaMark</td>
+<td>pragmaMark</td>
+<td>#pragma mark   - &lt;#infoMessage#&gt; -</td>
+</tr>
+<tr>
+<td>DMWarning</td>
+<td>warning，包括作者，以及warning描述</td>
+<td>#warning   &lt;#author#&gt;   &lt;#messageDesc#&gt;</td>
+</tr>
+<tr>
+<td>DMDispatchOnce</td>
+<td>单例中dispatch_once写法</td>
+<td>实现见下面</td>
+</tr>
+<tr>
+<td>DMGCDAsyMain</td>
+<td>异步回到主线程</td>
+<td>实现见下面</td>
+</tr>
+<tr>
+<td>DMWeakSelf</td>
+<td>weak修饰写法</td>
+<td>__weak typeof(self)weakSelf = self;</td>
+</tr>
+<tr>
+<td>DMStrongSelf</td>
+<td>strong修饰写法</td>
+<td>__strong typeof(weakSelf)strongSelf = weakSelf;</td>
+</tr>
+<tr>
+<td>DMLocalBlock</td>
+<td>localBlock</td>
+<td>实现见下面</td>
+</tr>
+<tr>
+<td>DMInitMethod</td>
+<td>初始化方法</td>
+<td>实现见下面</td>
+</tr>
+<tr>
+<td>DMLifecycle</td>
+<td>vc生命周期</td>
+<td>实现见下面</td>
+</tr>
+<tr>
+<td>DMTableViewInterface</td>
+<td>UITabeleView声明</td>
+<td>@property (nonatomic, strong) UITableView *&lt;#tableView#&gt;;</td>
+</tr>
+<tr>
+<td>DMTableViewLazyLoading</td>
+<td>UITableView懒加载</td>
+<td>实现见下面</td>
+</tr>
+<tr>
+<td>DMCollectionViewInterface</td>
+<td>UICollectionView声明</td>
+<td>@property (nonatomic, strong) UICollectionView *&lt;#collectionView#&gt;;</td>
+</tr>
+<tr>
+<td>DMCollectionViewLazyLoading</td>
+<td>UICollectionView懒加载</td>
+<td>实现见下面</td>
+</tr>
+</tbody></table>
+<h4 id="DMButtonLazyLoading"><a href="#DMButtonLazyLoading" class="headerlink" title="DMButtonLazyLoading"></a>DMButtonLazyLoading</h4><p>实现：UIButton实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- (UIButton *)&lt;#customBtn#&gt; &#123;</span><br><span class="line">    if (!&lt;#_customBtn#&gt;) &#123;</span><br><span class="line">        &lt;#_customBtn#&gt; &#x3D; [UIButton buttonWithType:UIButtonTypeCustom];</span><br><span class="line">        [&lt;#_customBtn#&gt; setTitle:&lt;#(nullable NSString *)#&gt; forState:UIControlStateNormal];</span><br><span class="line">        [&lt;#_customBtn#&gt; setTitleColor:&lt;#(nullable UIColor *)#&gt; forState:UIControlStateNormal];</span><br><span class="line">        [&lt;#_customBtn#&gt; setBackgroundColor:&lt;#(UI_APPEARANCE_SELECTOR UIColor *)#&gt;];</span><br><span class="line">        [&lt;#_customBtn#&gt; addTarget:&lt;#(nullable id)#&gt; action:&lt;#(nonnull SEL)#&gt; forControlEvents:UIControlEventTouchUpInside];</span><br><span class="line">    &#125;</span><br><span class="line">    return &lt;#_customBtn#&gt;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="DMDispatchOnce"><a href="#DMDispatchOnce" class="headerlink" title="DMDispatchOnce"></a>DMDispatchOnce</h4><p>实现：单例中dispatch_once写法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">  + (instancetype)sharedInstance &#123;</span><br><span class="line">      static dispatch_once_t onceToken;</span><br><span class="line">      dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">          &lt;#code#&gt;</span><br><span class="line">      &#125;);</span><br><span class="line">      return &lt;#expression#&gt;;</span><br><span class="line">  &#125;</span><br><span class="line">&#96;&#96;&#96; </span><br><span class="line">#### DMGCDAsyMain</span><br><span class="line">实现：异步回到主线程</span><br></pre></td></tr></table></figure>
+<p>dispatch_async(dispatch_get_main_queue(), ^{<br>       &lt;#code#&gt;<br>   });</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### DMImageViewLazyLoading</span><br><span class="line">实现：UIImageView懒加载</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>(UIImageView *)&lt;#iconImageView#&gt; {<br>  if (!&lt;#_iconImageView#&gt;) {</p>
+<pre><code>  &lt;#_iconImageView#&gt; =[[UIImageView alloc]init];</code></pre>
+<p>  }<br>  return &lt;#_iconImageView#&gt;;<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### DMInitMethod</span><br><span class="line">实现：初始化方法</span><br></pre></td></tr></table></figure></li>
+<li><p>(instancetype)init {</p>
+<p>  if (self = [super init]) {</p>
+<p>  }<br>  return self;<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### DMLabelLazyLoading</span><br><span class="line">实现：UILabel懒加载</span><br></pre></td></tr></table></figure></li>
+<li><p>(UILabel *)&lt;#contentLabel#&gt; {<br>  if (!&lt;#_contentLabel#&gt;) {</p>
+<pre><code>  &lt;#_contentLabel#&gt; = [[UILabel alloc]initWithFrame:CGRectMake(&lt;#CGFloat x#&gt;, &lt;#CGFloat y#&gt;, &lt;#CGFloat width#&gt;, &lt;#CGFloat height#&gt;)];
+  &lt;#_contentLabel#&gt;.backgroundColor = [UIColor clearColor];</code></pre>
+<p>  }<br>  return &lt;#_contentLabel#&gt;;<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### DMLifecycle</span><br><span class="line">实现：vc生命周期</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>(void)pageInit {<br>  [super pageInit];</p>
+</li>
+</ul>
+<p>}</p>
+<ul>
+<li>(void)pageWillForwardToMe {<br>  [super pageWillForwardToMe];</li>
+</ul>
+<p>}</p>
+<ul>
+<li>(void)pageDidForwardToMe {<br>  [super pageDidForwardToMe];</li>
+</ul>
+<p>}</p>
+<ul>
+<li>(void)viewDidLoad {<br>  [super viewDidLoad];</li>
+</ul>
+<p>}</p>
+<ul>
+<li>(void)pageWillBeShown {<br>  [super pageWillBeShown];</li>
+</ul>
+<p>}</p>
+<ul>
+<li>(void)pageDidShown {<br>  [super pageDidShown];</li>
+</ul>
+<p>}</p>
+<ul>
+<li>(void)pageWillForwardFromMe {<br>  [super pageWillForwardFromMe];</li>
+</ul>
+<p>}</p>
+<ul>
+<li>(void)pageDidForwardFromMe {<br>  [super pageDidForwardFromMe];</li>
+</ul>
+<p>}</p>
+<ul>
+<li>(void)pageWillBackwardFromMe {<br>  [super pageWillBackwardFromMe];</li>
+</ul>
+<p>}</p>
+<ul>
+<li>(void)pageDidBackwardFromMe {<br>  [super pageDidBackwardFromMe];</li>
+</ul>
+<p>}</p>
+<ul>
+<li>(void)pageWillBackwardToMe {<br>  [super pageWillBackwardToMe];</li>
+</ul>
+<p>}</p>
+<ul>
+<li>(void)pageDidBackwardToMe {<br>  [super pageDidBackwardToMe];</li>
+</ul>
+<p>}</p>
+<ul>
+<li>(void)pageWillBeHidden {<br>  [super pageWillBeHidden];</li>
+</ul>
+<p>}</p>
+<ul>
+<li>(void)pageDidHidden {<br>  [super pageDidHidden];</li>
+</ul>
+<p>}</p>
+<ul>
+<li>(void)pageDestroy {<br>  [super pageDestroy];</li>
+</ul>
+<p>}</p>
+<ul>
+<li>(void)pageReload {<br>  [super pageReload];</li>
+</ul>
+<p>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### DMLocalBlock</span><br><span class="line">实现：localBlock</span><br></pre></td></tr></table></figure>
+<p>&lt;#returnType#&gt;(^&lt;#blocKname#&gt;)(&lt;#parameterTypes#&gt;) = ^&lt;#returnType#&gt; (&lt;#parameters#&gt;) {<br>    &lt;#statements#&gt;<br>    };</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### DMMutableArrayLazyLoading</span><br><span class="line">实现：可变数组懒加载</span><br></pre></td></tr></table></figure>
+<ul>
+<li>(NSMutableArray *)&lt;#mutableArray#&gt; {<br>  if (!&lt;#_mutableArray#&gt;) {<pre><code>  &lt;#_mutableArray#&gt; = [NSMutableArray array];</code></pre>
+  }<br>  return &lt;#_mutableArray#&gt;;<br>}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">#### DMMutableDictLazyLoading</span><br><span class="line">实现：可变字典懒加载</span><br></pre></td></tr></table></figure></li>
+<li>(NSMutableDictionary *)&lt;#mutableDictionary#&gt; {<br>  if (!&lt;#_mutableDictionary#&gt;) {<pre><code>  &lt;#_mutableDictionary#&gt; = [NSMutableDictionary dictionary];</code></pre>
+  }<br>  return &lt;#_mutableDictionary#&gt;;<br>}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#### DMViewLazyLoading</span><br><span class="line">实现：UIView懒加载</span><br></pre></td></tr></table></figure></li>
+<li>(UIView *)&lt;#contentView#&gt; {<br>  if (!&lt;#_contentView#&gt;) {<pre><code>  &lt;#_contentView#&gt; = [[UIView alloc]initWithFrame:CGRectMake(&lt;#CGFloat x#&gt;, &lt;#CGFloat y#&gt;, &lt;#CGFloat width#&gt;, &lt;#CGFloat height#&gt;)];
+  &lt;#_contentView#&gt;.backgroundColor = [UIColor clearColor];</code></pre>
+  }<br>  return &lt;#_contentView#&gt;;<br>}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># DMTableViewLazyLoading</span><br><span class="line">实现：UITableView懒加载</span><br></pre></td></tr></table></figure></li>
+<li>(UITableView *)&lt;#tableView#&gt; {<br>  if (!&lt;#_tableView#&gt;) {<pre><code>  &lt;#_tableView#&gt; = [[UITableView alloc]initWithFrame:&lt;#(CGRect)#&gt; style:UITableViewStylePlain];
+  &lt;#_tableView#&gt;.delegate = self;
+  &lt;#_tableView#&gt;.dataSource = self;
+  [self.view addSubview:&lt;#_tableView#&gt;];
+  [&lt;#_tableView#&gt; mas_makeConstraints:^(MASConstraintMaker *make) &#123;
+      make.edges.insets(UIEdgeInsetsMake(&lt;#CGFloat top#&gt;, &lt;#CGFloat left#&gt;, &lt;#CGFloat bottom#&gt;, &lt;#CGFloat right#&gt;));
+  &#125;];</code></pre>
+  }<br>  return &lt;#_tableView#&gt;;<br>}<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># DMCollectionViewLazyLoading</span><br><span class="line">实现：UICollectionView懒加载</span><br></pre></td></tr></table></figure></li>
+<li>(UICollectionView *)&lt;#collectionView#&gt; {<br>  if (!&lt;#_collectionView#&gt;) {<pre><code>  &lt;#_collectionView#&gt; = [[UICollectionView alloc]initWithFrame:&lt;#(CGRect)#&gt; collectionViewLayout:&lt;#(nonnull UICollectionViewLayout *)#&gt;];
+  &lt;#_collectionView#&gt;.delegate = self;
+  &lt;#_collectionView#&gt;.dataSource = self;
+  [self.view addSubview:&lt;#_collectionView#&gt;];
+  [&lt;#_collectionView#&gt; mas_makeConstraints:^(MASConstraintMaker *make) &#123;
+      make.edges.insets(UIEdgeInsetsMake(&lt;#CGFloat top#&gt;, &lt;#CGFloat left#&gt;, &lt;#CGFloat bottom#&gt;, &lt;#CGFloat right#&gt;));
+  &#125;];</code></pre>
+  }<br>  return &lt;#_collectionView#&gt;;<br>}<pre><code></code></pre>
+</li>
+</ul>
+
+  </div>
+  <!--文末结束语-->
+  
+    <div style="text-align:center;color: #ccc;font-size:24px;"> --- 本文结束 <i class="iconfont icon-heartbeat" style="font-size:24px;"></i> The End --- </div>
+  
+  <!--页脚广告-->
+  
+  <div class="mdui-divider"></div>
+  
+  <nav>
+    
+      <a rel="prev" class="post-nav-item mdui-float-left" href="/2020/09/02/hexo%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/">
+        <i class="iconfont icon-angle-left"></i>
+        <span>hexo使用说明</span>
+      </a>
+    
+    
+  </nav>
+</article>
+
+
+
+
+  <div class="toc-button"  style="z-index: 100;">
+    <button class="mdui-fab mdui-ripple mdui-color-teal" mdui-menu="{target: '#toc'}"><i class="iconfont icon-list"></i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item">
+        <a href="/2020/06/04/CodeSnippets%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/" id="toc-header" class="mdui-ripple">文章目录</a>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#CodeSnippets"><span class="toc-number">1.</span> <span class="toc-text">CodeSnippets</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">使用方式：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E%EF%BC%9A"><span class="toc-number">2.1.</span> <span class="toc-text">说明：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DMButtonLazyLoading"><span class="toc-number">2.2.</span> <span class="toc-text">DMButtonLazyLoading</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DMDispatchOnce"><span class="toc-number">2.3.</span> <span class="toc-text">DMDispatchOnce</span></a></li></ol></li></ol>
+      </li>
+    </ul>
+  </div>
+
+
+
+    <div id="comment" class="mdui-card mdui-p-a-2 mdui-m-b-5">
+      <div class="mdui-tab" mdui-tab>
+        
+          <a href="#comment-tab0" class="mdui-ripple">gitalk</a>
+        
+          <a href="#comment-tab1" class="mdui-ripple">livere</a>
+        
+      </div>
+      
+        <div id="comment-tab0" class="mdui-p-a-2">
+          <div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+    clientID: '',
+    clientSecret: '',
+    repo: '',
+    owner: '',
+    admin: [''],
+    id:  md5(location.pathname) ,
+    distractionFreeMode: 'true',
+  });
+  gitalk.render('gitalk-container');
+</script>
+        </div>
+      
+        <div id="comment-tab1" class="mdui-p-a-2">
+          <div id="lv-container" data-id="city" data-uid="">
+  <script type="text/javascript">
+    (function (d, s) {
+      var j, e = d.getElementsByTagName(s)[0];
+      if (typeof LivereTower === 'function') { return; }
+      j = d.createElement(s);
+      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+      j.async = true;
+      e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+  </script>
+  <noscript>Please enable JavaScript to view the comments powered by LiveRe.</noscript>
+</div>
+        </div>
+      
+    </div>
+
+  </main>
+  <footer id="footer" class="mdui-text-center mdui-m-t-5 mdui-p-b-2 mdui-p-t-4 mdui-color-theme">
+  <div class="mdui-container">
+    <div class="mdui-row">
+      
+        <a href="https://beian.miit.gov.cn" rel="noopener" target="_blank"></a>
+      
+      <span>
+        &copy; 2015 - 2021 
+        
+          <span style="color:#d9333f" class="iconfont icon-heart"></span>
+        
+        dmalliosco
+      </span>
+    </div>
+    <div class="mdui-row">
+      
+        <div class="mdui-col-xs-6 mdui-text-right">
+          <span>Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a></span>
+        </div>
+        <div class="mdui-col-xs-6 mdui-text-left">
+          <span>Theme: <a href="https://github.com/kb1000fx/Meadow" rel="noopener" target="_blank">Meadow</a></span>
+        </div>
+      
+    </div>
+    <div class="mdui-row">
+      
+        <div class="mdui-col-xs-6 mdui-text-right">
+          <span id="busuanzi_container_site_uv" style="display: none;"> <span class="iconfont icon-user"></span>总访客量 <span id="busuanzi_value_site_uv"></span></span>
+        </div>
+        <div class="mdui-col-xs-6 mdui-text-left">
+          <span id="busuanzi_container_site_pv" style="display: none;"> <span class="iconfont icon-eye"></span>总访问量 <span id="busuanzi_value_site_pv"></span></span>
+        </div>
+      
+    </div>
+ </div>
+</footer>
+  
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-teal" style="z-index:100;"><i class="iconfont icon-arrowup"></i></button>
+  
+  
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@8.4.8/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({
+        startOnLoad: true,
+        theme: "default"
+    });</script>
+
+
+
+
+    
+<script src="/js/mdui.min.v1.0.0.js"></script>
+
+
+
+
+<script src="/js/meadow.js"></script>
+
+</body>
+</html >
