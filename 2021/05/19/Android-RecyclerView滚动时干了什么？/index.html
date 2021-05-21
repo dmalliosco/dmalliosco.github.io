@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <script>if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode)) window.location.href="https://support.dmeng.net/upgrade-your-browser.html?referrer="+encodeURIComponent(window.location.href); </script>
+    
+    
+        <link rel="preload" crossorigin="crossorigin" href="/fonts/roboto/Roboto-Regular.woff2" as="font">
+        <link rel="preload" crossorigin="crossorigin" href="/fonts/roboto/Roboto-Bold.woff2" as="font">
+    
+    
+    
+        <link rel="shortcut icon" href="/icons/favicon.ico">
+    
+
+    
+    
+        
+<link rel="stylesheet" href="/css/mdui.min.v1.0.0.css">
+
+    
+    
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+    
+    
+
+    
+        <script data-ad-client="ca-" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+          
+
+
+    
+    
+    <title>
+        
+            Android-RecyclerView滚动时干了什么？ | dmalliosco
+        
+    </title>
+    
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body class="mdui-drawer-body-left mdui-appbar-with-toolbar mdui-theme-primary-teal mdui-theme-accent-blue">
+  
+  <header class="mdui-appbar mdui-appbar-fixed">
+  <div id="toolbar" class="mdui-toolbar mdui-color-theme">
+    <button class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="iconfont icon-menu"></i></button>
+    <a href="/" class="mdui-typo-headline">dmalliosco</a>
+    <a href="/" class="header-subtitle mdui-typo-headline">dmalldev</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <button class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: 'search'}"><i class="iconfont icon-search"></i></button>
+  </div>
+</header>
+
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字" onfocus="listenSearchFunc()">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer">
+    <div class="mdui-tab" mdui-tab>
+        <a href="#sidebar-tab1" id="sidebartab" class="mdui-ripple mdui-tab-active">站点概览</a>
+        <a href="#sidebar-tab2" id="sidebartab" class="mdui-ripple">关于</a>
+    </div>
+
+    
+    <div id="sidebar-tab1" class="mdui-p-a-1">
+        <div class="mdui-list">
+            
+                
+                <a href="/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-home"></i>
+                    </div>
+                    <div class="mdui-list-item-content">主页</div>
+                </a>
+            
+                
+                <a href="/tags/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-bookmark"></i>
+                    </div>
+                    <div class="mdui-list-item-content">标签</div>
+                </a>
+            
+                
+                <a href="/categories/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-folder"></i>
+                    </div>
+                    <div class="mdui-list-item-content">分类</div>
+                </a>
+            
+                
+                <a href="/archives/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-archive"></i>
+                    </div>
+                    <div class="mdui-list-item-content">归档</div>
+                </a>
+            
+                
+                <a href="/about/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-user"></i>
+                    </div>
+                    <div class="mdui-list-item-content">关于</div>
+                </a>
+            
+            <div class="mdui-list-item mdui-ripple">
+                <div class="mdui-list-item-icon">
+                    <i class="iconfont icon-moon"></i>
+                </div>
+                <div class="mdui-list-item-content">夜间模式</div>
+                <label class="mdui-switch" id="darkmode">
+                  <input type="checkbox" id="nightmode_switch"/>
+                  <i class="mdui-switch-icon"></i>
+                </label>
+            </div>           
+        </div>
+    </div>
+
+    
+    <div id="sidebar-tab2" class="mdui-p-a-1">
+        <div class="sidebar-overview">
+            <div class="sidebar-avatar">
+                
+                    <img src="/icons/avatar.gif"/>
+                
+            </div>
+            <div class="sidebar-author-name">dmalliosco</div>
+            <div class="sidebar-description">dmalldev</div>
+        </div>
+        <div class="sidebar-links">
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-mail"></i></span>
+                    <a href="mailto:dmalliosco@dmall.com" class="mdui-chip-title">E-Mail</a>
+                </div>
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-github"></i></span>
+                    <a target="_blank" rel="noopener" href="https://github.com/dmalliosco" class="mdui-chip-title">GitHub</a>
+                </div>
+            
+        </div>
+        <ul class="mdui-list" mdui-collapse="{accordion: true}">
+            <li class="mdui-collapse-item">
+                <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-link"></i>
+                    </div>
+                    <div class="mdui-list-item-content">友情链接</div>
+                    <div class="mdui-collapse-item-arrow">
+                        <i class="mdui-list-item-icon iconfont icon-angle-down"></i>
+                    </div>
+                </div>
+                <ul id="linksList" class="mdui-collapse-item-body mdui-list mdui-list-dense">
+                    
+                        <a target="_blank" rel="noopener" href="http://www.dmall.com/" class="mdui-list-item mdui-ripple">
+                            多点
+                        </a>
+                    
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="mdui-divider"></div>
+    
+    
+</aside>
+  
+  <main id="main-contain" class="mdui-container mdui-m-t-5">
+    <article id="article" class="mdui-card mdui-p-b-2 mdui-m-b-5">
+  <header class="mdui-card-media">
+    
+    
+      <div class="post-header"> 
+  <a class="post-header-title" href="/2021/05/19/Android-RecyclerView%E6%BB%9A%E5%8A%A8%E6%97%B6%E5%B9%B2%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F/">Android-RecyclerView滚动时干了什么？</a>
+  <div class="post-header-meta">
+    <span>
+      <span class="iconfont icon-calendar"></span>
+      发布于:&nbsp;2021-05-19
+    </span>
+    <span>
+      <span class="iconfont icon-calendar-check"></span>
+      更新于:&nbsp;2021-05-19
+    </span>
+    <span>
+      <span class="iconfont icon-folder"></span>
+      分类于:&nbsp;<a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>
+    </span>
+    
+      <span>
+        <span class="iconfont icon-eye"></span>
+        阅读次数:&nbsp;
+        <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+      </span>
+    
+  </div>
+</div>   
+    
+
+
+
+    
+    
+    <div class="mdui-card-menu">
+    
+      <button class="mdui-btn mdui-btn-icon mdui-text-color-teal" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="iconfont icon-share"></i></button>
+      <ul class="mdui-menu" id="share_menu">
+        <li class="mdui-menu-item">
+          <a href="http://service.weibo.com/share/share.php?appkey=&title=Android-RecyclerView滚动时干了什么？&url=https://dmalliosco.github.io/2021/05/19/Android-RecyclerView%E6%BB%9A%E5%8A%A8%E6%97%B6%E5%B9%B2%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F/&pic=https://dmalliosco.github.io/null&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://twitter.com/intent/tweet?text=Android-RecyclerView滚动时干了什么？&url=https://dmalliosco.github.io/2021/05/19/Android-RecyclerView%E6%BB%9A%E5%8A%A8%E6%97%B6%E5%B9%B2%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F/&via=dmalliosco" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=https://dmalliosco.github.io/2021/05/19/Android-RecyclerView%E6%BB%9A%E5%8A%A8%E6%97%B6%E5%B9%B2%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://plus.google.com/share?url=https://dmalliosco.github.io/2021/05/19/Android-RecyclerView%E6%BB%9A%E5%8A%A8%E6%97%B6%E5%B9%B2%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dmalliosco.github.io/2021/05/19/Android-RecyclerView%E6%BB%9A%E5%8A%A8%E6%97%B6%E5%B9%B2%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F/&title=Android-RecyclerView滚动时干了什么？" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="http://connect.qq.com/widget/shareqq/index.html?site=dmalliosco&title=Android-RecyclerView滚动时干了什么？&summary=dmalldev&pics=https://dmalliosco.github.io/null&url=https://dmalliosco.github.io/2021/05/19/Android-RecyclerView%E6%BB%9A%E5%8A%A8%E6%97%B6%E5%B9%B2%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://telegram.me/share/url?url=https://dmalliosco.github.io/2021/05/19/Android-RecyclerView%E6%BB%9A%E5%8A%A8%E6%97%B6%E5%B9%B2%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F/&text=Android-RecyclerView滚动时干了什么？" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+        </li>
+      </ul>
+    
+  </div>
+  </header>
+  
+  
+  
+  
+  <div class="post-tags">
+    
+      <i class="iconfont icon-tag">
+        <a rel="tag" href = /tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/ >底层原理</a>
+      </i>
+    
+  </div>
+
+  
+  <div class="mdui-card-content mdui-typo mdui-p-x-4">
+    <h1 id="RecyclerView滚动时干了什么？"><a href="#RecyclerView滚动时干了什么？" class="headerlink" title="RecyclerView滚动时干了什么？"></a>RecyclerView滚动时干了什么？</h1><p>谈到RecyclerView的时候，复用机制是我们能脱口而出的优点之一。系统内置的ViewHolder避免了使用ListView时手动去创建ViewHolder的麻烦。关于何时回收View，何时复用View，我们能做到胸有成竹吗？当我们滑动一个RecyclerView时，是先回收View，再复用View？还是先复用View，再回收View呢？答案是都有可能。详情且看下面分析：</p>
+<p><strong>名词解释</strong></p>
+<p><strong>1. 回收：是指View不需要再展示在屏幕中，被回收到回收池中</strong></p>
+<p><strong>2. 复用：本文中的复用是指调用了onCreateViewHolder或者onBindViewHolder方法</strong></p>
+<p><strong>本文大纲</strong></p>
+<p><strong>1. 滑动RV的两个场景</strong></p>
+<p><strong>2. DEMO验证答案</strong></p>
+<p><strong>3. 滑动原理讲解</strong></p>
+<p><strong>4. 源码分析</strong></p>
+<p><strong>5. 提问互动</strong></p>
+<h2 id="1-滑动RV的两个场景"><a href="#1-滑动RV的两个场景" class="headerlink" title="1.滑动RV的两个场景"></a>1.滑动RV的两个场景</h2><h3 id="1-1-场景一"><a href="#1-1-场景一" class="headerlink" title="1.1 场景一"></a>1.1 场景一</h3><p>RV中每个Item高度都为100px，最后一个Item超出屏幕50px。RV初始状态如下图        </p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9be83770378a4458b79a0cbf2dc365f7~tplv-k3u1fbpfcp-zoom-1.image" alt="场景一"></p>
+<p>Q1 假设向上滑动40px</p>
+<p>请问是否有View发生回收和复用？如果有，先复用还是先回收？</p>
+<p>$\color{red}{答    回收和复用都没有发生}$</p>
+<p>Q2    假设向上滑动60px</p>
+<p>请问是否有View发生回收和复用？如果有，先复用还是先回收？</p>
+<p>$\color{red}{答    没有发生回收，发生了复用}$</p>
+<p>Q3    假设向上滑动120px</p>
+<p>请问是否有View发生回收和复用？如果有，先复用还是先回收？</p>
+<p>$\color{red}{答    发生了回收和复用。先复用后回收}$</p>
+<h3 id="1-2-场景二"><a href="#1-2-场景二" class="headerlink" title="1.2 场景二"></a>1.2 场景二</h3><p>RV中第一个Item高度为50px，其它都为100px，最后一个Item超出屏幕95px。RV初始状态如下</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cae471defcc04a93a7a0f11e3b85d621~tplv-k3u1fbpfcp-zoom-1.image" alt="场景二"></p>
+<p>Q1    假设向上滑动40px</p>
+<p>请问是否有View发生回收和复用？如果有，先复用还是先回收？</p>
+<p>$\color{red}{答    回收和复用都没有发生}$</p>
+<p>Q2    假设向上滑动60px</p>
+<p>请问是否有View发生回收和复用？如果有，先复用还是先回收？</p>
+<p>$\color{red}{答    发生了回收，没有发生复用}$</p>
+<p>Q3    假设向上滑动120px</p>
+<p>请问是否有View发生回收和复用？如果有，先复用还是先回收？</p>
+<p>$\color{red}{答    发生了回收和复用。先回收后复用}$</p>
+<p>从答案可以看出。回收和复用并没有固定的答案。它因场景而异。下面我们通过案例验证答案真伪。  </p>
+<h2 id="2-DEMO验证答案"><a href="#2-DEMO验证答案" class="headerlink" title="2. DEMO验证答案"></a>2. DEMO验证答案</h2><h3 id="2-1-我们来验证场景一"><a href="#2-1-我们来验证场景一" class="headerlink" title="2.1 我们来验证场景一"></a>2.1 我们来验证场景一</h3><p>程序运行图  </p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5fee2c707893492aa3e158b1ce6a98d6~tplv-k3u1fbpfcp-zoom-1.image"><br>程序代码  </p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RecyclerViewActivity1</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">lateinit</span> <span class="keyword">var</span> mRecyclerView: RecyclerView</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_recycler_view1)</span><br><span class="line">        mRecyclerView = findViewById(R.id.recyclerview)</span><br><span class="line">        mRecyclerView.setHasFixedSize(<span class="literal">true</span>)</span><br><span class="line">        mRecyclerView.setItemViewCacheSize(<span class="number">0</span>)</span><br><span class="line">        mRecyclerView.layoutManager =</span><br><span class="line">            LinearLayoutManager(<span class="keyword">this</span>).apply &#123;</span><br><span class="line">                orientation = LinearLayoutManager.VERTICAL</span><br><span class="line">                isItemPrefetchEnabled = <span class="literal">false</span></span><br><span class="line">            &#125;</span><br><span class="line">        <span class="keyword">val</span> list: MutableList&lt;String&gt; =</span><br><span class="line">            ArrayList()</span><br><span class="line">        repeat(<span class="number">100</span>) &#123;</span><br><span class="line">            list.add(<span class="string">&quot;item <span class="variable">$it</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        mRecyclerView.adapter = MyAdapter(list)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">inner</span> <span class="class"><span class="keyword">class</span> <span class="title">MyAdapter</span></span>(<span class="keyword">val</span> mStrings: MutableList&lt;String&gt;) :</span><br><span class="line">        RecyclerView.Adapter&lt;RecyclerView.ViewHolder&gt;() &#123;</span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateViewHolder</span><span class="params">(parent: <span class="type">ViewGroup</span>, viewType: <span class="type">Int</span>)</span></span>: RecyclerView.ViewHolder &#123;</span><br><span class="line">            println(<span class="string">&quot;RecyclerView 场景一 onCreateViewHolder &quot;</span>)</span><br><span class="line">            <span class="keyword">val</span> view = LayoutInflater.from(parent.context)</span><br><span class="line">                .inflate(R.layout.view_item, parent, <span class="literal">false</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">object</span> : RecyclerView.ViewHolder(view) &#123;&#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">getItemCount</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> mStrings.size</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onBindViewHolder</span><span class="params">(holder: <span class="type">RecyclerView</span>.<span class="type">ViewHolder</span>, position: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">            println(<span class="string">&quot;RecyclerView 场景一 onBindViewHolder <span class="variable">$position</span> &quot;</span>)</span><br><span class="line">            <span class="keyword">val</span> textView = holder.itemView <span class="keyword">as</span> TextView</span><br><span class="line">            textView.layoutParams.height = (resources.displayMetrics.density * <span class="number">100</span>).toInt()</span><br><span class="line">            textView.text = mStrings[position]</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onViewRecycled</span><span class="params">(holder: <span class="type">RecyclerView</span>.<span class="type">ViewHolder</span>)</span></span> &#123;</span><br><span class="line">            println(<span class="string">&quot;RecyclerView 场景一 发生回收 &quot;</span> + (holder.itemView <span class="keyword">as</span> TextView).text)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">super</span>.onViewRecycled(holder)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">scroll120</span><span class="params">(view: <span class="type">View</span>)</span></span> &#123;</span><br><span class="line">        mRecyclerView.scrollBy(<span class="number">0</span>, (resources.displayMetrics.density * <span class="number">120</span>).toInt())</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">scroll60</span><span class="params">(view: <span class="type">View</span>)</span></span> &#123;</span><br><span class="line">        mRecyclerView.scrollBy(<span class="number">0</span>, (resources.displayMetrics.density * <span class="number">60</span>).toInt())</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">scroll40</span><span class="params">(view: <span class="type">View</span>)</span></span> &#123;</span><br><span class="line">        mRecyclerView.scrollBy(<span class="number">0</span>, (resources.displayMetrics.density * <span class="number">40</span>).toInt())</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>日志输出如下</p>
+<blockquote>
+<p>首先进入初始状态</p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 0 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 1 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 2 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 3 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 4 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 5</p>
+</blockquote>
+<blockquote>
+<p>点击上滑40px。打印日志不变。证明 回收和复用都没有发生  </p>
+</blockquote>
+<blockquote>
+<p>点击上滑60px。打印日志如下。证明 没有发生回收，发生了复用</p>
+<p>RecyclerView 场景一 onCreateViewHolder</p>
+<p>RecyclerView 场景一 onBindViewHolder 0</p>
+<p>RecyclerView 场景一 onCreateViewHolder</p>
+<p>RecyclerView 场景一 onBindViewHolder 1</p>
+<p>RecyclerView 场景一 onCreateViewHolder</p>
+<p>RecyclerView 场景一 onBindViewHolder 2</p>
+<p>RecyclerView 场景一 onCreateViewHolder</p>
+<p>RecyclerView 场景一 onBindViewHolder 3</p>
+<p>RecyclerView 场景一 onCreateViewHolder</p>
+<p>RecyclerView 场景一 onBindViewHolder 4</p>
+<p>RecyclerView 场景一 onCreateViewHolder</p>
+<p>RecyclerView 场景一 onBindViewHolder 5</p>
+<p>RecyclerView 场景一 onCreateViewHolder //只发生了复用<br>RecyclerView 场景一 onBindViewHolder 6</p>
+</blockquote>
+<blockquote>
+<p>点击上滑动120px。打印日志如下。证明 发生了回收和复用。先复用后回收</p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 0 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 1 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 2 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 3 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 4 </p>
+<p>RecyclerView 场景一 onCreateViewHolder </p>
+<p>RecyclerView 场景一 onBindViewHolder 5</p>
+<p>RecyclerView 场景一 onCreateViewHolder //先复用 </p>
+<p>RecyclerView 场景一 onBindViewHolder 6</p>
+<p>RecyclerView 场景一 发生回收 item 0  //后回收</p>
+</blockquote>
+<h3 id="2-2-我们来验证场景二"><a href="#2-2-我们来验证场景二" class="headerlink" title="2.2 我们来验证场景二"></a>2.2 我们来验证场景二</h3><p>程序运行图</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9b2c035480b14deaa0a9023ba693fdff~tplv-k3u1fbpfcp-zoom-1.image">  </p>
+<p>程序代码</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RecyclerViewActivity2</span> : <span class="type">AppCompatActivity</span></span>() &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">lateinit</span> <span class="keyword">var</span> mRecyclerView: RecyclerView</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        setContentView(R.layout.activity_recycler_view2)</span><br><span class="line">        mRecyclerView = findViewById(R.id.recyclerview)</span><br><span class="line">        mRecyclerView.setHasFixedSize(<span class="literal">true</span>)</span><br><span class="line">        mRecyclerView.setItemViewCacheSize(<span class="number">0</span>)</span><br><span class="line">        mRecyclerView.layoutManager =</span><br><span class="line">            LinearLayoutManager(<span class="keyword">this</span>).apply &#123;</span><br><span class="line">                orientation = LinearLayoutManager.VERTICAL</span><br><span class="line">                isItemPrefetchEnabled = <span class="literal">false</span></span><br><span class="line">            &#125;</span><br><span class="line">        <span class="keyword">val</span> list: MutableList&lt;String&gt; =</span><br><span class="line">            ArrayList()</span><br><span class="line">        repeat(<span class="number">100</span>) &#123;</span><br><span class="line">            list.add(<span class="string">&quot;item <span class="variable">$it</span>&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        mRecyclerView.adapter = MyAdapter(list)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">inner</span> <span class="class"><span class="keyword">class</span> <span class="title">MyAdapter</span></span>(<span class="keyword">val</span> mStrings: MutableList&lt;String&gt;) :</span><br><span class="line">        RecyclerView.Adapter&lt;RecyclerView.ViewHolder&gt;() &#123;</span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateViewHolder</span><span class="params">(parent: <span class="type">ViewGroup</span>, viewType: <span class="type">Int</span>)</span></span>: RecyclerView.ViewHolder &#123;</span><br><span class="line">            println(<span class="string">&quot;RecyclerView 场景二 onCreateViewHolder &quot;</span>)</span><br><span class="line">            <span class="keyword">val</span> view = LayoutInflater.from(parent.context)</span><br><span class="line">                .inflate(R.layout.view_item, parent, <span class="literal">false</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">object</span> : RecyclerView.ViewHolder(view) &#123;&#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">getItemCount</span><span class="params">()</span></span>: <span class="built_in">Int</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> mStrings.size</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onBindViewHolder</span><span class="params">(holder: <span class="type">RecyclerView</span>.<span class="type">ViewHolder</span>, position: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">            println(<span class="string">&quot;RecyclerView 场景二 onBindViewHolder <span class="variable">$position</span> &quot;</span>)</span><br><span class="line">            <span class="keyword">val</span> textView = holder.itemView <span class="keyword">as</span> TextView</span><br><span class="line">            textView.layoutParams.height =</span><br><span class="line">                <span class="keyword">if</span> (position == <span class="number">0</span>) (resources.displayMetrics.density * <span class="number">50</span>).toInt() <span class="keyword">else</span> (resources.displayMetrics.density * <span class="number">100</span>).toInt()</span><br><span class="line">            textView.text = mStrings[position]</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onViewRecycled</span><span class="params">(holder: <span class="type">RecyclerView</span>.<span class="type">ViewHolder</span>)</span></span> &#123;</span><br><span class="line">            println(<span class="string">&quot;RecyclerView 场景二 发生回收 &quot;</span> + (holder.itemView <span class="keyword">as</span> TextView).text)</span><br><span class="line">            <span class="keyword">super</span>.onViewRecycled(holder)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">scroll120</span><span class="params">(view: <span class="type">View</span>)</span></span> &#123;</span><br><span class="line">        mRecyclerView.scrollBy(<span class="number">0</span>, (resources.displayMetrics.density * <span class="number">120</span>).toInt())</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">scroll60</span><span class="params">(view: <span class="type">View</span>)</span></span> &#123;</span><br><span class="line">        mRecyclerView.scrollBy(<span class="number">0</span>, (resources.displayMetrics.density * <span class="number">60</span>).toInt())</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">scroll40</span><span class="params">(view: <span class="type">View</span>)</span></span> &#123;</span><br><span class="line">        mRecyclerView.scrollBy(<span class="number">0</span>, (resources.displayMetrics.density * <span class="number">40</span>).toInt())</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>日志输出首先进入初始状态</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 0</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 1</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 2</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 3</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 4</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 5</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 6</p>
+</blockquote>
+<blockquote>
+<p>点击上滑40px。打印日志不变。证明 回收和复用都没有发生  </p>
+</blockquote>
+<blockquote>
+<p>点击上滑60px。打印日志如下。证明 发生回收，没有发生复用</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 0</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 1</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 2</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 3</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 4</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 5</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 6</p>
+<p>RecyclerView 场景二 发生回收 item 0   //只发生了回收</p>
+</blockquote>
+<blockquote>
+<p>点击上滑动120px。打印日志如下。证明 发生了回收和复用。先回收后复用</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 0</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 1</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 2</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 3</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 4</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 5</p>
+<p>RecyclerView 场景二 onCreateViewHolder</p>
+<p>RecyclerView 场景二 onBindViewHolder 6</p>
+<p>RecyclerView 场景二 发生回收 item 0 //先回收</p>
+<p>RecyclerView 场景二 onBindViewHolder 7 //再复用</p>
+</blockquote>
+<h2 id="3-滑动原理分析"><a href="#3-滑动原理分析" class="headerlink" title="3. 滑动原理分析"></a>3. 滑动原理分析</h2><p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4e9e34fd43034173912c8a7fff713f65~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p>如图所示，介绍几个关于坐标的参数  </p>
+<ol>
+<li><p> delta：手指滑动的距离120px。  </p>
+</li>
+<li><p> mOffset：RV最后一个子View的Bottom在屏幕坐标系的Y坐标600px。RV的下一个View(Item7)从mOffset处布局。</p>
+</li>
+<li><p> mScrollingOffset：RV最后一个子view的Bottom距离RV Bottom的距离50px。向上滑动不超过该距离。如超过需创建新的View填充。</p>
+</li>
+<li><p> mVailable：delta-mScrollingOffset。可以填充View的空间。如果大于0表示有空间填充新的View</p>
+</li>
+<li><p>如果delta&lt;mScrollingOffset，mScrollingOffset=delta，mVailable&lt;0  </p>
+</li>
+</ol>
+<p>滑动逻辑如下  </p>
+<ol>
+<li><p>  从RecyclerView的第0个View开始遍历，直到View的Bottom&gt;mScrollingOffset,并记录该View的下标index，回收[0,index)区间的View，index为开区间，如果index&gt;=1,则会将[0,index)区间的View移除屏幕，并按照回收算法放入回收池。具体回收算法先按下不表。</p>
+</li>
+<li><p> 如果mVailable&gt;0，则从mOffset处，用新的View填充。mOffset+=新View的高度，mVailable-=新View的高度，mScrollingOffset+=新View的高度，如果mVailable&lt;0，mScrollingOffset+=mVailable。布局完成后用步骤1的算法按需回收上面的View。</p>
+</li>
+<li><p> 重复步骤2</p>
+</li>
+<li><p> 将RV整体，向上移动delta或者consumed距离(一般是delta距离，但是当RecyclerView下面没有Item时会是具体消耗掉的距离)  </p>
+</li>
+</ol>
+<p>根据此滑动逻辑，我们分析场景一中的向上滑动120px<br><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b422bb36e19245698c2c240890bb5c5f~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p>mOffset = 600px  </p>
+<p>mScrollingOffset = 50px</p>
+<p>mAvailable = 70px</p>
+<p>item1高度100px  </p>
+<ol>
+<li><p> 首先从第0个View遍历Bottom&gt;50px。找到item1.bottom=100px，记录index=0。因为index&lt;1。所以不发生回收  </p>
+</li>
+<li><p> mAvailable&gt;0，从Item6的底部，增加View Item7(此处发生复用逻辑)高度为100px，mOffset=700px，mAvailable=-30，mScrollingOffset=mScrollingOffset+100-30=120px。然后检查回收。首先从第0个View遍历Bottom&gt;120px。找到item2.bottom=200px，记录index=1。回收[0,1)区间的View。即回收Item1</p>
+</li>
+<li><p> mAvailable=-30&lt;0,退出填充逻辑</p>
+</li>
+<li><p> 整体向上移动120px</p>
+</li>
+</ol>
+<p>我们看到先创建Item7 然后回收Item1。跟日志相符合  </p>
+<p>RecyclerView 场景一 onCreateViewHolder //先复用<br>RecyclerView 场景一 onBindViewHolder 6</p>
+<p>RecyclerView 场景一 发生回收 item 0  //后回收</p>
+<p>同样的逻辑我们也可以分析场景二中的向上滑动120px的情况。场景二会先发生回收，再发生复用。读者可以自己去求证。  </p>
+<h2 id="4-源码分析"><a href="#4-源码分析" class="headerlink" title="4.源码分析"></a>4.源码分析</h2><p>RV的滑动，最终会调用LayoutManager的scrollBy方法。我们使用的是LinearLayoutManager。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//LinearLayoutManager.java</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">scrollBy</span><span class="params">(<span class="keyword">int</span> delta, RecyclerView.Recycler recycler, RecyclerView.State state)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (getChildCount() == <span class="number">0</span> || delta == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ensureLayoutState();</span><br><span class="line">        mLayoutState.mRecycle = <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> layoutDirection = delta &gt; <span class="number">0</span> ? LayoutState.LAYOUT_END : LayoutState.LAYOUT_START;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> absDelta = Math.abs(delta);</span><br><span class="line">        ##代码<span class="number">1</span> updateLayoutState方法，主要是计算mOffset等参数。</span><br><span class="line">        updateLayoutState(layoutDirection, absDelta, <span class="keyword">true</span>, state);</span><br><span class="line">        ##代码<span class="number">2</span> fill方法，根据剩余空间，填充View</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> consumed = mLayoutState.mScrollingOffset</span><br><span class="line">                + </span><br><span class="line">                fill(recycler, mLayoutState, state, <span class="keyword">false</span>);</span><br><span class="line">        <span class="keyword">if</span> (consumed &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (DEBUG) &#123;</span><br><span class="line">                Log.d(TAG, <span class="string">&quot;Don&#x27;t have any more elements to scroll&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> scrolled = absDelta &gt; consumed ? layoutDirection * consumed : delta;</span><br><span class="line">        ##代码<span class="number">3</span> offsetChildren，整体移动RV的子View</span><br><span class="line">        mOrientationHelper.offsetChildren(-scrolled);</span><br><span class="line">        <span class="keyword">if</span> (DEBUG) &#123;</span><br><span class="line">            Log.d(TAG, <span class="string">&quot;scroll req: &quot;</span> + delta + <span class="string">&quot; scrolled: &quot;</span> + scrolled);</span><br><span class="line">        &#125;</span><br><span class="line">        mLayoutState.mLastScrollDelta = scrolled;</span><br><span class="line">        <span class="keyword">return</span> scrolled;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>##代码1 updateLayoutState方法，主要是计算mOffset等参数。</p>
+<p>##代码2 fill方法，根据剩余空间，填充View</p>
+<p>##代码3 offsetChildren，整体移动RV的子View</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//主要是计算</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">updateLayoutState</span><span class="params">(<span class="keyword">int</span> layoutDirection, <span class="keyword">int</span> requiredSpace,</span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="keyword">boolean</span> canUseExistingSpace, RecyclerView.State state)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// If parent provides a hint, don&#x27;t measure unlimited.</span></span><br><span class="line">        mLayoutState.mInfinite = resolveIsInfinite();</span><br><span class="line">        mLayoutState.mLayoutDirection = layoutDirection;</span><br><span class="line">        mReusableIntPair[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">        mReusableIntPair[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">        calculateExtraLayoutSpace(state, mReusableIntPair);</span><br><span class="line">        <span class="keyword">int</span> extraForStart = Math.max(<span class="number">0</span>, mReusableIntPair[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">int</span> extraForEnd = Math.max(<span class="number">0</span>, mReusableIntPair[<span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">boolean</span> layoutToEnd = layoutDirection == LayoutState.LAYOUT_END;</span><br><span class="line">        mLayoutState.mExtraFillSpace = layoutToEnd ? extraForEnd : extraForStart;</span><br><span class="line">        mLayoutState.mNoRecycleSpace = layoutToEnd ? extraForStart : extraForEnd;</span><br><span class="line">        <span class="keyword">int</span> scrollingOffset;</span><br><span class="line">        <span class="keyword">if</span> (layoutToEnd) &#123;</span><br><span class="line">            mLayoutState.mExtraFillSpace += mOrientationHelper.getEndPadding();</span><br><span class="line">            <span class="comment">// get the first child in the direction we are going</span></span><br><span class="line">            <span class="keyword">final</span> View child = getChildClosestToEnd();</span><br><span class="line">            <span class="comment">// the direction in which we are traversing children</span></span><br><span class="line">            mLayoutState.mItemDirection = mShouldReverseLayout ? LayoutState.ITEM_DIRECTION_HEAD</span><br><span class="line">                    : LayoutState.ITEM_DIRECTION_TAIL;</span><br><span class="line">            mLayoutState.mCurrentPosition = getPosition(child) + mLayoutState.mItemDirection;</span><br><span class="line">            mLayoutState.mOffset = mOrientationHelper.getDecoratedEnd(child);</span><br><span class="line">            <span class="comment">// calculate how much we can scroll without adding new children (independent of layout)</span></span><br><span class="line">            scrollingOffset = mOrientationHelper.getDecoratedEnd(child)</span><br><span class="line">                    - mOrientationHelper.getEndAfterPadding();</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">final</span> View child = getChildClosestToStart();</span><br><span class="line">            mLayoutState.mExtraFillSpace += mOrientationHelper.getStartAfterPadding();</span><br><span class="line">            mLayoutState.mItemDirection = mShouldReverseLayout ? LayoutState.ITEM_DIRECTION_TAIL</span><br><span class="line">                    : LayoutState.ITEM_DIRECTION_HEAD;</span><br><span class="line">            mLayoutState.mCurrentPosition = getPosition(child) + mLayoutState.mItemDirection;</span><br><span class="line">            mLayoutState.mOffset = mOrientationHelper.getDecoratedStart(child);</span><br><span class="line">            scrollingOffset = -mOrientationHelper.getDecoratedStart(child)</span><br><span class="line">                    + mOrientationHelper.getStartAfterPadding();</span><br><span class="line">        &#125;</span><br><span class="line">        mLayoutState.mAvailable = requiredSpace;</span><br><span class="line">        <span class="keyword">if</span> (canUseExistingSpace) &#123;</span><br><span class="line">            mLayoutState.mAvailable -= scrollingOffset;</span><br><span class="line">        &#125;</span><br><span class="line">        mLayoutState.mScrollingOffset = scrollingOffset;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fill</span><span class="params">(RecyclerView.Recycler recycler, LayoutState layoutState,</span></span></span><br><span class="line"><span class="params"><span class="function">            RecyclerView.State state, <span class="keyword">boolean</span> stopOnFocusable)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// max offset we should set is mFastScroll + available</span></span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> start = layoutState.mAvailable;</span><br><span class="line">        <span class="keyword">if</span> (layoutState.mScrollingOffset != LayoutState.SCROLLING_OFFSET_NaN) &#123;</span><br><span class="line">            <span class="comment">// TODO ugly bug fix. should not happen</span></span><br><span class="line">            <span class="keyword">if</span> (layoutState.mAvailable &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                layoutState.mScrollingOffset += layoutState.mAvailable;</span><br><span class="line">            &#125;</span><br><span class="line">            ##代码<span class="number">1</span> 首先判断是否需要回收<span class="function">View</span></span><br><span class="line"><span class="function">            <span class="title">recycleByLayoutState</span><span class="params">(recycler, layoutState)</span></span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> remainingSpace = layoutState.mAvailable + layoutState.mExtraFillSpace;</span><br><span class="line">        LayoutChunkResult layoutChunkResult = mLayoutChunkResult;</span><br><span class="line">        ##代码<span class="number">2</span> 根据剩余空间，判断是否需要填充<span class="function">View</span></span><br><span class="line"><span class="function">        <span class="title">while</span> <span class="params">((layoutState.mInfinite || remainingSpace &gt; <span class="number">0</span>)</span> &amp;&amp; layoutState.<span class="title">hasMore</span><span class="params">(state)</span>) </span>&#123;</span><br><span class="line">            layoutChunkResult.resetInternal();</span><br><span class="line">            <span class="keyword">if</span> (RecyclerView.VERBOSE_TRACING) &#123;</span><br><span class="line">                TraceCompat.beginSection(<span class="string">&quot;LLM LayoutChunk&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            ##代码<span class="number">3</span> 是具体的layout方法</span><br><span class="line">            layoutChunk(recycler, state, layoutState, layoutChunkResult);</span><br><span class="line">            <span class="keyword">if</span> (RecyclerView.VERBOSE_TRACING) &#123;</span><br><span class="line">                TraceCompat.endSection();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (layoutChunkResult.mFinished) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            layoutState.mOffset += layoutChunkResult.mConsumed * layoutState.mLayoutDirection;</span><br><span class="line">            <span class="comment">/**</span></span><br><span class="line"><span class="comment">             * Consume the available space if:</span></span><br><span class="line"><span class="comment">             * * layoutChunk did not request to be ignored</span></span><br><span class="line"><span class="comment">             * * OR we are laying out scrap children</span></span><br><span class="line"><span class="comment">             * * OR we are not doing pre-layout</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="keyword">if</span> (!layoutChunkResult.mIgnoreConsumed || layoutState.mScrapList != <span class="keyword">null</span></span><br><span class="line">                    || !state.isPreLayout()) &#123;</span><br><span class="line">                layoutState.mAvailable -= layoutChunkResult.mConsumed;</span><br><span class="line">                <span class="comment">// we keep a separate remaining space because mAvailable is important for recycling</span></span><br><span class="line">                remainingSpace -= layoutChunkResult.mConsumed;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (layoutState.mScrollingOffset != LayoutState.SCROLLING_OFFSET_NaN) &#123;</span><br><span class="line">                layoutState.mScrollingOffset += layoutChunkResult.mConsumed;</span><br><span class="line">                <span class="keyword">if</span> (layoutState.mAvailable &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                    layoutState.mScrollingOffset += layoutState.mAvailable;</span><br><span class="line">                &#125;</span><br><span class="line">                ##代码<span class="number">4</span> 是layout完成后判断是否需要回收<span class="function">View</span></span><br><span class="line"><span class="function">                <span class="title">recycleByLayoutState</span><span class="params">(recycler, layoutState)</span></span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (stopOnFocusable &amp;&amp; layoutChunkResult.mFocusable) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (DEBUG) &#123;</span><br><span class="line">            validateChildOrder();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> start - layoutState.mAvailable;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>##代码1，首先判断是否需要回收View</p>
+<p>##代码2，根据剩余空间，判断是否需要填充View</p>
+<p>##代码3 是具体的layout方法</p>
+<p>##代码4 是layout完成后判断是否需要回收View</p>
+<p>本文主要讲解了滑动时的回收和复用的逻辑。具体如何如何回收，如何复用。RecyclerView的三级缓存是如何实现的。且听下回分解。</p>
+<h2 id="5-提问互动"><a href="#5-提问互动" class="headerlink" title="5. 提问互动"></a>5. 提问互动</h2><p>最后为了巩固大家对知识的理解，提出一个问题，请在评论区写出你的答案吧。<br><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b422bb36e19245698c2c240890bb5c5f~tplv-k3u1fbpfcp-zoom-1.image"></p>
+<p><strong>问题一 场景一的case3，向上滑动120px，120px大于第一个Item的高度100px，为何不先让Item1先回收掉呢？</strong></p>
+<p><strong>问题二 谷歌这么设计的原因可能是什么？</strong></p>
+<h4 id="Written-By-多点-移动运营研发部-姜斌"><a href="#Written-By-多点-移动运营研发部-姜斌" class="headerlink" title="Written By 多点-移动运营研发部-姜斌"></a>Written By 多点-移动运营研发部-姜斌</h4>
+  </div>
+  <!--文末结束语-->
+  
+    <div style="text-align:center;color: #ccc;font-size:24px;"> --- 本文结束 <i class="iconfont icon-heartbeat" style="font-size:24px;"></i> The End --- </div>
+  
+  <!--页脚广告-->
+  
+  <div class="mdui-divider"></div>
+  
+  <nav>
+    
+      <a rel="prev" class="post-nav-item mdui-float-left" href="/2021/05/19/Runloop%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
+        <i class="iconfont icon-angle-left"></i>
+        <span>RunLoop实现原理分析</span>
+      </a>
+    
+    
+      <a rel="next" class="post-nav-item mdui-float-right" href="/2021/05/19/Android%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/">
+        <span>Android事件分发机制分析</span>
+        <i class="iconfont icon-angle-right"></i>
+      </a>
+    
+  </nav>
+</article>
+
+
+
+
+  <div class="toc-button"  style="z-index: 100;">
+    <button class="mdui-fab mdui-ripple mdui-color-teal" mdui-menu="{target: '#toc'}"><i class="iconfont icon-list"></i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item">
+        <a href="/2021/05/19/Android-RecyclerView%E6%BB%9A%E5%8A%A8%E6%97%B6%E5%B9%B2%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F/" id="toc-header" class="mdui-ripple">文章目录</a>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RecyclerView%E6%BB%9A%E5%8A%A8%E6%97%B6%E5%B9%B2%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">RecyclerView滚动时干了什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%BB%91%E5%8A%A8RV%E7%9A%84%E4%B8%A4%E4%B8%AA%E5%9C%BA%E6%99%AF"><span class="toc-number">1.1.</span> <span class="toc-text">1.滑动RV的两个场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%9C%BA%E6%99%AF%E4%B8%80"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 场景一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%9C%BA%E6%99%AF%E4%BA%8C"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 场景二</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-DEMO%E9%AA%8C%E8%AF%81%E7%AD%94%E6%A1%88"><span class="toc-number">1.2.</span> <span class="toc-text">2. DEMO验证答案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E6%88%91%E4%BB%AC%E6%9D%A5%E9%AA%8C%E8%AF%81%E5%9C%BA%E6%99%AF%E4%B8%80"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 我们来验证场景一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E6%88%91%E4%BB%AC%E6%9D%A5%E9%AA%8C%E8%AF%81%E5%9C%BA%E6%99%AF%E4%BA%8C"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 我们来验证场景二</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%BB%91%E5%8A%A8%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90"><span class="toc-number">1.3.</span> <span class="toc-text">3. 滑动原理分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">1.4.</span> <span class="toc-text">4.源码分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%8F%90%E9%97%AE%E4%BA%92%E5%8A%A8"><span class="toc-number">1.5.</span> <span class="toc-text">5. 提问互动</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Written-By-%E5%A4%9A%E7%82%B9-%E7%A7%BB%E5%8A%A8%E8%BF%90%E8%90%A5%E7%A0%94%E5%8F%91%E9%83%A8-%E5%A7%9C%E6%96%8C"><span class="toc-number">1.5.0.1.</span> <span class="toc-text">Written By 多点-移动运营研发部-姜斌</span></a></li></ol></li></ol></li></ol></li></ol>
+      </li>
+    </ul>
+  </div>
+
+
+
+    <div id="comment" class="mdui-card mdui-p-a-2 mdui-m-b-5">
+      <div class="mdui-tab" mdui-tab>
+        
+          <a href="#comment-tab0" class="mdui-ripple">gitalk</a>
+        
+          <a href="#comment-tab1" class="mdui-ripple">livere</a>
+        
+      </div>
+      
+        <div id="comment-tab0" class="mdui-p-a-2">
+          <div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+    clientID: '',
+    clientSecret: '',
+    repo: '',
+    owner: '',
+    admin: [''],
+    id:  md5(location.pathname) ,
+    distractionFreeMode: 'true',
+  });
+  gitalk.render('gitalk-container');
+</script>
+        </div>
+      
+        <div id="comment-tab1" class="mdui-p-a-2">
+          <div id="lv-container" data-id="city" data-uid="">
+  <script type="text/javascript">
+    (function (d, s) {
+      var j, e = d.getElementsByTagName(s)[0];
+      if (typeof LivereTower === 'function') { return; }
+      j = d.createElement(s);
+      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+      j.async = true;
+      e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+  </script>
+  <noscript>Please enable JavaScript to view the comments powered by LiveRe.</noscript>
+</div>
+        </div>
+      
+    </div>
+
+  </main>
+  <footer id="footer" class="mdui-text-center mdui-m-t-5 mdui-p-b-2 mdui-p-t-4 mdui-color-theme">
+  <div class="mdui-container">
+    <div class="mdui-row">
+      
+        <a href="https://beian.miit.gov.cn" rel="noopener" target="_blank"></a>
+      
+      <span>
+        &copy; 2015 - 2021 
+        
+          <span style="color:#ff000" class="iconfont icon-heart"></span>
+        
+        dmalliosco
+      </span>
+    </div>
+    <div class="mdui-row">
+      
+        <div class="mdui-col-xs-6 mdui-text-right">
+          <span>Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a></span>
+        </div>
+        <div class="mdui-col-xs-6 mdui-text-left">
+          <span>Theme: <a href="https://github.com/kb1000fx/Meadow" rel="noopener" target="_blank">Meadow</a></span>
+        </div>
+      
+    </div>
+    <div class="mdui-row">
+      
+        <div class="mdui-col-xs-6 mdui-text-right">
+          <span id="busuanzi_container_site_uv" style="display: none;"> <span class="iconfont icon-user"></span>总访客量 <span id="busuanzi_value_site_uv"></span></span>
+        </div>
+        <div class="mdui-col-xs-6 mdui-text-left">
+          <span id="busuanzi_container_site_pv" style="display: none;"> <span class="iconfont icon-eye"></span>总访问量 <span id="busuanzi_value_site_pv"></span></span>
+        </div>
+      
+    </div>
+ </div>
+</footer>
+  
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-teal" style="z-index:100;"><i class="iconfont icon-arrowup"></i></button>
+  
+  
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@8.4.8/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({
+        startOnLoad: true,
+        theme: "default"
+    });</script>
+
+
+
+
+    
+<script src="/js/mdui.min.v1.0.0.js"></script>
+
+
+
+
+<script src="/js/meadow.js"></script>
+
+</body>
+</html >

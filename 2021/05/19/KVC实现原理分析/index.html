@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <script>if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode)) window.location.href="https://support.dmeng.net/upgrade-your-browser.html?referrer="+encodeURIComponent(window.location.href); </script>
+    
+    
+        <link rel="preload" crossorigin="crossorigin" href="/fonts/roboto/Roboto-Regular.woff2" as="font">
+        <link rel="preload" crossorigin="crossorigin" href="/fonts/roboto/Roboto-Bold.woff2" as="font">
+    
+    
+    
+        <link rel="shortcut icon" href="/icons/favicon.ico">
+    
+
+    
+    
+        
+<link rel="stylesheet" href="/css/mdui.min.v1.0.0.css">
+
+    
+    
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/iconfont.css">
+
+
+    
+    
+
+    
+        <script data-ad-client="ca-" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+          
+
+
+    
+    
+    <title>
+        
+            KVC实现原理分析 | dmalliosco
+        
+    </title>
+    
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body class="mdui-drawer-body-left mdui-appbar-with-toolbar mdui-theme-primary-teal mdui-theme-accent-blue">
+  
+  <header class="mdui-appbar mdui-appbar-fixed">
+  <div id="toolbar" class="mdui-toolbar mdui-color-theme">
+    <button class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="iconfont icon-menu"></i></button>
+    <a href="/" class="mdui-typo-headline">dmalliosco</a>
+    <a href="/" class="header-subtitle mdui-typo-headline">dmalldev</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <button class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: 'search'}"><i class="iconfont icon-search"></i></button>
+  </div>
+</header>
+
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字" onfocus="listenSearchFunc()">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+
+  <aside id="sidebar" class="mdui-drawer">
+    <div class="mdui-tab" mdui-tab>
+        <a href="#sidebar-tab1" id="sidebartab" class="mdui-ripple mdui-tab-active">站点概览</a>
+        <a href="#sidebar-tab2" id="sidebartab" class="mdui-ripple">关于</a>
+    </div>
+
+    
+    <div id="sidebar-tab1" class="mdui-p-a-1">
+        <div class="mdui-list">
+            
+                
+                <a href="/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-home"></i>
+                    </div>
+                    <div class="mdui-list-item-content">主页</div>
+                </a>
+            
+                
+                <a href="/tags/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-bookmark"></i>
+                    </div>
+                    <div class="mdui-list-item-content">标签</div>
+                </a>
+            
+                
+                <a href="/categories/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-folder"></i>
+                    </div>
+                    <div class="mdui-list-item-content">分类</div>
+                </a>
+            
+                
+                <a href="/archives/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-archive"></i>
+                    </div>
+                    <div class="mdui-list-item-content">归档</div>
+                </a>
+            
+                
+                <a href="/about/" class="mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-user"></i>
+                    </div>
+                    <div class="mdui-list-item-content">关于</div>
+                </a>
+            
+            <div class="mdui-list-item mdui-ripple">
+                <div class="mdui-list-item-icon">
+                    <i class="iconfont icon-moon"></i>
+                </div>
+                <div class="mdui-list-item-content">夜间模式</div>
+                <label class="mdui-switch" id="darkmode">
+                  <input type="checkbox" id="nightmode_switch"/>
+                  <i class="mdui-switch-icon"></i>
+                </label>
+            </div>           
+        </div>
+    </div>
+
+    
+    <div id="sidebar-tab2" class="mdui-p-a-1">
+        <div class="sidebar-overview">
+            <div class="sidebar-avatar">
+                
+                    <img src="/icons/avatar.gif"/>
+                
+            </div>
+            <div class="sidebar-author-name">dmalliosco</div>
+            <div class="sidebar-description">dmalldev</div>
+        </div>
+        <div class="sidebar-links">
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-mail"></i></span>
+                    <a href="mailto:dmalliosco@dmall.com" class="mdui-chip-title">E-Mail</a>
+                </div>
+            
+                
+                <div class="mdui-chip">
+                    <span class="mdui-chip-icon"><i class="iconfont icon-github"></i></span>
+                    <a target="_blank" rel="noopener" href="https://github.com/dmalliosco" class="mdui-chip-title">GitHub</a>
+                </div>
+            
+        </div>
+        <ul class="mdui-list" mdui-collapse="{accordion: true}">
+            <li class="mdui-collapse-item">
+                <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+                    <div class="mdui-list-item-icon">
+                        <i class="iconfont icon-link"></i>
+                    </div>
+                    <div class="mdui-list-item-content">友情链接</div>
+                    <div class="mdui-collapse-item-arrow">
+                        <i class="mdui-list-item-icon iconfont icon-angle-down"></i>
+                    </div>
+                </div>
+                <ul id="linksList" class="mdui-collapse-item-body mdui-list mdui-list-dense">
+                    
+                        <a target="_blank" rel="noopener" href="http://www.dmall.com/" class="mdui-list-item mdui-ripple">
+                            多点
+                        </a>
+                    
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="mdui-divider"></div>
+    
+    
+</aside>
+  
+  <main id="main-contain" class="mdui-container mdui-m-t-5">
+    <article id="article" class="mdui-card mdui-p-b-2 mdui-m-b-5">
+  <header class="mdui-card-media">
+    
+    
+      <div class="post-header"> 
+  <a class="post-header-title" href="/2021/05/19/KVC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">KVC实现原理分析</a>
+  <div class="post-header-meta">
+    <span>
+      <span class="iconfont icon-calendar"></span>
+      发布于:&nbsp;2021-05-19
+    </span>
+    <span>
+      <span class="iconfont icon-calendar-check"></span>
+      更新于:&nbsp;2021-05-19
+    </span>
+    <span>
+      <span class="iconfont icon-folder"></span>
+      分类于:&nbsp;<a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB/">技术分享</a>
+    </span>
+    
+      <span>
+        <span class="iconfont icon-eye"></span>
+        阅读次数:&nbsp;
+        <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+      </span>
+    
+  </div>
+</div>   
+    
+
+
+
+    
+    
+    <div class="mdui-card-menu">
+    
+      <button class="mdui-btn mdui-btn-icon mdui-text-color-teal" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="iconfont icon-share"></i></button>
+      <ul class="mdui-menu" id="share_menu">
+        <li class="mdui-menu-item">
+          <a href="http://service.weibo.com/share/share.php?appkey=&title=KVC实现原理分析&url=https://dmalliosco.github.io/2021/05/19/KVC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/&pic=https://dmalliosco.github.io/null&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到 Weibo</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://twitter.com/intent/tweet?text=KVC实现原理分析&url=https://dmalliosco.github.io/2021/05/19/KVC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/&via=dmalliosco" target="_blank" class="mdui-ripple">分享到 Twitter</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=https://dmalliosco.github.io/2021/05/19/KVC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/" target="_blank" class="mdui-ripple">分享到 Facebook</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://plus.google.com/share?url=https://dmalliosco.github.io/2021/05/19/KVC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/" target="_blank" class="mdui-ripple">分享到 Google+</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://dmalliosco.github.io/2021/05/19/KVC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/&title=KVC实现原理分析" target="_blank" class="mdui-ripple">分享到 LinkedIn</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="http://connect.qq.com/widget/shareqq/index.html?site=dmalliosco&title=KVC实现原理分析&summary=dmalldev&pics=https://dmalliosco.github.io/null&url=https://dmalliosco.github.io/2021/05/19/KVC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/" target="_blank" class="mdui-ripple">分享到 QQ</a>
+        </li>
+        <li class="mdui-menu-item">
+          <a href="https://telegram.me/share/url?url=https://dmalliosco.github.io/2021/05/19/KVC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/&text=KVC实现原理分析" target="_blank" class="mdui-ripple">分享到 Telegram</a>
+        </li>
+      </ul>
+    
+  </div>
+  </header>
+  
+  
+  
+  
+  <div class="post-tags">
+    
+      <i class="iconfont icon-tag">
+        <a rel="tag" href = /tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ >源码分析</a>
+      </i>
+    
+  </div>
+
+  
+  <div class="mdui-card-content mdui-typo mdui-p-x-4">
+    <h2 id="KVC实现原理分析"><a href="#KVC实现原理分析" class="headerlink" title="KVC实现原理分析"></a>KVC实现原理分析</h2><h3 id="问题？"><a href="#问题？" class="headerlink" title="问题？"></a>问题？</h3><ol>
+<li>KVC在进行存取的时候，是怎么进行查找赋值的？</li>
+<li>KVC的keypath中集合运算符是如何使用的？</li>
+<li>使用KVC的时候如果setvalue的属性没有实现会怎样？</li>
+</ol>
+<h3 id="KVC是什么？"><a href="#KVC是什么？" class="headerlink" title="KVC是什么？"></a>KVC是什么？</h3><ul>
+<li>KVC全称是Key value coding，定义在NSKeyValueCoding.h文件中，是一个非正式协议。</li>
+<li>KVC提供了一种间接访问属性方法/成员变量的机制。我们可以通过字符串来访问对应的属性方法或者成员变量。</li>
+<li>KVC的实现依赖其搜索规则。</li>
+</ul>
+<h3 id="KVC的访问方法"><a href="#KVC的访问方法" class="headerlink" title="KVC的访问方法"></a>KVC的访问方法</h3><ul>
+<li>在NSKeyValueCoding中我们可以看到提供了KVC的通用访问方法，getter方法：valueForKey:以及setter方法：setValue:forKey，以及其衍生出来的keyPath方法。</li>
+<li>这两个方法由KVC提供了默认的实现。也可以重写对应的方法来更改实现。</li>
+</ul>
+<h3 id="操作对象"><a href="#操作对象" class="headerlink" title="操作对象"></a>操作对象</h3><p>KVC主要针对三种类型进行操作，基础数据类型，对象和集合类型。</p>
+<h3 id="KVC的集合操作符运算"><a href="#KVC的集合操作符运算" class="headerlink" title="KVC的集合操作符运算"></a>KVC的集合操作符运算</h3><ul>
+<li>@sum 求和运算 比如@sum.classNumber</li>
+<li>@avg 求平均值运算 比如@avg.classNumber</li>
+<li>@count 求集合中元素的个数 比如@count</li>
+</ul>
+<h3 id="搜索规则"><a href="#搜索规则" class="headerlink" title="搜索规则"></a>搜索规则</h3><ul>
+<li>KVC在通过key和keypath进行操作的时候，可以查找属性方法，成员变量。查找的时候可以兼容多种命名，查找的规则官方文档有介绍。</li>
+<li>在KVC的实现中，依赖了<code>setter</code>和<code>getter</code>方法的实现。方法的命名要符合apple的规范。</li>
+</ul>
+<h4 id="关键属性accessInstanceVariablesDirectly"><a href="#关键属性accessInstanceVariablesDirectly" class="headerlink" title="关键属性accessInstanceVariablesDirectly"></a>关键属性accessInstanceVariablesDirectly</h4><p>这个属性表示是否允许读取实例变量的值，如果设置为YES,表明在KVC的查找中，从内存中读取实例变量的值。（在没有找到存取器的时候才会调用该方法）。</p>
+<h3 id="基础getter搜索模式"><a href="#基础getter搜索模式" class="headerlink" title="基础getter搜索模式"></a>基础getter搜索模式</h3><ol>
+<li>这种搜索模式是valueForKey:的默认实现，给定一个key作为参数</li>
+<li>通过<code>getter</code>方法搜索实例，依次匹配  <code>get&lt;key&gt;</code>  <code>&lt;key&gt; </code> <code>is&lt;key&gt;</code> <code> _&lt;key&gt;</code> 如果找到，直接返回。需要注意的是：如果返回的是对象指针类型，直接返回结果，如果返回的是NSNumber转化所支持的变量之一，返回一个NSNumber否则返回的是NSValue。</li>
+<li>当没有找到getter方法的时候，调用<code>accessInstanceVariablesDirectly</code>询问，如果返回<code>yes</code>，从<code>_&lt;key&gt;`` _is&lt;key&gt;</code> <code>&lt;key&gt;</code> <code>is&lt;key&gt;</code>中查找对应的值。如果返回NO结束查找，并调用<code>valueForUndefindedKey</code>异常。</li>
+</ol>
+<h3 id="基础setter搜索模式"><a href="#基础setter搜索模式" class="headerlink" title="基础setter搜索模式"></a>基础setter搜索模式</h3><ol>
+<li>这种搜索模式是<code>setValue:forKey</code>的默认实现，给定输入的value和key。在调用对象的内部，设置属性名为key的<code>value</code>。</li>
+<li>查找<code>set&lt;key&gt;:</code>或者<code>_set&lt;key&gt;</code>命名的setter。按照这个顺序，如果找到的话，调用这个方法执行。</li>
+<li>如果设置的<code>setter</code>但是<code>accessInstanceVariablesDirectly</code>返回YES,那么查找的命名规则为<code>_&lt;key&gt; _is&lt;key&gt; &lt;key&gt; is&lt;key&gt;</code>的实例变量。根据这个顺序将value赋值给实例变量。</li>
+<li>如果没有发现setter或实例变量。调用<code>setValueForUndefinedKey</code>并抛出异常。</li>
+</ol>
+<h3 id="KVC的性能"><a href="#KVC的性能" class="headerlink" title="KVC的性能"></a>KVC的性能</h3><p>从上面的描述中可以看出：KVC的性能访问属性并没有直接访问快，因为他是按照搜索规则进行搜索。所以我们在使用的时候，最好不 要手动设置<code>setter``和getter</code> 方法这样会导致搜索的步骤变长。本质上是操作方法列表以及在内存中去查找实例变量。这个操作对readonly和protected的成员变量，都可以正常访问。如果不想在外界访问的话，可以将<code>accessInstanceVariableDirectly</code>设置为NO。</p>
+<h3 id="KVC缺点"><a href="#KVC缺点" class="headerlink" title="KVC缺点"></a>KVC缺点</h3><ul>
+<li>因为我们在操作的时候传入<code>setvalueForKey</code>以及<code>setvalueForKeyPath valueForKey</code>以及<code>keyPath</code>是一个字符串。编译器在编译的时候不会报错，但是在运行的时候，如果设置或者获取的属性不存在就会报undefinedKey异常。</li>
+<li>例如：在 iOS13之前我们可以通过改变私有变量的属性来更改一些设置。比如更改textField的颜色属性。iOS13之后更改的时候debug模式下会crash。</li>
+</ul>
+<h3 id="JsonModel中的使用"><a href="#JsonModel中的使用" class="headerlink" title="JsonModel中的使用"></a>JsonModel中的使用</h3><p>主要是通过KVC进行赋值，例如在赋值的时候，循环遍历model中每一个解析出来的property结构，从dic中拿出对应的value，进行一系列的判断。如果value可用，就进行赋值。如果对应的property是一个jsonmodel的时候，就递归先将子model进行整理解析。如果包含protocol字段，表明是一个array或者dictionary。然后将这个protocol字段的对象解析。</p>
+
+  </div>
+  <!--文末结束语-->
+  
+    <div style="text-align:center;color: #ccc;font-size:24px;"> --- 本文结束 <i class="iconfont icon-heartbeat" style="font-size:24px;"></i> The End --- </div>
+  
+  <!--页脚广告-->
+  
+  <div class="mdui-divider"></div>
+  
+  <nav>
+    
+      <a rel="prev" class="post-nav-item mdui-float-left" href="/2021/05/19/CodeSnippets%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/">
+        <i class="iconfont icon-angle-left"></i>
+        <span>CodeSnippets使用说明</span>
+      </a>
+    
+    
+      <a rel="next" class="post-nav-item mdui-float-right" href="/2021/05/19/Runloop%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
+        <span>RunLoop实现原理分析</span>
+        <i class="iconfont icon-angle-right"></i>
+      </a>
+    
+  </nav>
+</article>
+
+
+
+
+  <div class="toc-button"  style="z-index: 100;">
+    <button class="mdui-fab mdui-ripple mdui-color-teal" mdui-menu="{target: '#toc'}"><i class="iconfont icon-list"></i></button>
+    <ul class="mdui-menu" id="toc">
+      <li class="mdui-menu-item">
+        <a href="/2021/05/19/KVC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/" id="toc-header" class="mdui-ripple">文章目录</a>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#KVC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">KVC实现原理分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">问题？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#KVC%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">KVC是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#KVC%E7%9A%84%E8%AE%BF%E9%97%AE%E6%96%B9%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">KVC的访问方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.4.</span> <span class="toc-text">操作对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#KVC%E7%9A%84%E9%9B%86%E5%90%88%E6%93%8D%E4%BD%9C%E7%AC%A6%E8%BF%90%E7%AE%97"><span class="toc-number">1.5.</span> <span class="toc-text">KVC的集合操作符运算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%9C%E7%B4%A2%E8%A7%84%E5%88%99"><span class="toc-number">1.6.</span> <span class="toc-text">搜索规则</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E5%B1%9E%E6%80%A7accessInstanceVariablesDirectly"><span class="toc-number">1.6.1.</span> <span class="toc-text">关键属性accessInstanceVariablesDirectly</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80getter%E6%90%9C%E7%B4%A2%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.7.</span> <span class="toc-text">基础getter搜索模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80setter%E6%90%9C%E7%B4%A2%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.8.</span> <span class="toc-text">基础setter搜索模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#KVC%E7%9A%84%E6%80%A7%E8%83%BD"><span class="toc-number">1.9.</span> <span class="toc-text">KVC的性能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#KVC%E7%BC%BA%E7%82%B9"><span class="toc-number">1.10.</span> <span class="toc-text">KVC缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JsonModel%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">1.11.</span> <span class="toc-text">JsonModel中的使用</span></a></li></ol></li></ol>
+      </li>
+    </ul>
+  </div>
+
+
+
+    <div id="comment" class="mdui-card mdui-p-a-2 mdui-m-b-5">
+      <div class="mdui-tab" mdui-tab>
+        
+          <a href="#comment-tab0" class="mdui-ripple">gitalk</a>
+        
+          <a href="#comment-tab1" class="mdui-ripple">livere</a>
+        
+      </div>
+      
+        <div id="comment-tab0" class="mdui-p-a-2">
+          <div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+<script>
+  var gitalk = new Gitalk({
+    clientID: '',
+    clientSecret: '',
+    repo: '',
+    owner: '',
+    admin: [''],
+    id:  md5(location.pathname) ,
+    distractionFreeMode: 'true',
+  });
+  gitalk.render('gitalk-container');
+</script>
+        </div>
+      
+        <div id="comment-tab1" class="mdui-p-a-2">
+          <div id="lv-container" data-id="city" data-uid="">
+  <script type="text/javascript">
+    (function (d, s) {
+      var j, e = d.getElementsByTagName(s)[0];
+      if (typeof LivereTower === 'function') { return; }
+      j = d.createElement(s);
+      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+      j.async = true;
+      e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+  </script>
+  <noscript>Please enable JavaScript to view the comments powered by LiveRe.</noscript>
+</div>
+        </div>
+      
+    </div>
+
+  </main>
+  <footer id="footer" class="mdui-text-center mdui-m-t-5 mdui-p-b-2 mdui-p-t-4 mdui-color-theme">
+  <div class="mdui-container">
+    <div class="mdui-row">
+      
+        <a href="https://beian.miit.gov.cn" rel="noopener" target="_blank"></a>
+      
+      <span>
+        &copy; 2015 - 2021 
+        
+          <span style="color:#ff000" class="iconfont icon-heart"></span>
+        
+        dmalliosco
+      </span>
+    </div>
+    <div class="mdui-row">
+      
+        <div class="mdui-col-xs-6 mdui-text-right">
+          <span>Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a></span>
+        </div>
+        <div class="mdui-col-xs-6 mdui-text-left">
+          <span>Theme: <a href="https://github.com/kb1000fx/Meadow" rel="noopener" target="_blank">Meadow</a></span>
+        </div>
+      
+    </div>
+    <div class="mdui-row">
+      
+        <div class="mdui-col-xs-6 mdui-text-right">
+          <span id="busuanzi_container_site_uv" style="display: none;"> <span class="iconfont icon-user"></span>总访客量 <span id="busuanzi_value_site_uv"></span></span>
+        </div>
+        <div class="mdui-col-xs-6 mdui-text-left">
+          <span id="busuanzi_container_site_pv" style="display: none;"> <span class="iconfont icon-eye"></span>总访问量 <span id="busuanzi_value_site_pv"></span></span>
+        </div>
+      
+    </div>
+ </div>
+</footer>
+  
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-teal" style="z-index:100;"><i class="iconfont icon-arrowup"></i></button>
+  
+  
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@8.4.8/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({
+        startOnLoad: true,
+        theme: "default"
+    });</script>
+
+
+
+
+    
+<script src="/js/mdui.min.v1.0.0.js"></script>
+
+
+
+
+<script src="/js/meadow.js"></script>
+
+</body>
+</html >
