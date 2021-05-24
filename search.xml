@@ -1303,14 +1303,54 @@
       </tags>
   </entry>
   <entry>
-    <title>iOS 内存泄漏那些事</title>
+    <title>谈谈iOS内存泄漏</title>
     <url>/2021/05/20/iOS%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E9%82%A3%E4%BA%9B%E4%BA%8B/</url>
-    <content><![CDATA[<h3 id="什么是内存泄漏？"><a href="#什么是内存泄漏？" class="headerlink" title="什么是内存泄漏？"></a>什么是内存泄漏？</h3>]]></content>
+    <content><![CDATA[<h2 id="1-什么是内存泄漏？-memory-leak"><a href="#1-什么是内存泄漏？-memory-leak" class="headerlink" title="1.什么是内存泄漏？(memory leak)"></a>1.什么是内存泄漏？(memory leak)</h2><p>内存泄漏（Memory leak）是在计算机科学中，由于疏忽或错误造成程序未能释放已经不再使用的内存。内存泄漏并非指内存在物理上的消失，而是应用程序分配某段内存后，由于设计错误，导致在释放该段内存之前就失去了对该段内存的控制，从而造成了内存的浪费。– 来自维基百科中文版<br>通俗的来讲，就是一块内存区域被你占用了，但是当你不适用这块内存的时候也不让别人用，造成了内存的浪费，这就是内存泄漏。泄漏严重会造成内存吃紧，严重的会使程序崩溃。(一次内存泄漏可以忽略，但是如果内存泄漏地方比较多，无论多少内存，都有可能被占用完毕，最终导致crash)<br>PS：简单说明一下什么是内存溢出?（out of memory ）指的是程序在申请内存的时候，没有足够的内存空间供其使用。(比如说你的电脑内存比较小，当你运行一个大型游戏的时候，游戏所需要的内存大于你电脑的内存所能承受的大小，这就叫做内存溢出，最终导致程序crash)</p>
+<h2 id="2-如何检测内存泄漏？"><a href="#2-如何检测内存泄漏？" class="headerlink" title="2.如何检测内存泄漏？"></a>2.如何检测内存泄漏？</h2><h3 id="内存泄漏检测目前有以下几种工具："><a href="#内存泄漏检测目前有以下几种工具：" class="headerlink" title="内存泄漏检测目前有以下几种工具："></a>内存泄漏检测目前有以下几种工具：</h3><ol>
+<li>静态分析(Analyze)：快捷键com+shift+b </li>
+<li>动态分析<br>动态分析常用的有以下几种：</li>
+<li>(Instrument工具库里的Leaks)</li>
+<li>借助三方工具 MLeaksFinder 依赖 FBRetainCycleDetector</li>
+</ol>
+<h4 id="静态分析："><a href="#静态分析：" class="headerlink" title="静态分析："></a>静态分析：</h4><p>静态分析是在程序没有运行的时候，通过工具对代码进行直接分析，可以帮助我们找出代码的潜在错误，比如说未使用变量。原理：根据代码的上下文的语法结构，让编译器分析内存情况，检查是否存在内存泄漏。<br>静态分析的使用方法比较简单，可以使用快捷键com+shift+b ,也可以打开xcode，点击上方工具栏选择Product-&gt;Analyze<br><a href=""><img src="https://z3.ax1x.com/2021/05/24/gjhYqJ.png" alt="静态分析01"></a></p>
+<h5 id="静态分析主要分析以下几种问题："><a href="#静态分析主要分析以下几种问题：" class="headerlink" title="静态分析主要分析以下几种问题："></a>静态分析主要分析以下几种问题：</h5><ol>
+<li>Memory error:  nil returned from a method that is expected to return a non-null value 非空返回值返回了空。</li>
+<li>Dead store: Value stored to ‘xxx’ is never read &amp;&amp; Value stored to ‘split_row’ during its initialization is never read  变量没有使用过。</li>
+<li>Logic error: Converting a pointer value of type ‘NSNumber *’ to a primitive boolean value; instead, either compare the pointer to nil or call -boolValue （修饰符以判断类型不匹配 逻辑错误）</li>
+<li>Optimization： Instance variable ‘_verticalAlignment’ in class ‘DMCustomLabel’ is never used by the methods in its @implementation (although it may be used by category methods)</li>
+<li>Core Foundation/Objective-C： Returning ‘self’ while it is not set to the result of ‘[(super or self) init…]’  初始化的时候没有调用super</li>
+</ol>
+<h4 id="动态分析："><a href="#动态分析：" class="headerlink" title="动态分析："></a>动态分析：</h4><p>动态分析可以使用xcode提供的工具Instrument工具库里的Leaks 具体操作如下：<br>选择顶部工具栏Product-&gt;Profile-&gt;Leaks<br><a href=""><img src="https://z3.ax1x.com/2021/05/24/gjhoQS.png" alt="动态检测01"></a><br>之后的操作是：<br><a href=""><img src="https://z3.ax1x.com/2021/05/24/gj4dmQ.png" alt="动态检测02"></a><br>点击右上角圆圈开始运行：<br><a href=""><img src="https://z3.ax1x.com/2021/05/24/gj4clT.png" alt="动态检测03"></a><br>注意这里需要选中Leaks，然后工具栏选中Leaks Call Tree<br><a href=""><img src="https://z3.ax1x.com/2021/05/24/gj4ofx.png" alt="动态检测04"></a><br>底部勾选 invert call tree 以及hide system Libraries<br><a href=""><img src="https://z3.ax1x.com/2021/05/24/gj599P.png" alt="动态检测05"></a><br>解释：</p>
+<ul>
+<li>Separate by Thread：按线程分开做分析，这样更容易揪出那些吃资源的问题线程。特别是对于主线程，它要处理和渲染所有的接口数据，一旦受到阻塞，程序必然卡顿或停止响应。</li>
+<li>Invert Call Tree：反向输出调用树。把调用层级最深的方法显示在最上面，更容易找到最耗时的操作。</li>
+<li>Hide System Libraries：隐藏系统库文件。过滤掉各种系统调用，只显示自己的代码调用。</li>
+<li>Flattern Recursion：拼合递归。将同一递归函数产生的多条堆栈（因为递归函数会调用自己）合并为一条。<br>运行产生的结果:<br><a href=""><img src="https://z3.ax1x.com/2021/05/24/gj5ABQ.png" alt="动态检测06"></a><br>怎么分析呢？<br><a href=""><img src="https://z3.ax1x.com/2021/05/24/gj5K3V.png" alt="动态检测07"></a><br>也可以使用三方工具<br>MLLeaksFinder:<br>初步原理：对将要释放的对象，延迟2s在主线程调用一个方法，在2s内对象释放，则对nil发送消息是安全的。如果2s内对象没有释放。那么就输出没有释放的对象。<br>优点：<br>MLeaksFinder使用起来非常简单，只需要把它引入到你的项目里，一句额外的代码都不用加，只要应用跑起来了，它就会自动帮你检测有没有内存泄露。<br>MLeaksFinder的代码没有侵入性，这意味着你不用为了引入它而修改你原有的项目代码，甚至连发正式版都不用移除掉，因为它只在debug版本里起作用。<br>自动检测并弹框提醒，无需打开额外的检测工具，代码没有侵入性。它默认只检测应用里UIViewController和UIView对象的泄露情况，因为一般应用里内存泄露影响最严重的就是这两种内存占用比较高的对象。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Possibly Memory Leak.</span><br><span class="line">In case that ControllerA should not be dealloced, override -willDealloc in ControllerA by returning NO.</span><br><span class="line">View-ViewController stack: (</span><br><span class="line">  ControllerA</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>如何查找循环引用链？<br>这个是facebook出品的FBRetainCycleDetector来处理的。使用这个工具可以传入应用内存里的任意一个Objective-C对象，FBRetainCycleDetector会查找以该对象为根节点的强引用树中有没有循环引用。<br>动态内存泄漏主要有以下几种问题：<br>1.循环引用（产生双向/多向引用环）关于循环引用这里仅讲述一个概念。不做太多深究。<br>A-&gt;B-&gt;A<br> A-&gt;B-&gt;C-&gt;A<br>循环引用会导致一些内存无法释放。导致dealloc方法无法被调用。<br>循环引用产生可能有以下情况：<br>1.block中的循环引用环。<br>2.NSTimer中的循环引用环。<br>3.代理中的循环引用环等等。</p>
+<h3 id="1-Block中环产生：block-在copy的时候会对block内部用到的对象进行强引用-捕获-这个类又将block最为自己的属性变量，在block方法中又使用了该类本身。这个时候环就产生了。"><a href="#1-Block中环产生：block-在copy的时候会对block内部用到的对象进行强引用-捕获-这个类又将block最为自己的属性变量，在block方法中又使用了该类本身。这个时候环就产生了。" class="headerlink" title="1.Block中环产生：block 在copy的时候会对block内部用到的对象进行强引用(捕获),这个类又将block最为自己的属性变量，在block方法中又使用了该类本身。这个时候环就产生了。"></a>1.Block中环产生：block 在copy的时候会对block内部用到的对象进行强引用(捕获),这个类又将block最为自己的属性变量，在block方法中又使用了该类本身。这个时候环就产生了。</h3><p>Block中循环引用解决：block外部用weak修饰，block内部用strong修饰。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(其中加__weak的时候是为了在block内部使用的时候不会强引用当前对象，不会造成引用计数+1，防止了循环引用。而用__strong的目的是一旦进入block执行，假设不允许self在这个执行过程中释放，就需要加入strongself，block执行完毕之后这个strongself会自动释放，不会存在循环引用问题，如果要在block内多次访问self，那么需要使用strongself)</span><br></pre></td></tr></table></figure>
+<p>问题：使用系统的某些block api（如UIView的block版本写动画时），是否也考虑引用循环问题？</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">不需要考虑。产生循环引用的原因是相互引用。系统的api是单向引用，不会产生循环引用的问题，但是使用gcd和通知中心的时候需要考虑。拿gcd来说，如果gcd内部使用了self，而gcd的其他参数是属性变量的话，那么需要考虑循环引用。会不会产生循环引用以及要不要处理循环引用的问题，主要还是看使用的时候有没有形成环，如果形成环。那就需要处理循环引用的问题。</span><br></pre></td></tr></table></figure>
+<h3 id="2-NSTimer中的循环引用环："><a href="#2-NSTimer中的循环引用环：" class="headerlink" title="2.NSTimer中的循环引用环："></a>2.NSTimer中的循环引用环：</h3><p>VC 强引用 timer  timer 强引用target target强引用VC,并且runloop也引用了timer。<br>如果我们按照正常的像block一样解除循环引用的方法是行不通的。因为虽然对象对timer的引用为弱引用，但是timer对对象的引用却还是强引用。<br>循环引用的问题出现在target强引用self 如果把这个强引用的类换成其他类就可以解决这个问题。<br>多点中对应类DMPTimerWeakTarget 就是这样处理的。</p>
+<h4 id="方法一："><a href="#方法一：" class="headerlink" title="方法一："></a>方法一：</h4><p>这个类的实现是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@property (nonatomic, assign) SEL selector;</span><br><span class="line">@property (nonatomic, weak) NSTimer *timer;</span><br><span class="line">@property (nonatomic, weak) id target;</span><br><span class="line"></span><br><span class="line">+ (NSTimer *) scheduledTimerWithTimeInterval:(NSTimeInterval)interval</span><br><span class="line">                   target:(id)aTarget</span><br><span class="line">                  selector:(SEL)aSelector</span><br><span class="line">                  userInfo:(id)userInfo</span><br><span class="line">                   repeats:(BOOL)repeats&#123;</span><br><span class="line">   </span><br><span class="line">  DMPTimerWeakTarget * timer = [DMPTimerWeakTarget new];</span><br><span class="line">  timer.target = aTarget;</span><br><span class="line">  timer.selector = aSelector;</span><br><span class="line">  timer.timer = [NSTimer scheduledTimerWithTimeInterval:interval target:timer selector:@selector(fire:) userInfo:userInfo repeats:repeats];</span><br><span class="line">  return timer.timer;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)fire:(NSTimer *)timer &#123;</span><br><span class="line">   </span><br><span class="line">  if (self.target) &#123;</span><br><span class="line">    if (self.selector &amp;&amp; [self.target respondsToSelector:self.selector]) &#123;</span><br><span class="line">      [self.target performSelector:self.selector withObject:timer.userInfo];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    [self.timer invalidate];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="方法二：参考yykit中的YYWeakProxy"><a href="#方法二：参考yykit中的YYWeakProxy" class="headerlink" title="方法二：参考yykit中的YYWeakProxy"></a>方法二：参考yykit中的YYWeakProxy</h4><p>它的原理是：对象-&gt; timer -&gt; proxy(这里的proxy继承自NSProxy)-&gt; (消息转发)target -&gt; 对象。<br>这个时候target为弱引用。如果对象的引用计数为0了，那么target就会被置为nil。这样就打破循环引用了。<br>NSProxy本身是一个抽象类，它遵循NSObject协议，提供了消息转发的通用接口，NSProxy通常用来实现消息转发机制和惰性初始化资源。不能直接使用NSProxy。需要创建NSProxy的子类，并实现消息转发的相关方法，才可以用。<br> YYWeakProxy继承了NSProxy，定义了一个弱引用的target对象，通过重写消息转发等关键方法，让target对象去处理接收到的消息。在整个引用链中，Controller对象强引用NSTimer对象，NSTimer对象强引用YYWeakProxy对象，而YYWeakProxy对象弱引用Controller对象，所以在YYWeakProxy对象的作用下，Controller对象和NSTimer对象之间并没有相互持有，解决循环引用的问题。</p>
+<h4 id="方法三："><a href="#方法三：" class="headerlink" title="方法三："></a>方法三：</h4><p> 还有一种解决方法是：在vc中使用视图将要消失的时候 停掉定时器 并且置为nil。（在停掉定时器的时候，runloop也被移除）</p>
+<h4 id="方法四："><a href="#方法四：" class="headerlink" title="方法四："></a>方法四：</h4><p>不用target 使用block的初始化方式。 这种缺点是iOS10+并且由于是block所以要处理block循环引用的问题。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if (@available(iOS 10.0, *)) &#123;</span><br><span class="line">   self.schemeTimer = [NSTimer timerWithTimeInterval:1.0f repeats:YES block:^(NSTimer *timer) &#123;</span><br><span class="line"></span><br><span class="line">   &#125;];</span><br><span class="line"> &#125; else &#123;</span><br><span class="line">   // Fallback on earlier versions</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-代理可能产生的循环引用"><a href="#3-代理可能产生的循环引用" class="headerlink" title="3.代理可能产生的循环引用"></a>3.代理可能产生的循环引用</h3><p>修饰代理的时候用weak来修饰。</p>
+<h2 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h2><ul>
+<li><a href="https://www.jianshu.com/p/c9fd287ec7ab">https://www.jianshu.com/p/c9fd287ec7ab</a></li>
+<li><a href="http://wereadteam.github.io/2016/02/22/MLeaksFinder">http://wereadteam.github.io/2016/02/22/MLeaksFinder</a></li>
+</ul>
+<h4 id="Written-By-多点-移动运营研发部-侯志伟"><a href="#Written-By-多点-移动运营研发部-侯志伟" class="headerlink" title="Written By 多点-移动运营研发部-侯志伟"></a>Written By 多点-移动运营研发部-侯志伟</h4>]]></content>
       <categories>
-        <category>效率工具</category>
+        <category>技术分享</category>
       </categories>
       <tags>
-        <tag>实用工具</tag>
+        <tag>性能优化</tag>
       </tags>
   </entry>
   <entry>
